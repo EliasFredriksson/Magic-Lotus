@@ -1,15 +1,16 @@
-import React, { lazy, Suspense } from "react";
+import { FunctionComponent, lazy, LazyExoticComponent, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 type IRoute = {
   path: string;
-  component: React.LazyExoticComponent<React.FunctionComponent>;
+  component: LazyExoticComponent<React.FunctionComponent>;
 };
 type IStaticRoutes = {
-  [key: string]: React.FunctionComponent;
+  [key: string]: FunctionComponent;
 };
 
 // ROUTES TO LOAD WITH EAGER (Not lazy)
+// SPECIFY WHICH FILES TO LOAD
 const LOADED_ROUTES: Record<string, any> = import.meta.glob(
   "/src/pages/(_app|404)/index.tsx",
   {
@@ -20,7 +21,7 @@ const LOADED_ROUTES: Record<string, any> = import.meta.glob(
 const LAZY_ROUTES: Record<string, () => any> = import.meta.glob(
   "/src/pages/**/[a-zA-Z[]*.tsx"
 );
-
+// CONVERT LOADED ROUTES INTO A IStaticRoutes OBJECT
 const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
   (preserved, route) => {
     const key = route
@@ -31,7 +32,7 @@ const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
   },
   {}
 );
-
+// CONVERT LOADED ROUTES INTO A LIST OF IRoutes OBJECTS
 const lazy_routes: IRoute[] = Object.keys(LAZY_ROUTES).map((route) => {
   const path = route
     .replace(/\/src\/pages|index|\.tsx$/g, "")
