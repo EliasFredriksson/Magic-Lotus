@@ -27,7 +27,6 @@ const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
       .replace(/\/src\/pages\/|\.tsx$/g, "")
       .toLowerCase()
       .replace("/index", "");
-    console.log(LOADED_ROUTES);
     return { ...preserved, [key]: LOADED_ROUTES[route].default };
   },
   {}
