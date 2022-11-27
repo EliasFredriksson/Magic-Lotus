@@ -49,6 +49,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Suspense fallback={"Loading..."}>
+        {/* ### MAP OUR LAZY ROUTES ### */}
         <Routes>
           {lazy_routes.map((route) => (
             <Route
