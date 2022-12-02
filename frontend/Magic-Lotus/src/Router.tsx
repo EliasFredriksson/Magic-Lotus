@@ -46,6 +46,7 @@ const lazy_routes: IRoute[] = Object.keys(LAZY_ROUTES).map((route) => {
 
 const NotFound = loaded_routes?.["404"] || <></>;
 const Router = () => {
+  console.log("ROUTES: ", lazy_routes, loaded_routes);
   return (
     <BrowserRouter>
       <Suspense fallback={"Loading..."}>
