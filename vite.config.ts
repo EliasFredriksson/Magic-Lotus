@@ -4,6 +4,7 @@ import { readFileSync } from "fs";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  root: "./src",
   server: {
     https: {
       key: readFileSync("./.cert/key.pem"),
@@ -11,6 +12,8 @@ export default defineConfig({
     }, // USE HTTPS PROTOCOL (YOU NEED TO PROVIDE YOUR OWN CERTIFICATE)
     //cors: true, // USE CORS (default: true)
     open: true, // OPEN NEW TAB WHEN SERVER STARTS
-    // headers: {},
+    headers: {
+      "content-type": "application/json",
+    },
   },
 });
