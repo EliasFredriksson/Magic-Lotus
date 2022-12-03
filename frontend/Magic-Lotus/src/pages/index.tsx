@@ -1,10 +1,11 @@
-import { useState } from "react";
-import "./index.scss";
+import { Flex, Text } from "@chakra-ui/react";
 
-function App() {
-  const [count, setCount] = useState(0);
+const LandingPage = () => {
+  return (
+    <Flex className="App" border="5px solid red">
+      <Text>LANDING PAGE</Text>
+    </Flex>
+  );
+};
 
-  return <div className="App">LANDING PAGE</div>;
-}
-
-export default App;
+export default LandingPage;

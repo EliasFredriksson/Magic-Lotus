@@ -1,5 +1,3 @@
-import "./index.scss";
-
 type Props = {};
 
 const Index = (props: Props) => {

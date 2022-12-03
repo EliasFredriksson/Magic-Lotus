@@ -1,5 +1,8 @@
 import { FunctionComponent, lazy, LazyExoticComponent, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import useLoader from "./components/Loader/Loader";
+import Loader from "./components/Loader/Loader";
+import Layout from "./Layout";
 
 type IRoute = {
   path: string;
@@ -21,45 +24,50 @@ const LOADED_ROUTES: Record<string, any> = import.meta.glob(
 const LAZY_ROUTES: Record<string, () => any> = import.meta.glob(
   "/src/pages/**/[a-zA-Z[]*.tsx"
 );
-// CONVERT LOADED ROUTES INTO A IStaticRoutes OBJECT
-const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
-  (preserved, route) => {
-    const key = route
-      .replace(/\/src\/pages\/|\.tsx$/g, "")
+
+const Router = () => {
+  // CONVERT LOADED ROUTES INTO A IStaticRoutes OBJECT
+  const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
+    (preserved, route) => {
+      const key = route
+        .replace(/\/src\/pages\/|\.tsx$/g, "")
+        .toLowerCase()
+        .replace("/index", "");
+      return { ...preserved, [key]: LOADED_ROUTES[route].default };
+    },
+    {}
+  );
+  // CONVERT LOADED ROUTES INTO A LIST OF IRoutes OBJECTS
+  const lazy_routes: IRoute[] = Object.keys(LAZY_ROUTES).map((route) => {
+    const path = route
+      .replace(/\/src\/pages|index|\.tsx$/g, "")
+      .replace(/\[\.{3}.+\]/, "*")
+      .replace(/\[(.+)\]/, ":$1")
       .toLowerCase()
       .replace("/index", "");
-    return { ...preserved, [key]: LOADED_ROUTES[route].default };
-  },
-  {}
-);
-// CONVERT LOADED ROUTES INTO A LIST OF IRoutes OBJECTS
-const lazy_routes: IRoute[] = Object.keys(LAZY_ROUTES).map((route) => {
-  const path = route
-    .replace(/\/src\/pages|index|\.tsx$/g, "")
-    .replace(/\[\.{3}.+\]/, "*")
-    .replace(/\[(.+)\]/, ":$1")
-    .toLowerCase()
-    .replace("/index", "");
 
-  return { path, component: lazy(LAZY_ROUTES[route]) };
-});
+    return { path, component: lazy(LAZY_ROUTES[route]) };
+  });
 
-const NotFound = loaded_routes?.["404"] || <></>;
-const Router = () => {
-  console.log("ROUTES: ", lazy_routes, loaded_routes);
+  // ########## LOADED ROUTES ##########
+  const NotFound = loaded_routes?.["404"] || <></>;
+
   return (
     <BrowserRouter>
-      <Suspense fallback={"Loading..."}>
-        {/* ### MAP OUR LAZY ROUTES ### */}
+      <Suspense fallback={<Loader />}>
         <Routes>
-          {lazy_routes.map((route) => (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<route.component />}
-            />
-          ))}
-          <Route path="*" element={<NotFound />} />
+          {/* LAYOUT FILE */}
+          <Route element={<Layout />}>
+            {/* ### MAP OUR LAZY ROUTES ### */}
+            {lazy_routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<route.component />}
+              />
+            ))}
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Routes>
       </Suspense>
     </BrowserRouter>
