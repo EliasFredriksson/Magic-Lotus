@@ -1,6 +1,5 @@
 import { FunctionComponent, lazy, LazyExoticComponent, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import useLoader from "./components/Loader/Loader";
 import Loader from "./components/Loader/Loader";
 import Layout from "./Layout";
 

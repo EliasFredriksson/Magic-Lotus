@@ -33,5 +33,6 @@ export default interface ICard {
   readonly hand_modifier: Optional<string>; // This card’s hand modifier, if it is Vanguard card. This value will contain a delta, such as -1.
   readonly keywords: string[]; // An array of keywords that this card uses, such as 'Flying' and 'Cumulative upkeep'.
   readonly layout: string; // A code for this card's layout
+
   // ########## PRINT FIELDS ##########
 }

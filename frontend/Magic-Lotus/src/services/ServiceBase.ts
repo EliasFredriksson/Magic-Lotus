@@ -6,7 +6,7 @@ export const POST = async <T>(
   options?: AxiosRequestConfig
 ) => {
   return await axios.post<T>(
-    `${import.meta.env.SCRYFALL_API + route}`,
+    `${import.meta.env.VITE_SCRYFALL_API + route}`,
     data,
     options && options
   );
@@ -18,7 +18,7 @@ export const PUT = async <T>(
   options?: AxiosRequestConfig
 ) => {
   return await axios.put<T>(
-    `${import.meta.env.SCRYFALL_API + route}`,
+    `${import.meta.env.VITE_SCRYFALL_API + route}`,
     data,
     options && options
   );
@@ -26,7 +26,7 @@ export const PUT = async <T>(
 
 export const GET = async <T>(route: string, options?: AxiosRequestConfig) => {
   return await axios.get<T>(
-    `${import.meta.env.SCRYFALL_API + route}`,
+    `${import.meta.env.VITE_SCRYFALL_API + route}`,
     options && options
   );
 };
@@ -36,7 +36,7 @@ export const DELETE = async <T>(
   options?: AxiosRequestConfig
 ) => {
   return await axios.delete<T>(
-    `${import.meta.env.SCRYFALL_API + route}`,
+    `${import.meta.env.VITE_SCRYFALL_API + route}`,
     options && options
   );
 };
