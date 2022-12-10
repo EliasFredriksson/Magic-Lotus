@@ -1,4 +1,3 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect } from "react";
 import useFetch from "../hooks/useFetch/useFetch";
 import { getCardsRandom } from "../services/Cards.service";
@@ -19,16 +18,16 @@ const LandingPage = () => {
   }, [isLoading]);
 
   return (
-    <Flex className="App" border="5px solid red">
-      <Text>LANDING PAGE</Text>
-      <Button
+    <main className="App">
+      <h1>LANDING PAGE</h1>
+      <button
         onClick={() => {
           // triggerFetch();
         }}
       >
         FETCH
-      </Button>
-    </Flex>
+      </button>
+    </main>
   );
 };
 

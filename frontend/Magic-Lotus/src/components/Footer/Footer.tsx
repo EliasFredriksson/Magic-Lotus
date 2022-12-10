@@ -1,9 +1,8 @@
-import { Flex } from "@chakra-ui/react";
-
+import "./footer.scss";
 type Props = {};
 
 const Footer = (props: Props) => {
-  return <Flex direction="column">Footer</Flex>;
+  return <footer>Footer</footer>;
 };
 
 export default Footer;

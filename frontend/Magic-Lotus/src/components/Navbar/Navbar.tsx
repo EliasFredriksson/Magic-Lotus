@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@chakra-ui/react";
+import "./navBar.scss";
 import { useNavigate } from "react-router-dom";
 
 import NAVBAR_CONFIGS from "../../constants/NAVBAR_CONFIG";
@@ -6,21 +6,20 @@ import NAVBAR_CONFIGS from "../../constants/NAVBAR_CONFIG";
 const Navbar = () => {
   const navigate = useNavigate();
   return (
-    <Box backgroundColor="primary.500" p="m">
-      <Stack direction="row" gap="m">
+    <nav className="main-navbar">
+      <div>
         {NAVBAR_CONFIGS.default.map((link) => (
-          <Button
-            size="md"
+          <button
             key={link.to}
             onClick={() => {
               navigate(link.to);
             }}
           >
             {link.text}
-          </Button>
+          </button>
         ))}
-      </Stack>
-    </Box>
+      </div>
+    </nav>
   );
 };
 

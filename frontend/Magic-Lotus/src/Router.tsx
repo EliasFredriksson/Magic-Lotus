@@ -43,7 +43,7 @@ const Router = () => {
       .replace(/\[\.{3}.+\]/, "*")
       .replace(/\[(.+)\]/, ":$1")
       .toLowerCase()
-      .replace("/index", "");
+      .replace("/Page", "");
 
     return { path, component: lazy(LAZY_ROUTES[route]) };
   });
