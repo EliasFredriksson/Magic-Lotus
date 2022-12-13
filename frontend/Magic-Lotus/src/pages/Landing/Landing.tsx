@@ -1,8 +1,9 @@
+import "./landing.scss";
 import { useEffect } from "react";
-import useFetch from "../hooks/useFetch/useFetch";
-import { getCardsRandom } from "../services/Cards.service";
+import useFetch from "../../hooks/useFetch/useFetch";
+import { getCardsRandom } from "../../services/Cards.service";
 
-const LandingPage = () => {
+const Landing = () => {
   const { isLoading, error, success, data, triggerFetch, abort } =
     useFetch<string>({
       initValue: "",
@@ -31,4 +32,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default Landing;

@@ -1,5 +1,5 @@
 import ICard from "../models/interfaces/ICard";
-import { GET } from "./ServiceBase";
+import { GET } from "./serviceBase/ServiceBase";
 
 // ================================================= GET =================================================
 // GET    /cards

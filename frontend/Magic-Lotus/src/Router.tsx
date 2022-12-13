@@ -1,55 +1,16 @@
-import { FunctionComponent, lazy, LazyExoticComponent, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Loader from "./components/Loader/Loader";
 import Layout from "./Layout";
 
-type IRoute = {
-  path: string;
-  component: LazyExoticComponent<React.FunctionComponent>;
-};
-type IStaticRoutes = {
-  [key: string]: FunctionComponent;
-};
-
-// ROUTES TO LOAD WITH EAGER (Not lazy)
-// SPECIFY WHICH FILES TO LOAD
-const LOADED_ROUTES: Record<string, any> = import.meta.glob(
-  "/src/pages/(_app|404)/index.tsx",
-  {
-    eager: true,
-  }
-);
-// ROUTES TO LOAD WITH LAZY
-const LAZY_ROUTES: Record<string, () => any> = import.meta.glob(
-  "/src/pages/**/[a-zA-Z[]*.tsx"
-);
-
 const Router = () => {
-  // CONVERT LOADED ROUTES INTO A IStaticRoutes OBJECT
-  const loaded_routes: IStaticRoutes = Object.keys(LOADED_ROUTES).reduce(
-    (preserved, route) => {
-      const key = route
-        .replace(/\/src\/pages\/|\.tsx$/g, "")
-        .toLowerCase()
-        .replace("/index", "");
-      return { ...preserved, [key]: LOADED_ROUTES[route].default };
-    },
-    {}
-  );
-  // CONVERT LOADED ROUTES INTO A LIST OF IRoutes OBJECTS
-  const lazy_routes: IRoute[] = Object.keys(LAZY_ROUTES).map((route) => {
-    const path = route
-      .replace(/\/src\/pages|index|\.tsx$/g, "")
-      .replace(/\[\.{3}.+\]/, "*")
-      .replace(/\[(.+)\]/, ":$1")
-      .toLowerCase()
-      .replace("/Page", "");
-
-    return { path, component: lazy(LAZY_ROUTES[route]) };
-  });
-
-  // ########## LOADED ROUTES ##########
-  const NotFound = loaded_routes?.["404"] || <></>;
+  // LAZY IMPORTS
+  const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
+  const Landing = lazy(() => import("./pages/Landing/Landing"));
+  const Login = lazy(() => import("./pages/Login/Login"));
+  const Register = lazy(() => import("./pages/Register/Register"));
+  const Profile = lazy(() => import("./pages/Profile/Profile"));
+  const Settings = lazy(() => import("./pages/Settings/Settings"));
 
   return (
     <BrowserRouter>
@@ -57,14 +18,13 @@ const Router = () => {
         <Routes>
           {/* LAYOUT FILE */}
           <Route element={<Layout />}>
-            {/* ### MAP OUR LAZY ROUTES ### */}
-            {lazy_routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={<route.component />}
-              />
-            ))}
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+
+            {/* NOT FOUND (404) */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

@@ -1,3 +1,5 @@
+import "./login.scss";
+
 type Props = {};
 
 const Login = (props: Props) => {
