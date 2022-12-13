@@ -1,13 +1,65 @@
+@use "./styles/all" as *;
+
+// RESET ALL PADDING AND MARGINS.
+* {
+  margin: 0;
+  padding: 0;
+}
+
+// MAKE SURE ALL TAGS USE BORDER-BOX SIZING.
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+// MAKE SURE ALL HEADINGS USE THE HEADING FONT.
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $heading-font;
+}
+
+// ENSURE THAT NO TEXT EVER OVERFLOWS PARENTS. INSTEAD BREAKS. AND BY DEFAULT INHERITS FONT.
+input,
+textarea,
+button,
+select,
+p,
+pre {
+  font: inherit;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+// RESET IMAGES ETC SO THEY SCALE ACORDING TO PARENT.
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+// DEFAULT SETTINGS FOR THE DOCUMENT.
 html {
+  // ENFORCE SMOOTH SCROLLING EVERYWHERE.
   scroll-behavior: smooth;
+
+  // DEFINE WHICH COLOR SCHEMES ARE AVALIBLE.
+  color-scheme: dark light;
+
+  // DEFAULT FONT SIZE. FOLLOWS THE GOLDEN RATIO.
+  font-family: $main-font;
+  font-size: 62.5%;
+
   #root {
+    // DEFAULT BEHAVIOR FOR THE ROOT ENTRY POINT.
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-  }
-  p,
-  pre {
-    word-break: break-word;
-    white-space: pre-wrap;
   }
 }
