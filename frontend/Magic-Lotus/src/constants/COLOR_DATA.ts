@@ -1,20 +1,6 @@
-// COLOR ABBVERATIONS
-const ABBVERATIONS = ["W", "U", "B", "R", "G"] as const;
-export type IColorAbbveration = typeof ABBVERATIONS[number];
-
-// COLOR FULL NAMES
-const COLOR_NAMES = ["White", "Blue", "Black", "Red", "Green"] as const;
-export type IColorName = typeof COLOR_NAMES[number];
-
-// COLOR LAND NAMES
-const COLOR_LAND_NAMES = [
-  "Plains",
-  "Island",
-  "Swamp",
-  "Mountain",
-  "Forest",
-] as const;
-export type IColorLand = typeof COLOR_LAND_NAMES[number];
+import BasicLand from "../models/types/BasicLand";
+import ColorAbbveration from "../models/types/ColorAbbveration";
+import ColorName from "../models/types/ColorName";
 
 // COLOR MANA SYMBOLS PUBLIC PATHS
 const MANA_SYMBOL_URLS = [
@@ -24,17 +10,17 @@ const MANA_SYMBOL_URLS = [
   "/Mana_Symbols/Mountain.svg",
   "/Mana_Symbols/Forest.svg",
 ] as const;
-export type IColorSymbol = typeof MANA_SYMBOL_URLS[number];
+export type ColorSymbol = typeof MANA_SYMBOL_URLS[number];
 
 // ############ COLOR DATA ############
-export type IColor = {
-  [Property in IColorLand]: {
-    abbveration: IColorAbbveration;
-    color: IColorName;
-    symbolUrl: IColorSymbol;
+type Color = {
+  [Property in BasicLand]: {
+    abbveration: ColorAbbveration;
+    color: ColorName;
+    symbolUrl: ColorSymbol;
   };
 };
-const COLOR_DATA: IColor = {
+const COLOR_DATA: Color = {
   Plains: {
     abbveration: "W",
     color: "White",

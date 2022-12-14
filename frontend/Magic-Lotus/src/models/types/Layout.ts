@@ -20,6 +20,7 @@ const LAYOUTS = [
   "augment",
   "art_series",
   "reversible_card",
-];
+] as const;
 // TYPE
-export type ILayout = typeof LAYOUTS[number];
+type Layout = typeof LAYOUTS[number];
+export default Layout;
