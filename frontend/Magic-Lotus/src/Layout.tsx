@@ -7,12 +7,13 @@ const Layout = () => {
     <main
       className="layout"
       style={{
+        flexGrow: 1,
         display: "flex",
         flexDirection: "column",
       }}
     >
       <Navbar />
-      <div className="page-content">
+      <div className="page-content" style={{ flexGrow: 1 }}>
         <Outlet />
       </div>
       <Footer />

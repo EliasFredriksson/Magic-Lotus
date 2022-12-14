@@ -1,0 +1,10 @@
+####################### useOutsideClick #######################
+
+HOW TO USE:
+You pass two props:
+    - refObject:   Which is a reference (useRef hook).
+    - Arrow function which will run when you click outside the container the reference points to.
+
+PURPOSE:
+    To easily detect if the user clicks outside of the component.
+    To close a dropdown for example.

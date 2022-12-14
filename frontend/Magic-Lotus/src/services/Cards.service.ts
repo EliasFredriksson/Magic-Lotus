@@ -1,27 +1,13 @@
-import ICard from "../models/interfaces/ICard";
-import { GET } from "./serviceBase/ServiceBase";
-
 // ================================================= GET =================================================
 // GET    /cards
-export const getCards = async (signal: AbortSignal) => {
-  return await GET<any>(`cards/random`, {
-    signal,
-  });
-};
 
 // GET    /cards/random
+// QUERY PARAMETERS
+export const ROUTE_GET_CARDS_RANDOM = "cards/random";
 export interface IGetCardsRandom {
-  q: string;
-  format: string;
-  face: string;
-  version: string;
-  pretty: boolean;
+  q?: string;
+  format?: string;
+  face?: string;
+  version?: string;
+  pretty?: boolean;
 }
-export const getCardsRandom = async (
-  signal: AbortSignal,
-  params: IGetCardsRandom
-) => {
-  return await GET<ICard>(`cards/random`, {
-    signal,
-  });
-};

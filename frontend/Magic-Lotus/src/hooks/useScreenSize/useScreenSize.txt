@@ -1,0 +1,18 @@
+------------------------------------------------------------------------------
+################################# HOW TO USE #################################
+------------------------------------------------------------------------------
+
+############## REGULAR ##############
+const { size, breakpoints } = useScreenSize();
+
+############## REGULAR (Only size) ##############
+const { size } = useScreenSize();
+
+############## REGULAR (Only breakpoints) ##############
+const { breakpoints } = useScreenSize();
+
+############## TO DESCONSTRUCT BREAKPOINTS ##############
+const {
+   breakpoints: { IS_MOBILE, IS_TABLET_SMALL, IS_TABLET_BIG, IS_LAPTOP },
+} = useScreenSize();
+
