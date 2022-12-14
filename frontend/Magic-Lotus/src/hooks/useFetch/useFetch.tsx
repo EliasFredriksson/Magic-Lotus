@@ -1,34 +1,35 @@
-import { AxiosResponse } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import { MethodName, METHODS_MAP } from "./ServiceBase";
+
+interface IServiceResponse<IResult> {
+  success: boolean;
+  error: string | null;
+  data: IResult | null;
+}
 
 interface ITriggerFetch<QParams> {
   params?: QParams;
   data?: any;
 }
 
-interface IProps<QParams> {
+interface IProps<IResult> {
   method: MethodName;
   route: string;
   debug?: boolean;
+  onFetched: (res: IServiceResponse<IResult>) => void;
+  onError?: (error: Error) => void;
 }
 
 const useFetch = <QParams, IResult>(
-  props: IProps<QParams>
+  props: IProps<IResult>
 ): {
   isLoading: boolean;
-  success: boolean;
-  error: string;
-  res: AxiosResponse<IResult> | null;
   triggerFetch: (queryParams: ITriggerFetch<QParams>) => Promise<void>;
   abort: () => void;
 } => {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const abortControllerRef = useRef<AbortController>(new AbortController());
-  const [res, setRes] = useState<AxiosResponse<IResult> | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const abort = useCallback(() => {
     if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -37,7 +38,6 @@ const useFetch = <QParams, IResult>(
   const triggerFetch = useCallback(async (args: ITriggerFetch<QParams>) => {
     setIsLoading(true);
     try {
-      setRes(null);
       if (abortControllerRef.current) abortControllerRef.current.abort();
       abortControllerRef.current = new AbortController();
 
@@ -55,21 +55,26 @@ const useFetch = <QParams, IResult>(
         },
       });
 
+      // IF DEBUG, LOG INFORMATION TO CONSOLE.
       if (props.debug) debug(query, data, res);
 
       // VERIFY THE STATUS CODE IS 2XX
       if (`${res.status}`.startsWith("2")) {
-        setSuccess(true);
-        setError("");
+        props.onFetched({
+          success: true,
+          error: null,
+          data: res.data,
+        });
       } else {
-        setSuccess(false);
-        setError(res.statusText);
+        props.onFetched({
+          success: false,
+          error: res.statusText,
+          data: null,
+        });
       }
-
-      setRes(res);
     } catch (error) {
-      if ((error as Error).name === "AbortError") return;
-      setError((error as Error).message);
+      // if ((error as Error).name === "CanceledError") return;
+      if (props.onError) props.onError(error as Error);
     }
     setIsLoading(false);
   }, []);
@@ -88,9 +93,6 @@ const useFetch = <QParams, IResult>(
 
   return {
     isLoading,
-    success,
-    error,
-    res,
     triggerFetch,
     abort,
   };

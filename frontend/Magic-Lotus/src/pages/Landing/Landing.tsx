@@ -2,29 +2,32 @@ import "./landing.scss";
 import useFetch from "../../hooks/useFetch/useFetch";
 import {
   ROUTE_GET_CARDS_RANDOM,
-  IGetCardsRandom,
+  IGetCardsRandomParams,
+  IGetCardsRandomResult,
 } from "../../services/Cards.service";
-import useUpdateEffect from "../../hooks/useUpdateEffect/useUpdateEffect";
+import { useEffect } from "react";
+import ICard from "../../models/interfaces/ICard";
 
 const Landing = () => {
-  const { isLoading, error, success, res, triggerFetch, abort } = useFetch<
-    IGetCardsRandom,
-    any
+  const { isLoading, triggerFetch, abort } = useFetch<
+    IGetCardsRandomParams,
+    ICard
   >({
     method: "GET",
     route: ROUTE_GET_CARDS_RANDOM,
+    onFetched: (res) => {
+      console.log("RES: ", res);
+    },
+    onError: (error) => {
+      console.log("ERROR: ", error);
+    },
   });
 
-  useUpdateEffect(() => {
-    if (!isLoading) {
-      console.log("RES: ", res);
-    }
-
-    // IF UNMOUNT, ABORT
+  useEffect(() => {
     return () => {
       abort();
     };
-  }, [isLoading]);
+  }, []);
 
   return (
     <main className="App">
@@ -35,7 +38,6 @@ const Landing = () => {
             params: {
               q: "Force of will",
             },
-            data: null,
           });
         }}
       >
