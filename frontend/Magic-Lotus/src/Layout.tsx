@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar/Navbar";
 
 const Layout = () => {
   return (
-    <main
+    <div
       className="layout"
       style={{
         flexGrow: 1,
@@ -13,11 +13,9 @@ const Layout = () => {
       }}
     >
       <Navbar />
-      <div className="page-content" style={{ flexGrow: 1 }}>
-        <Outlet />
-      </div>
+      <Outlet />
       <Footer />
-    </main>
+    </div>
   );
 };
 

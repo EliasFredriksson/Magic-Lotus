@@ -11,6 +11,7 @@ const Router = () => {
   const Register = lazy(() => import("./pages/Register/Register"));
   const Profile = lazy(() => import("./pages/Profile/Profile"));
   const Settings = lazy(() => import("./pages/Settings/Settings"));
+  const Search = lazy(() => import("./pages/Search/Search"));
 
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ const Router = () => {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
 

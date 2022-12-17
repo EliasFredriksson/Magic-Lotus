@@ -1,40 +1,25 @@
 import "./landing.scss";
 import useFetch from "../../hooks/useFetch/useFetch";
-import {
-  ROUTE_GET_CARDS_RANDOM,
-  IGetCardsRandomParams,
-} from "../../services/Cards.service";
-import { useEffect } from "react";
+import { IGetCardsRandomParams } from "../../services/Cards.service";
 import ICard from "../../models/interfaces/ICard";
 
 const Landing = () => {
-  const { isLoading, triggerFetch, abort } = useFetch<
+  const { isLoading, triggerFetch } = useFetch<
     IGetCardsRandomParams,
+    any,
     ICard
   >({
+    base: "STRAPI",
     method: "GET",
-    route: ROUTE_GET_CARDS_RANDOM,
-    onFetched: (res) => {
-      console.log("RES: ", res);
-    },
+    route: "catalogs",
   });
-
-  useEffect(() => {
-    return () => {
-      abort();
-    };
-  }, []);
 
   return (
     <main className="App">
       <h1>LANDING PAGE</h1>
       <button
         onClick={() => {
-          triggerFetch({
-            params: {
-              q: "Force of will",
-            },
-          });
+          triggerFetch();
         }}
       >
         FETCH

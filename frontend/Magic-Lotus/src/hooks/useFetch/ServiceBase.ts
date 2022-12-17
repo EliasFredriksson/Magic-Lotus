@@ -1,39 +1,56 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 interface IFetchOptions {
+  base: "SCRYFALL" | "STRAPI";
   route: string;
-  data?: any;
   options: AxiosRequestConfig;
+  data?: any;
 }
 
+const BASE_SCRYFALL = import.meta.env.VITE_SCRYFALL_API;
+const BASE_STRAPI = import.meta.env.VITE_STRAPI_API;
+
 const POST = async <T>(args: IFetchOptions) => {
+  let base;
+  if (args.base === "STRAPI") base = BASE_STRAPI;
+  else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
+  if (!base) throw new Error("No baseURL provided for POST (ServiceBase.ts)");
   return await axios.post<T>(
-    `${import.meta.env.VITE_SCRYFALL_API + args.route}`,
+    `${base + args.route}`,
     args.data && args.data,
     args.options
   );
 };
 
 const PUT = async <T>(args: IFetchOptions) => {
+  let base;
+  if (args.base === "STRAPI") base = BASE_STRAPI;
+  else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
+  if (!base) throw new Error("No baseURL provided for PUT (ServiceBase.ts)");
   return await axios.put<T>(
-    `${import.meta.env.VITE_SCRYFALL_API + args.route}`,
+    `${base + args.route}`,
     args.data && args.data,
     args.options
   );
 };
 
 const GET = async <T>(args: IFetchOptions) => {
-  return await axios.get<T>(
-    `${import.meta.env.VITE_SCRYFALL_API + args.route}`,
-    args.options && args.options
-  );
+  let base;
+  if (args.base === "STRAPI") base = base = BASE_STRAPI;
+  else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
+  if (!base) throw new Error("No baseURL provided for GET (ServiceBase.ts)");
+
+  console.log("BASE: ", base);
+
+  return await axios.get<T>(`${base + args.route}`, args.options);
 };
 
 const DELETE = async <T>(args: IFetchOptions) => {
-  return await axios.delete<T>(
-    `${import.meta.env.VITE_SCRYFALL_API + args.route}`,
-    args.options && args.options
-  );
+  let base;
+  if (args.base === "STRAPI") base = base = BASE_STRAPI;
+  else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
+  if (!base) throw new Error("No baseURL provided for DELETE (ServiceBase.ts)");
+  return await axios.delete<T>(`${base + args.route}`, args.options);
 };
 
 // EXPORTED FETCH METHODS

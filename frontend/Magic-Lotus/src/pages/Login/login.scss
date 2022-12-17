@@ -1,0 +1,15 @@
+#login-page {
+  flex-grow: 1;
+  background-color: red;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    font-size: 3rem;
+  }
+}
