@@ -1,7 +1,7 @@
 // PRIMARY COLOR
 $primary-100: #b97ff4;
 $primary-500: #6d31a8;
-$primary-800: #2f203d;
+$primary-800: #1b1324;
 
 // SECONDARY COLOR
 $secondary-100: #ffa64d;
@@ -13,8 +13,9 @@ $success-100: #5bf58d;
 $success-500: #2b7543;
 
 // ALERT COLOR
-$alert-100: #f46867;
-$alert-500: #753131;
+$alert-100: #ff6d6d;
+$alert-500: #ff0000;
+$alert-800: #850000;
 
 // GRAYS
 $gray-100: #d6d6ff;
@@ -26,3 +27,8 @@ $gray-900: #363640;
 // OTHER
 $black: #000;
 $white: #fff;
+$link-blue: #7f64f5;
+
+// ############### GRADIENTS ###############
+$main-gradient-dark: linear-gradient(45deg, $primary-800, $primary-500);
+$main-gradient-light: linear-gradient(45deg, $primary-500, $primary-100);

@@ -2,5 +2,14 @@
 @forward "./variables/colors";
 @forward "./variables/fonts";
 @forward "./variables/spacings";
+@forward "./variables/borders";
+@forward "./variables/breakpoints";
 
 // ALL MIXINS
+@forward "./mixins/display";
+@forward "./mixins/page";
+@forward "./mixins/input";
+@forward "./mixins/scheme";
+@forward "./mixins/label";
+@forward "./mixins/button";
+@forward "./mixins/breakpoint";

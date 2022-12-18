@@ -12,6 +12,10 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       to: "/login",
       text: "Login",
     },
+    {
+      to: "/register",
+      text: "Register",
+    },
   ],
   loggedIn: [
     {

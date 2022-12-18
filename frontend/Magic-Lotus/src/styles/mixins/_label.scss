@@ -1,0 +1,23 @@
+@use "../variables/colors" as *;
+@use "../variables/fonts" as *;
+@use "../variables/spacings" as *;
+@use "../variables/borders" as *;
+@use "./scheme" as *;
+@use "./breakpoint" as *;
+
+@mixin basic-label {
+  font-family: $heading-font;
+  font-size: $size-xl;
+  font-weight: $weight-medium;
+  border: 0;
+  transition: color 0.2s ease;
+
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+
+  @include breakpoint-laptop {
+    font-size: $size-l;
+  }
+}

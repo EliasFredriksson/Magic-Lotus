@@ -11,11 +11,11 @@ const Landing = () => {
   >({
     base: "STRAPI",
     method: "GET",
-    route: "catalogs",
+    route: "/catalogs",
   });
 
   return (
-    <main className="App">
+    <main id="landing-page">
       <h1>LANDING PAGE</h1>
       <button
         onClick={() => {

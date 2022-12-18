@@ -1,0 +1,17 @@
+@use "../variables/spacings" as *;
+@use "../variables/colors" as *;
+@use "./scheme" as *;
+
+@mixin page-base {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+
+  @include dark-mode {
+    background: $main-gradient-dark;
+  }
+  @include light-mode {
+    background: $main-gradient-light;
+  }
+}

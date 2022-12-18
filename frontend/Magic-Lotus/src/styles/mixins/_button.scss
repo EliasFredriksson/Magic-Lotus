@@ -1,0 +1,97 @@
+@use "../variables/colors" as *;
+@use "../variables/fonts" as *;
+@use "../variables/spacings" as *;
+@use "../variables/borders" as *;
+@use "./scheme" as *;
+@use "./breakpoint" as *;
+
+@mixin button-base {
+  font-family: $main-font;
+  font-size: $size-2xl;
+  font-weight: $weight-bold;
+  padding: $spacing-s $spacing-m;
+  border-radius: $border-radus-medium;
+  border: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @include breakpoint-laptop {
+    font-size: $size-l;
+  }
+}
+
+@mixin primary-button {
+  @include button-base;
+
+  @include dark-mode {
+    color: $white;
+    background-color: $primary-500;
+    &:hover {
+      background-color: $primary-100;
+    }
+  }
+  @include light-mode {
+    color: $primary-800;
+    background-color: $white;
+    &:hover {
+      background-color: $gray-100;
+    }
+  }
+}
+
+@mixin secondary-button {
+  @include button-base;
+
+  @include dark-mode {
+    color: $white;
+    background-color: $secondary-500;
+    &:hover {
+      background-color: $secondary-100;
+    }
+  }
+  @include light-mode {
+    color: $secondary-800;
+    background-color: $white;
+    &:hover {
+      background-color: $gray-100;
+    }
+  }
+}
+
+@mixin link-button {
+  font-family: $main-font;
+  font-size: $size-l;
+  background-color: transparent;
+  border: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  color: $link-blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+  &:hover {
+    color: $white;
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}

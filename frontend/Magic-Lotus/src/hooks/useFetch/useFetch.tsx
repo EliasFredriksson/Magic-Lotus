@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import useAuth from "../useAuth/useAuth";
@@ -7,11 +8,19 @@ interface IHeader {
   [key: string]: string;
 }
 
-interface IServiceResponse<IResult> {
-  success: boolean;
-  error: string;
+// #################################### DEFINE UNION SERVICE RESPONSE TO GET DYNAMIC TYPING ####################################
+interface ServiceResult<IResult> {
+  success: true;
   data: IResult;
 }
+interface ServiceError<IError> {
+  success: false;
+  data: IError;
+}
+type ServiceResponse<IResult, IError> =
+  | ServiceResult<IResult>
+  | ServiceError<IError>;
+// #############################################################################################################################
 
 interface ITriggerFetch<QParams, BodyParams> {
   params?: QParams;
@@ -26,13 +35,19 @@ interface IProps {
   debug?: boolean;
 }
 
-const useFetch = <QParams, BodyParams, IResult>(
+const debug = (query: string, data: any, res: any) => {
+  console.log("\n\nQUERY:\t", query);
+  console.log("DATA:\t", data);
+  console.log("RES\t\t", res, "\n\n\n");
+};
+
+const useFetch = <QParams, BodyParams, IResult = any, IError = any>(
   props: IProps
 ): {
   isLoading: boolean;
   triggerFetch: (
     queryParams?: ITriggerFetch<QParams, BodyParams>
-  ) => Promise<IServiceResponse<IResult>>;
+  ) => Promise<ServiceResponse<IResult, IError>>;
   abort: () => void;
 } => {
   const { credentials } = useAuth();
@@ -47,7 +62,7 @@ const useFetch = <QParams, BodyParams, IResult>(
   const triggerFetch = useCallback(
     async (
       args?: ITriggerFetch<QParams, BodyParams>
-    ): Promise<IServiceResponse<IResult>> => {
+    ): Promise<ServiceResponse<IResult, IError>> => {
       setIsLoading(true);
       try {
         if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -58,17 +73,6 @@ const useFetch = <QParams, BodyParams, IResult>(
 
         const query = convertObjectToQuery(args?.params);
         const data = args?.data ? args.data : null;
-
-        // let finalHeaders: IHeader | undefined = undefined;
-
-        // if (credentials.role !== "Public") {
-        //   finalHeaders = {
-        //     Authentication: `bearer ${credentials.jwt}`,
-        //     ...args?.headers,
-        //   };
-        // } else if (args?.headers) {
-        //   finalHeaders = args.headers;
-        // }
 
         const res = await method<IResult>({
           base: props.base,
@@ -83,39 +87,30 @@ const useFetch = <QParams, BodyParams, IResult>(
         // IF DEBUG, LOG INFORMATION TO CONSOLE.
         if (props.debug) debug(query, data, res);
 
-        // VERIFY THE STATUS CODE IS 2XX
+        // TURN OFF LOADING AND RETURN DATA.
         setIsLoading(false);
-        if (`${res.status}`.startsWith("2")) {
-          return {
-            success: true,
-            error: "",
-            data: res.data,
-          };
-        } else {
-          return {
-            success: false,
-            error: res.statusText,
-            data: res.data,
-          };
-        }
+        return {
+          success: true,
+          data: res.data,
+        };
       } catch (error) {
         // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
         if (!((error as Error).name === "CanceledError")) setIsLoading(false);
+        if ((error as Error).name === "AxiosError") {
+          return {
+            success: false,
+            data: (error as AxiosError<IError>).response?.data as IError,
+          };
+        }
         return {
           success: false,
-          error: (error as Error).message,
-          data: error as IResult,
+          data: error as IError,
         };
       }
     },
+
     []
   );
-
-  const debug = useCallback((query: string, data: any, res: any) => {
-    console.log("\n\nQUERY:\t", query);
-    console.log("DATA:\t", data);
-    console.log("RES\t\t", res, "\n\n\n");
-  }, []);
 
   useEffect(() => {
     return () => {

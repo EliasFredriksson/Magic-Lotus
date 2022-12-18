@@ -1,0 +1,5 @@
+@use "../../styles/all" as *;
+
+#landing-page {
+  @include page-base;
+}

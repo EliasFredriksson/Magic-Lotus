@@ -1,0 +1,64 @@
+@use "../../styles/all" as *;
+
+.spinner-component {
+  border-radius: 50%;
+
+  animation: spin 1s linear infinite;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+
+  filter: drop-shadow(0px 0px 0.2rem lightgrey);
+
+  @include light-mode {
+    border-top: 0.5rem solid $white;
+    border-right: 0.5rem solid $primary-100;
+    border-bottom: 0.5rem solid $primary-100;
+    border-left: 0.5rem solid $primary-100;
+  }
+
+  @include dark-mode {
+    border-top: 0.5rem solid $primary-500;
+    border-right: 0.5rem solid $white;
+    border-bottom: 0.5rem solid $white;
+    border-left: 0.5rem solid $white;
+  }
+
+  &.x-small {
+    border-width: 0.25rem;
+    height: $size-s;
+    width: $size-s;
+  }
+
+  &.small {
+    border-width: 0.25rem;
+    height: $size-l;
+    width: $size-l;
+  }
+
+  &.medium {
+    border-width: 0.4rem;
+    height: $size-2xl;
+    width: $size-2xl;
+  }
+
+  &.large {
+    border-width: 0.6rem;
+    height: $size-4xl;
+    width: $size-4xl;
+  }
+
+  &.x-large {
+    border-width: 1rem;
+    height: $size-6xl;
+    width: $size-6xl;
+  }
+}
+
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}

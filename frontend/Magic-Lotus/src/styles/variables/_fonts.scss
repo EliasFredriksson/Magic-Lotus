@@ -1,30 +1,33 @@
+// FONT SIZES
+$size-4xs: 0.75rem;
+$size-3xs: 0.875rem;
+$size-2xs: 1rem;
+$size-xs: 1.125rem;
+$size-s: 1.25rem;
+$size-m: 1.5rem;
+$size-l: 1.875rem;
+$size-xl: 2.25rem;
+$size-2xl: 3rem;
+$size-3xl: 3.75rem;
+$size-4xl: 4.5rem;
+$size-5xl: 6rem;
+$size-6xl: 8rem;
+
+// FONT WEIGHTS
+$weight-light: 100;
+$weight-medium: 400;
+$weight-bold: 700;
+
 // FONT FAMILIES
 // BODY FONT
-$main-font: "Nunito";
+$main-font: Nunito;
 @font-face {
   font-family: $main-font;
   src: url("fonts/Nunito-Regular.ttf");
-  font-weight: 400;
 }
 // HEADING FONT
-$heading-font: "Montserrat";
+$heading-font: Montserrat;
 @font-face {
   font-family: $heading-font;
   src: url("fonts/Montserrat-Regular.ttf");
-  font-weight: 700;
 }
-
-// FONT SIZES
-$size-xs: 0.75rem;
-$size-sm: 0.875rem;
-$size-md: 1rem;
-$size-lg: 1.125rem;
-$size-xl: 1.25rem;
-$size-2xl: 1.5rem;
-$size-3xl: 1.875rem;
-$size-4xl: 2.25rem;
-$size-5xl: 3rem;
-$size-6xl: 3.75rem;
-$size-7xl: 4.5rem;
-$size-8xl: 6rem;
-$size-9xl: 8rem;

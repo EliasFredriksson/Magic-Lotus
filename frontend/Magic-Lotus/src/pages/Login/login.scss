@@ -1,15 +1,21 @@
-#login-page {
-  flex-grow: 1;
-  background-color: red;
+@use "../../styles/all" as *;
 
-  display: flex;
-  flex-direction: column;
+#login-page {
+  @include page-base;
   justify-content: center;
   align-items: center;
 
-  form {
-    display: flex;
-    flex-direction: column;
-    font-size: 3rem;
+  & > h1 {
+    font-size: $size-4xl;
+    color: $white;
+  }
+
+  .login-form {
+    @include display-flex-column;
+    // gap: 2.5rem;
+
+    .link {
+      @include link-button;
+    }
   }
 }

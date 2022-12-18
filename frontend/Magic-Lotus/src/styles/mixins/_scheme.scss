@@ -1,0 +1,12 @@
+// DARK MODE DETECTION
+@mixin dark-mode {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+// LIGHT MODE DETECTION
+@mixin light-mode {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
