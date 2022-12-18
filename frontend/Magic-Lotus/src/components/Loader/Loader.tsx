@@ -1,9 +1,10 @@
+import Spinner from "../Spinner/Spinner";
 import "./loader.scss";
 
 const Loader = () => {
   return (
-    <div>
-      <h1>LOADER</h1>
+    <div className="loader-component">
+      <Spinner size="x-large" />
     </div>
   );
 };
