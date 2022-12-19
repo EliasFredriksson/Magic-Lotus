@@ -4,7 +4,6 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
   width: 100vw;
 
   display: flex;
@@ -18,6 +17,14 @@
   }
   @include light-mode {
     background: $main-gradient-light;
+  }
+
+  margin-top: $size-6xl;
+  height: calc(100vh - $size-6xl);
+
+  @include breakpoint-laptop {
+    margin-top: $size-4xl;
+    height: calc(100vh - $size-4xl);
   }
 
   @include breakpoint-laptop {

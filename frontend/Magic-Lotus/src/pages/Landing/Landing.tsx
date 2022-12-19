@@ -1,17 +1,21 @@
 import "./landing.scss";
 import useFetch from "../../hooks/useFetch/useFetch";
-import { IGetCardsRandomParams } from "../../services/Cards.service";
-import ICard from "../../models/interfaces/ICard";
+import { IGetCardsRandomParams } from "../../services/scryfall/Cards.service";
+import ICard from "../../models/scryfall/interfaces/ICard";
+import Input from "../../components/Input/Input";
+import { useState } from "react";
 
 const Landing = () => {
+  const [searchText, setSearchText] = useState("");
+
   const { isLoading, triggerFetch } = useFetch<
     IGetCardsRandomParams,
     any,
     ICard
   >({
-    base: "STRAPI",
+    base: "SCRYFALL",
     method: "GET",
-    route: "/catalogs",
+    route: "/cards/random",
   });
 
   return (
@@ -24,6 +28,15 @@ const Landing = () => {
       >
         FETCH
       </button>
+
+      <Input
+        type="text"
+        placeholder="Search for cards"
+        value={searchText}
+        onChange={(e) => {
+          setSearchText(e.target.value);
+        }}
+      />
     </main>
   );
 };

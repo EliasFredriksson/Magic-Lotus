@@ -1,9 +1,10 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Loader from "./components/Loader/Loader";
+import { AnimatePresence } from "framer-motion";
+import { lazy } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./Layout";
 
 const Router = () => {
+  const location = useLocation();
   // LAZY IMPORTS
   const NotFound = lazy(() => import("./pages/NotFound/NotFound"));
   const Landing = lazy(() => import("./pages/Landing/Landing"));
@@ -14,24 +15,22 @@ const Router = () => {
   const Search = lazy(() => import("./pages/Search/Search"));
 
   return (
-    <BrowserRouter>
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {/* LAYOUT FILE */}
-          <Route element={<Layout />}>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* LAYOUT FILE */}
+        <Route element={<Layout />}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
 
-            {/* NOT FOUND (404) */}
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+          {/* NOT FOUND (404) */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </AnimatePresence>
   );
 };
 

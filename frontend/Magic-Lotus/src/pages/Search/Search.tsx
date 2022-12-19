@@ -3,7 +3,7 @@ import "./search.scss";
 type Props = {};
 
 const Search = (props: Props) => {
-  return <div>SEARCH PAGE</div>;
+  return <main id="search-page">SEARCH PAGE</main>;
 };
 
 export default Search;

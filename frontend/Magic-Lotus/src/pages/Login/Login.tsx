@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button/Button";
+import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
 import Spinner from "../../components/Spinner/Spinner";
 import { isValidityValid } from "../../helpers/InputValidityHelpers";
@@ -9,8 +10,8 @@ import useAuth from "../../hooks/useAuth/useAuth";
 import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
-import IStrapiError from "../../models/interfaces/strapi/IStrapiError";
-import { IStrapiLogin } from "../../models/interfaces/strapi/IStrapiLogin";
+import IStrapiError from "../../models/strapi/interfaces/IStrapiError";
+import { IStrapiLogin } from "../../models/strapi/interfaces/IStrapiLogin";
 import { IStrapiAuthBody } from "../../services/StrapiAuth.service";
 import "./login.scss";
 
@@ -113,32 +114,34 @@ const Login = () => {
         });
 
         if (res.success) {
+          login({
+            user: res.data.user,
+            jwt: res.data.jwt,
+            role: "Admin",
+          });
           navigate("/");
         } else {
           const { error } = res.data;
+
+          if (!error) {
+            console.warn("UNKNOWN ERROR!: ", res.data);
+            return;
+          }
 
           if (error.name === "ValidationError") {
             setLiveValidate(true);
             setErrorMsg("Incorrect username / password. Try again.");
             openErrorModal();
+            setValidationMsg({
+              username: "",
+              password: "",
+            });
             setInputValidity({
               username: false,
               password: false,
             });
-          } else {
           }
-          // alert(res.data.error.message);
         }
-
-        console.log("LOGIN FAILED...\n\n", res);
-
-        // login({
-        //   user: loginRes.data.user,
-        //   jwt: loginRes.data.jwt,
-        //   role: "Admin",
-        // });
-
-        // navigate("/");
       }
     },
     [inputState]
@@ -148,45 +151,46 @@ const Login = () => {
     <main id="login-page">
       <h1>Login</h1>
 
-      <form onSubmit={handleSubmit} className="login-form">
-        <Input
-          label="Username"
-          id="login-username"
-          type="text"
-          placeholder="Username"
-          value={inputState.username}
-          onChange={(e) => {
-            setInputState({
-              username: e.target.value,
-            });
-          }}
-          isValid={inputValidity.username}
-          validationMsg={validationMsg.username}
-        />
+      <Card>
+        <form onSubmit={handleSubmit} className="login-form">
+          <Input
+            label="Username"
+            id="login-username"
+            type="text"
+            placeholder="Your username"
+            value={inputState.username}
+            onChange={(e) => {
+              setInputState({
+                username: e.target.value,
+              });
+            }}
+            isValid={inputValidity.username}
+            validationMsg={validationMsg.username}
+          />
 
-        <Input
-          label="Password"
-          id="login-password"
-          type="password"
-          placeholder="Password"
-          value={inputState.password}
-          onChange={(e) => {
-            setInputState({
-              password: e.target.value,
-            });
-          }}
-          isValid={inputValidity.password}
-          validationMsg={validationMsg.password}
-        />
+          <Input
+            label="Password"
+            id="login-password"
+            type="password"
+            placeholder="Your password"
+            value={inputState.password}
+            onChange={(e) => {
+              setInputState({
+                password: e.target.value,
+              });
+            }}
+            isValid={inputValidity.password}
+            validationMsg={validationMsg.password}
+          />
 
-        <Button type="submit">
-          {FetchLogin.isLoading ? <Spinner size="medium" /> : "Login"}
+          <Button type="submit">
+            {FetchLogin.isLoading ? <Spinner size="medium" /> : "Login"}
+          </Button>
+        </form>
+        <Button variant="link">
+          <Link to="/register">Register</Link>
         </Button>
-
-        <Link to="/register" className="link">
-          <Button variant="link">Register</Button>
-        </Link>
-      </form>
+      </Card>
       <Button onClick={openErrorModal}>Open modal</Button>
       {errorModal}
     </main>

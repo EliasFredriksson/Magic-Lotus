@@ -1,6 +1,7 @@
-import ICard from "../models/interfaces/ICard";
 // ================================================= GET =================================================
 // GET    /cards
+
+import ICard from "../../models/scryfall/interfaces/ICard";
 
 // ###########################
 // GET    /cards/random

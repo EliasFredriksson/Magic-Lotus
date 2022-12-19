@@ -1,0 +1,12 @@
+@use "../../styles/all" as *;
+
+#profile-page {
+  @include page-base;
+
+  align-items: center;
+
+  .middle {
+    flex-grow: 1;
+    background-color: $black;
+  }
+}

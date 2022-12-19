@@ -34,6 +34,8 @@ const PUT = async <T>(args: IFetchOptions) => {
   );
 };
 
+// Access-Control-Allow-Origin: http://localhost:9999
+
 const GET = async <T>(args: IFetchOptions) => {
   let base;
   if (args.base === "STRAPI") base = base = BASE_STRAPI;
@@ -42,7 +44,13 @@ const GET = async <T>(args: IFetchOptions) => {
 
   console.log("BASE: ", base);
 
-  return await axios.get<T>(`${base + args.route}`, args.options);
+  return await axios.get<T>(`${base + args.route}`, {
+    headers: {
+      "Access-Control-Allow-Origin": "http://localhost:3000",
+      ...args.options.headers,
+    },
+    ...args.options,
+  });
 };
 
 const DELETE = async <T>(args: IFetchOptions) => {

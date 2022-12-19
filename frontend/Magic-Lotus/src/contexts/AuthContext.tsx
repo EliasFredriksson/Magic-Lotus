@@ -5,7 +5,7 @@ import useObjectState from "../hooks/useObjectState/useObjectState";
 import {
   BLANK_STRAPI_USER,
   IStrapiUser,
-} from "../models/interfaces/strapi/IStrapiUser";
+} from "../models/strapi/interfaces/IStrapiUser";
 
 interface ICredentials {
   user: IStrapiUser;
@@ -35,7 +35,7 @@ export const AuthContextProvider = (props: IProps) => {
 
   const FetchUser = useFetch<null, null, any>({
     base: "STRAPI",
-    route: "users/me",
+    route: "/users/me",
     method: "GET",
   });
 

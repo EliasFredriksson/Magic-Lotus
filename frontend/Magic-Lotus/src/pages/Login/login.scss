@@ -13,9 +13,5 @@
   .login-form {
     @include display-flex-column;
     // gap: 2.5rem;
-
-    .link {
-      @include link-button;
-    }
   }
 }

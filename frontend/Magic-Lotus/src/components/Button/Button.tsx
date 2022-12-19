@@ -11,6 +11,7 @@ const Button = ({
   variant,
   className,
   children,
+  tabIndex,
   borderRadius,
   ...rest
 }: Props) => {
@@ -19,6 +20,7 @@ const Button = ({
       className={`button-component ${variant ? variant : "primary"} ${
         className ? className : ""
       } ${borderRadius ? borderRadius : "medium"}`}
+      tabIndex={variant === "link" ? -1 : tabIndex}
       {...rest}
     >
       {children}

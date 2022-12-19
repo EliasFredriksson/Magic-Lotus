@@ -3,13 +3,24 @@
 .main-navbar {
   @include display-flex-row;
   padding: $spacing-m;
-  box-shadow: -0.5rem -1rem 5rem 2rem $gray-1100;
+
   z-index: 10;
 
   @include dark-mode {
     background: $navbar-gradient-dark;
+    box-shadow: -0.5rem -1rem 5rem 2rem $gray-1100;
   }
   @include light-mode {
     background: $navbar-gradient-light;
+    box-shadow: -0.5rem -1rem 5rem 2rem $primary-500;
+  }
+
+  height: $size-6xl;
+  @include breakpoint-laptop {
+    height: $size-4xl;
+  }
+
+  .button-component {
+    max-width: fit-content;
   }
 }

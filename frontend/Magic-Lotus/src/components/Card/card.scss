@@ -1,0 +1,16 @@
+@use "../../styles/all" as *;
+
+.card-component {
+  @include display-flex-column;
+  padding: $spacing-l;
+  border-radius: $border-radius-large;
+
+  @include light-mode {
+    box-shadow: 0 1rem 2rem 0 $gray-900;
+    background: $card-gradient-light;
+  }
+  @include dark-mode {
+    box-shadow: 0 1rem 2rem 0 $gray-1100;
+    background: $card-gradient-dark;
+  }
+}

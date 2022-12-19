@@ -11,6 +11,10 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       text: <FaHome />,
     },
     {
+      to: "/search",
+      text: "Search cards",
+    },
+    {
       to: "/login",
       text: "Login",
     },
@@ -25,6 +29,10 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       text: "Home",
     },
     {
+      to: "/search",
+      text: "Search cards",
+    },
+    {
       to: "/profile",
       text: "Profile",
     },
@@ -37,6 +45,10 @@ const NAVBAR_CONFIGS: INavbarConfig = {
     {
       to: "/",
       text: "Home",
+    },
+    {
+      to: "/search",
+      text: "Search cards",
     },
     {
       to: "/profile",

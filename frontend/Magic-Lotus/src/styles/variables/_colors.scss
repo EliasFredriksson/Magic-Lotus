@@ -32,8 +32,12 @@ $link-blue-dark: #7f64f5;
 $link-blue-light: #bfb1ff;
 
 // ############### GRADIENTS ###############
+// MAIN
 $main-gradient-dark: linear-gradient(45deg, $primary-800, $primary-500);
 $main-gradient-light: linear-gradient(45deg, $primary-500, $primary-100);
-
+// NAVBAR
 $navbar-gradient-dark: linear-gradient(-45deg, $primary-800, $primary-500);
 $navbar-gradient-light: linear-gradient(-45deg, $primary-500, $primary-100);
+// CARD
+$card-gradient-dark: linear-gradient(45deg, $primary-100, $gray-100);
+$card-gradient-light: linear-gradient(45deg, $gray-100, $white);

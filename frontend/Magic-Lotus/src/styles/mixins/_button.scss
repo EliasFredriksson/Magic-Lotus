@@ -5,7 +5,12 @@
 @use "./scheme" as *;
 @use "./breakpoint" as *;
 
-@mixin shadow-border($border-width, $color, $padding-v, $padding-h) {
+@mixin shadow-border(
+  $border-width,
+  $color,
+  $padding-v: inherit,
+  $padding-h: inherit
+) {
   box-shadow: 0 0 0 $border-width $color;
   margin: $border-width;
   padding: calc($padding-v - $border-width) calc($padding-h - $border-width);
@@ -54,8 +59,6 @@
     color: $white;
     background-color: $primary-100;
 
-    @include shadow-border(3px, $primary-100, $spacing-s, $spacing-m);
-
     &:hover {
       filter: brightness(110%);
     }
@@ -82,30 +85,44 @@
 }
 
 @mixin link-button {
-  font-family: $main-font;
-  font-size: $size-l;
   background-color: transparent;
   border: 0;
   transition: all 0.2s ease;
   cursor: pointer;
-  color: $link-blue-light;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  &:focus {
+  transition: all 0.2s ease;
+
+  & > a {
+    font-family: $main-font;
+    font-size: $size-l;
+    text-decoration: none;
+    transition: all 0.2s ease;
     border: 0;
     outline: 0;
+
+    &:focus {
+      border: 0;
+      outline: 0;
+      text-decoration: underline;
+    }
   }
-  &:hover {
+
+  &:hover > a {
     color: $white;
   }
   &:active {
     transform: scale(0.95);
   }
-
   @include dark-mode {
     color: $link-blue-dark;
+    text-decoration-color: $link-blue-dark;
+  }
+  @include light-mode {
+    color: $link-blue-light;
+    text-decoration-color: $link-blue-light;
   }
 }
 

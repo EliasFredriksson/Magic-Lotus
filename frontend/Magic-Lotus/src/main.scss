@@ -60,6 +60,14 @@ html {
     // DEFAULT BEHAVIOR FOR THE ROOT ENTRY POINT.
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    overflow: hidden;
+
+    @include light-mode {
+      background-color: $primary-500;
+    }
+    @include dark-mode {
+      background-color: $primary-800;
+    }
   }
 }
