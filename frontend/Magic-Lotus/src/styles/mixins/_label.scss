@@ -20,4 +20,12 @@
   @include breakpoint-laptop {
     font-size: $size-l;
   }
+
+  @include dark-mode {
+  }
+
+  @include light-mode {
+    // text-shadow: 0 0 2px lightgray;
+    color: $white;
+  }
 }

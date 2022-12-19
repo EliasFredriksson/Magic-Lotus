@@ -7,4 +7,20 @@
   &.secondary {
     @include secondary-button;
   }
+  &.link {
+    @include link-button;
+  }
+
+  &.small {
+    border-radius: $border-radius-small;
+  }
+  &.medium {
+    border-radius: $border-radius-medium;
+  }
+  &.large {
+    border-radius: $border-radius-large;
+  }
+  &.none {
+    border-radius: 0;
+  }
 }

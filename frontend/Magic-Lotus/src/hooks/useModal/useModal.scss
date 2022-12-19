@@ -1,6 +1,4 @@
-@import "../../styles_NEW_STRUCTURE/mixins/breakpoints";
-@import "../../styles_NEW_STRUCTURE/mixins/buttons";
-@import "../../styles_NEW_STRUCTURE/globalVariables";
+@use "../../styles/all" as *;
 
 @mixin flex_center {
   display: flex;
@@ -8,28 +6,7 @@
   align-items: center;
 }
 
-@mixin button_base {
-  font-family: $body-font;
-  font-size: 3rem;
-  padding: $spacing-m;
-  border: 0;
-  border-radius: $border-radius-small;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  transition: filter 0.2s ease, scale 0.2s ease;
-  cursor: pointer;
-  @include flex_center;
-
-  &:hover {
-    filter: brightness(110%);
-    scale: 1.025;
-  }
-
-  &:active {
-    scale: 0.9;
-  }
-}
-
-.admin-modal {
+.modal-component {
   width: 100%;
   height: 100vh;
   pointer-events: none;
@@ -44,7 +21,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, $primary-navy, $primary-blue);
     opacity: 0.75;
     transition: opacity 0.4s ease;
 
@@ -56,6 +32,13 @@
       opacity: 0;
       pointer-events: none;
       transition-delay: 0.2s;
+    }
+
+    @include dark-mode {
+      background: $main-gradient-dark;
+    }
+    @include light-mode {
+      background: $main-gradient-light;
     }
   }
 
@@ -74,7 +57,7 @@
     transition: transform 0.4s ease;
 
     width: 90%;
-    @include breakpoint-mobile {
+    @include breakpoint-tablet {
       width: 60%;
     }
     @include breakpoint-desktop {
@@ -83,28 +66,32 @@
 
     .top {
       display: flex;
+      gap: $spacing-l;
 
       & > :first-child {
         @include flex_center;
         text-align: center;
         word-break: break-word;
         flex-grow: 1;
-        background-color: $light-grey;
+        background-color: $gray-100;
         border-radius: $border-radius-small;
         box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.1);
         padding: $spacing-l;
-        font-size: $body-copy-size;
+        font-size: $size-m;
       }
 
       .close {
-        @include button_base;
-        background-color: transparent;
+        @include icon-button;
         box-shadow: none;
         flex-grow: 0;
         flex-shrink: 0;
-        color: $primary-navy;
-        align-items: flex-start;
-        padding: 0 0 0 $spacing-l;
+        color: $primary-800;
+        align-self: flex-start;
+        // padding: 0 0 0 $spacing-l;
+
+        @include breakpoint-laptop {
+          font-size: $size-xl;
+        }
       }
     }
 
@@ -115,21 +102,17 @@
       .confirm,
       .cancel {
         @include button_base;
-        font-size: $big-label-size;
       }
       .confirm {
-        background-color: $primary-blue;
-        color: white;
+        @include primary-button;
         flex-basis: 50%;
 
         &.alone {
           flex-basis: 100%;
         }
-
-        @include button-primary;
       }
       .cancel {
-        background-color: $red;
+        background-color: $alert-100;
         color: white;
         flex-basis: 50%;
       }

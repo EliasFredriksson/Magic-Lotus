@@ -28,8 +28,12 @@ $gray-1100: #1f1f24;
 // OTHER
 $black: #000;
 $white: #fff;
-$link-blue: #7f64f5;
+$link-blue-dark: #7f64f5;
+$link-blue-light: #bfb1ff;
 
 // ############### GRADIENTS ###############
 $main-gradient-dark: linear-gradient(45deg, $primary-800, $primary-500);
 $main-gradient-light: linear-gradient(45deg, $primary-500, $primary-100);
+
+$navbar-gradient-dark: linear-gradient(-45deg, $primary-800, $primary-500);
+$navbar-gradient-light: linear-gradient(-45deg, $primary-500, $primary-100);

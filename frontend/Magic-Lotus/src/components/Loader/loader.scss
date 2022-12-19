@@ -13,7 +13,12 @@
 
   z-index: 1000;
 
-  background-color: rgba($color: #000000, $alpha: 0.2);
+  @include dark-mode {
+    background: $main-gradient-dark;
+  }
+  @include light-mode {
+    background: $main-gradient-light;
+  }
 
   @include breakpoint-laptop {
     justify-content: flex-end;

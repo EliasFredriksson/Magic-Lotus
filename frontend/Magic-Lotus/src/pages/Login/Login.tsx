@@ -7,6 +7,7 @@ import { isValidityValid } from "../../helpers/InputValidityHelpers";
 import { isEmpty } from "../../helpers/StringValidations";
 import useAuth from "../../hooks/useAuth/useAuth";
 import useFetch from "../../hooks/useFetch/useFetch";
+import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import IStrapiError from "../../models/interfaces/strapi/IStrapiError";
 import { IStrapiLogin } from "../../models/interfaces/strapi/IStrapiLogin";
@@ -34,6 +35,20 @@ const BLANK_INPUT_STATE: IInputState = {
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const [errorMsg, setErrorMsg] = useState("sdasdadsasd");
+  const [errorModal, openErrorModal] = useModal({
+    innerTsx: (
+      <span
+        style={{
+          fontSize: "1.5rem",
+        }}
+      >
+        {errorMsg}
+      </span>
+    ),
+    confirmTextOrButton: "Ok",
+  });
 
   const [liveValidate, setLiveValidate] = useState(false);
 
@@ -104,10 +119,8 @@ const Login = () => {
 
           if (error.name === "ValidationError") {
             setLiveValidate(true);
-            setValidationMsg({
-              username: "",
-              password: "Incorrect credentials!",
-            });
+            setErrorMsg("Incorrect username / password. Try again.");
+            openErrorModal();
             setInputValidity({
               username: false,
               password: false,
@@ -171,9 +184,11 @@ const Login = () => {
         </Button>
 
         <Link to="/register" className="link">
-          Register
+          <Button variant="link">Register</Button>
         </Link>
       </form>
+      <Button onClick={openErrorModal}>Open modal</Button>
+      {errorModal}
     </main>
   );
 };

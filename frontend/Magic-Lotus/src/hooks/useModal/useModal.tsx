@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import { RiCloseLine } from "react-icons/ri";
+import { IoClose } from "react-icons/io5";
 import "./useModal.scss";
 
 interface IModalOptions {
@@ -10,7 +10,6 @@ interface IModalOptions {
   onCancel?: Function;
   onClose?: Function;
   flipButtonOrder?: boolean;
-  singleButton?: boolean;
 }
 
 export default function useModal(
@@ -40,7 +39,7 @@ export default function useModal(
   }, [close, options]);
 
   const modal = (
-    <div className="admin-modal">
+    <div className="modal-component">
       <div
         className={`background ${isVisible ? "show" : "hide"}`}
         onClick={close}
@@ -49,7 +48,7 @@ export default function useModal(
         <div className="top">
           {options.innerTsx}
           <button className="close" onClick={close}>
-            <RiCloseLine />
+            <IoClose />
           </button>
         </div>
         <div
@@ -61,7 +60,7 @@ export default function useModal(
           {typeof options.confirmTextOrButton === "string" ? (
             <button
               ref={buttonRef}
-              className={`confirm ${options.singleButton && "alone"}`}
+              className={`confirm ${!options.cancelTextOrButton && "alone"}`}
               onClick={confirm}
             >
               {options.confirmTextOrButton}
@@ -70,18 +69,14 @@ export default function useModal(
             options.confirmTextOrButton
           )}
 
-          {options.singleButton === false ? (
-            !options.cancelTextOrButton ||
-            typeof options.cancelTextOrButton === "string" ? (
+          {options.cancelTextOrButton &&
+            (typeof options.cancelTextOrButton === "string" ? (
               <button className="cancel" onClick={cancel}>
                 {options.cancelTextOrButton ? options.cancelTextOrButton : "Ok"}
               </button>
             ) : (
-              options.confirmTextOrButton
-            )
-          ) : (
-            <></>
-          )}
+              options.cancelTextOrButton
+            ))}
         </div>
       </div>
     </div>
