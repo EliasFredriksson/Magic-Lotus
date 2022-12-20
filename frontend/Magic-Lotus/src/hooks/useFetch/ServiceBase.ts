@@ -16,7 +16,7 @@ const POST = async <T>(args: IFetchOptions) => {
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for POST (ServiceBase.ts)");
   return await axios.post<T>(`${base + args.route}`, args.data && args.data, {
-    withCredentials: true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
+    withCredentials: args.base === "SCRYFALL" ? false : true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
     ...args.options,
   });
 };
@@ -27,7 +27,7 @@ const PUT = async <T>(args: IFetchOptions) => {
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for PUT (ServiceBase.ts)");
   return await axios.put<T>(`${base + args.route}`, args.data && args.data, {
-    withCredentials: true,
+    withCredentials: args.base === "SCRYFALL" ? false : true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
     ...args.options,
   });
 };
@@ -38,7 +38,7 @@ const GET = async <T>(args: IFetchOptions) => {
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for GET (ServiceBase.ts)");
   return await axios.get<T>(`${base + args.route}`, {
-    withCredentials: true,
+    withCredentials: args.base === "SCRYFALL" ? false : true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
     ...args.options,
   });
 };
@@ -49,7 +49,7 @@ const DELETE = async <T>(args: IFetchOptions) => {
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for DELETE (ServiceBase.ts)");
   return await axios.delete<T>(`${base + args.route}`, {
-    withCredentials: true,
+    withCredentials: args.base === "SCRYFALL" ? false : true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
     ...args.options,
   });
 };

@@ -14,6 +14,7 @@ const Router = () => {
   const Profile = lazy(() => import("./pages/Profile/Profile"));
   const Settings = lazy(() => import("./pages/Settings/Settings"));
   const Search = lazy(() => import("./pages/Search/Search"));
+  const Admin = lazy(() => import("./pages/Admin/Admin"));
 
   return (
     <AnimatePresence mode="wait">
@@ -28,6 +29,12 @@ const Router = () => {
           <Route element={<RequireRole roles={["user", "admin"]} />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
+          </Route>
+
+          <Route element={<RequireRole roles={["admin"]} />}>
+            <Route path="/admin">
+              <Route index element={<Admin />} />
+            </Route>
           </Route>
 
           {/* NOT FOUND (404) */}

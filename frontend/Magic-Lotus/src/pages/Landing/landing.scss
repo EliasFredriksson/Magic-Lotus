@@ -2,4 +2,31 @@
 
 #landing-page {
   @include page-base;
+
+  justify-content: flex-start;
+  align-items: center;
+
+  & > h1 {
+    margin-top: $spacing-4xl;
+    font-size: $size-4xl;
+    text-align: center;
+
+    @include breakpoint-laptop {
+      margin-top: 0px;
+    }
+  }
+
+  @include breakpoint-laptop {
+    justify-content: center;
+  }
+
+  .landing-form {
+    @include display-flex-column;
+    width: 90%;
+
+    @include breakpoint-laptop {
+      @include display-flex-row;
+      width: auto;
+    }
+  }
 }

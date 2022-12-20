@@ -58,6 +58,10 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       to: "/logout",
       text: "Logout",
     },
+    {
+      to: "/admin",
+      text: "Admin",
+    },
   ],
 };
 export default NAVBAR_CONFIGS;

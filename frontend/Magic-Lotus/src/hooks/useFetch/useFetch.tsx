@@ -16,6 +16,7 @@ interface IProps {
   base: "SCRYFALL" | "BACKEND";
   route: string;
   debug?: boolean;
+  encodeUri?: boolean;
 }
 
 const debug = (query: string, data: any, res: any) => {
@@ -52,7 +53,9 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
         const method = METHODS_MAP.get(props.method);
         if (!method) throw new Error("Invalid fetch method. (useFetch hook)");
 
-        const query = convertObjectToQuery(args?.params);
+        const query = props.encodeUri
+          ? encodeURI(convertObjectToQuery(args?.params))
+          : convertObjectToQuery(args?.params);
         const data = args?.data ? args.data : null;
 
         const res = await method<IResult>({

@@ -18,7 +18,10 @@ type Order =
 // SORTING ORDER
 type Dir = "auto" | "asc" | "desc";
 
-export default interface ICardSearch {
+// ROUTE
+export const GET_CARDS_SEARCH = "/cards/search";
+// QUERY PARAMS
+export default interface ICardSearchParams {
   q: string; // A fulltext search query. Make sure that your parameter is properly encoded. Maximum length: 1000 Unicode characters.
   unique?: Unique; // The strategy for omitting similar cards. See above.
   order?: Order; // The method to sort returned cards. See above.
