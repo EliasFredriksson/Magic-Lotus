@@ -1,44 +1,60 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const utils = require("../helpers/utils");
 const { ROLES } = require("../constants/ROLES");
 const UsersModel = require("../models/UsersModel");
+
+const responses = require("../helpers/Response");
 
 const router = express.Router();
 
 // LOGIN
 router.post("/login", (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  UsersModel.findOne({ username }, (error, user) => {
+  UsersModel.findOne({ email: email }, (error, user) => {
     if (error) throw Promise.reject(error);
-    else if ((user, utils.comparePassword(password, user.hashedPassword))) {
+    if (!user) {
+      // USER NOT FOUND IN DATABASE
+      // INVALIDATE AUTH TOKEN
+      res.cookie("token", "", { maxAge: 0 });
+      // SEND RESPONSE
+      res
+        .status(400)
+        .send(
+          responses.create400Response(
+            "No user found with given credentials.",
+            "POST",
+            "/users/login"
+          )
+        );
+    } else if ((user, utils.comparePassword(password, user.hashedPassword))) {
       // Correct login information provided.
+      // GENEREATE AUTH COOKIE TOKEN
       const userData = {
         userId: user._id.toString(),
-        username: user.username,
       };
-
+      // SIGN DATA WITH JWT SECRET
       const accessToken = jwt.sign(userData, process.env.JWTSECRET);
+      // ATTATCH TOKEN AS COOKIE
       res.cookie("token", accessToken);
-
-      res.status(200).send({
-        success: true,
-        data: "",
-        error: "",
-        method: "POST",
-        route: "/users/login",
-        status: 200,
-      });
+      // SEND RESPONSE
+      res
+        .status(200)
+        .send(responses.create200Response(user._id, "POST", "/users/login"));
     } else {
-      // User not in db.
-      res.status(400).render("login", {
-        success: false,
-        data: "",
-        error: "User not found in database",
-        method: "POST",
-        route: "/users/login",
-        status: 400,
-      });
+      // INVALIDATE AUTH TOKEN
+      res.cookie("token", "", { maxAge: 0 });
+      // SEND RESPONSE
+      res
+        .status(400)
+        .send(
+          responses.create400Response(
+            "Invalid credentials provided.",
+            "POST",
+            "/users/login"
+          )
+        );
     }
   });
 });
@@ -48,22 +64,35 @@ router.post("/logout", (req, res) => {
   // We set the token to an empty string. And the option object
   // with maxAge: 0 in makes it that the allowed time for the cookie
   // to exist is 0, which means it becomes deleted emedietly.
-  res.cookie("token", "", { maxAge: 0 });
-  res.status(200).send({
-    success: true,
-    data: "",
-    error: "",
-    method: "POST",
-    route: "/users/logout",
-    status: 200,
-  });
+  if (!req.cookies["token"]) {
+    res
+      .status(400)
+      .send(
+        responses.create400Response(
+          "You need to login first.",
+          "POST",
+          "/users/logout"
+        )
+      );
+  } else {
+    res.cookie("token", "", { maxAge: 0 });
+    res
+      .status(200)
+      .send(
+        responses.create200Response(
+          "Logout successful!",
+          "POST",
+          "/users/logout"
+        )
+      );
+  }
 });
 
 // REGISTER USER
 router.post("/register", (req, res) => {
   // This is deconstructuring.
-  const { username, email, password, confirmPassword } = req.body;
-  UsersModel.findOne({ username }, async (error, user) => {
+  const { username, email, password, repeatPassword } = req.body;
+  UsersModel.findOne({ email }, async (error, user) => {
     // Error handling
     if (error) throw Promise.reject(error);
     // Regular cases
@@ -71,12 +100,12 @@ router.post("/register", (req, res) => {
       res.status(400).send({
         success: false,
         data: "",
-        error: "Username is already taken.",
+        error: "Email is already taken.",
         method: "POST",
         route: "/users/register",
         status: 400,
       });
-    } else if (password !== confirmPassword) {
+    } else if (password !== repeatPassword) {
       res.status(400).send({
         success: false,
         data: "",
@@ -89,13 +118,14 @@ router.post("/register", (req, res) => {
       const newUser = new UsersModel({
         username: username,
         hashedPassword: utils.hashPassword(password),
+        email: email,
         role: ROLES.user,
       });
       await newUser.save();
       res.status(200).send({
         success: true,
-        data: "",
-        error: "Incorrect passwords.",
+        data: newUser,
+        error: "",
         method: "POST",
         route: "/users/register",
         status: 400,

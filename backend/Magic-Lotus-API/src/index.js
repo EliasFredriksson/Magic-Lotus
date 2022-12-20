@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
+const UsersSchema = require("./models/UsersModel");
+
 const utils = require("./helpers/utils");
 const auth = require("./helpers/auth");
 
@@ -40,7 +42,7 @@ app.use("/users", UsersRouter);
 
 // ======= ROUTES =======
 // Home
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.status(200).send({
     success: true,
     data: "",
@@ -51,19 +53,19 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/", (req, res) => {
-  const { pass } = req.body;
-  const hash = utils.hashPassword(pass);
+// app.post("/", (req, res) => {
+//   const { pass } = req.body;
+//   const hash = utils.hashPassword(pass);
 
-  res.status(200).send({
-    success: true,
-    data: "",
-    error: "",
-    method: "POST",
-    route: "/",
-    status: 200,
-  });
-});
+//   res.status(200).send({
+//     success: true,
+//     data: hash,
+//     error: "",
+//     method: "POST",
+//     route: "/",
+//     status: 200,
+//   });
+// });
 
 // Secret - Only avalible to logged in users.
 // app.get("/profile", (req, res) => {
