@@ -1,20 +1,20 @@
-const create400Response = (error, method, route) => {
+const create400Response = (error, req) => {
   return {
     success: false,
     data: "",
     error: error,
-    method: method,
-    route: route,
+    method: req.method,
+    route: req.originalUrl,
     status: 400,
   };
 };
-const create200Response = (data, method, route) => {
+const create200Response = (data, req) => {
   return {
     success: true,
     data: data,
     error: "",
-    method: method,
-    route: route,
+    method: req.method,
+    route: req.originalUrl,
     status: 200,
   };
 };

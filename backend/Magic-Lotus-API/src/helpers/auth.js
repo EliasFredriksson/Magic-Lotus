@@ -2,6 +2,7 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 const { ROLES } = require("../constants/ROLES");
+const { create400Response } = require("./Response");
 
 const AUTH_TOKEN = "magicLotusAPIAuthToken";
 // ----------------------------------------------------------
@@ -17,16 +18,10 @@ function checkIfLoggedIn(req, res, next) {
     if ([ROLES.user, ROLES.admin].includes(tokenData.role)) {
       next();
     } else {
-      res.status(401).send({
-        msg: "Unauthorized",
-        error: "You do not have correct permissions.",
-      });
+      res.status(401).send(create400Response("Unauthorized.", req));
     }
   } else {
-    res.status(401).send({
-      msg: "Unauthorized",
-      error: "You need to be logged in.",
-    });
+    res.status(401).send(create400Response("Unauthorized.", req));
   }
 }
 function checkIfAdmin(req, res, next) {
@@ -36,16 +31,10 @@ function checkIfAdmin(req, res, next) {
     if (tokenData.role === ROLES.admin) {
       next();
     } else {
-      res.status(401).send({
-        msg: "Unauthorized",
-        error: "You do not have correct permissions.",
-      });
+      res.status(401).send(create400Response("Unauthorized.", req));
     }
   } else {
-    res.status(401).send({
-      msg: "Unauthorized",
-      error: "You need to be logged in.",
-    });
+    res.status(401).send(create400Response("Unauthorized.", req));
   }
 }
 

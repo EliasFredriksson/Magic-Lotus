@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 
-const UsersSchema = require("./models/UsersModel");
+const UsersSchema = require("./models/Users.model");
 
 const utils = require("./helpers/utils");
 const auth = require("./helpers/auth");
@@ -36,8 +36,10 @@ app.use(cors(corsOptions));
 // -------------------------------------------------------
 // ### ROUTERS ###
 const UsersRouter = require("./routers/User.router");
+const CatalogRouter = require("./routers/Catalog.router");
 
 app.use("/users", UsersRouter);
+app.use("/catalogs", CatalogRouter);
 // -------------------------------------------------------
 
 // ======= ROUTES =======

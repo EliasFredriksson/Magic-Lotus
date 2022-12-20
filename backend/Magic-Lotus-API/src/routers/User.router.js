@@ -1,31 +1,32 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const utils = require("../helpers/utils");
+const auth = require("../helpers/auth");
 const { ROLES } = require("../constants/ROLES");
-const UsersModel = require("../models/UsersModel");
+const UsersModel = require("../models/Users.model");
 
 const responses = require("../helpers/Response");
+const { AUTH_TOKEN } = require("../helpers/auth");
 
 const router = express.Router();
 
 // LOGIN
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  UsersModel.findOne({ email: email }, (error, user) => {
-    if (error) throw Promise.reject(error);
+    const user = await UsersModel.findOne({ email: email });
     if (!user) {
       // USER NOT FOUND IN DATABASE
       // INVALIDATE AUTH TOKEN
-      res.cookie("token", "", { maxAge: 0 });
+      res.cookie(AUTH_TOKEN, "", { maxAge: 0 });
       // SEND RESPONSE
       res
         .status(400)
         .send(
           responses.create400Response(
             "No user found with given credentials.",
-            "POST",
-            "/users/login"
+            req
           )
         );
     } else if ((user, utils.comparePassword(password, user.hashedPassword))) {
@@ -33,87 +34,57 @@ router.post("/login", (req, res) => {
       // GENEREATE AUTH COOKIE TOKEN
       const userData = {
         userId: user._id.toString(),
+        role: user.role,
       };
       // SIGN DATA WITH JWT SECRET
-      const accessToken = jwt.sign(userData, process.env.JWTSECRET);
+      const accessToken = jwt.sign(userData, process.env.JWT_SECRET);
       // ATTATCH TOKEN AS COOKIE
-      res.cookie("token", accessToken);
+      res.cookie(AUTH_TOKEN, accessToken);
       // SEND RESPONSE
-      res
-        .status(200)
-        .send(responses.create200Response(user._id, "POST", "/users/login"));
+      res.status(200).send(responses.create200Response(user._id, req));
     } else {
       // INVALIDATE AUTH TOKEN
-      res.cookie("token", "", { maxAge: 0 });
+      res.cookie(AUTH_TOKEN, "", { maxAge: 0 });
       // SEND RESPONSE
       res
         .status(400)
         .send(
-          responses.create400Response(
-            "Invalid credentials provided.",
-            "POST",
-            "/users/login"
-          )
+          responses.create400Response("Invalid credentials provided.", req)
         );
     }
-  });
-});
-
-// LOGOUT
-router.post("/logout", (req, res) => {
-  // We set the token to an empty string. And the option object
-  // with maxAge: 0 in makes it that the allowed time for the cookie
-  // to exist is 0, which means it becomes deleted emedietly.
-  if (!req.cookies["token"]) {
+  } catch (error) {
     res
       .status(400)
-      .send(
-        responses.create400Response(
-          "You need to login first.",
-          "POST",
-          "/users/logout"
-        )
-      );
-  } else {
-    res.cookie("token", "", { maxAge: 0 });
-    res
-      .status(200)
-      .send(
-        responses.create200Response(
-          "Logout successful!",
-          "POST",
-          "/users/logout"
-        )
-      );
+      .send(responses.create400Response(error, req.method, req.path));
   }
 });
 
+// LOGOUT
+router.post("/logout", auth.checkIfLoggedIn, (req, res) => {
+  // We set the token to an empty string. And the option object
+  // with maxAge: 0 in makes it that the allowed time for the cookie
+  // to exist is 0, which means it becomes deleted emedietly.
+
+  res.cookie("token", "", { maxAge: 0 });
+  res.status(200).send(responses.create200Response("Logout successful!", req));
+});
+
 // REGISTER USER
-router.post("/register", (req, res) => {
-  // This is deconstructuring.
-  const { username, email, password, repeatPassword } = req.body;
-  UsersModel.findOne({ email }, async (error, user) => {
-    // Error handling
-    if (error) throw Promise.reject(error);
+router.post("/register", async (req, res) => {
+  try {
+    // This is deconstructuring.
+    const { username, email, password, repeatPassword } = req.body;
+    const user = await UsersModel.findOne({ email });
+
     // Regular cases
     if (user) {
-      res.status(400).send({
-        success: false,
-        data: "",
-        error: "Email is already taken.",
-        method: "POST",
-        route: "/users/register",
-        status: 400,
-      });
+      res
+        .status(400)
+        .send(responses.create400Response("Email is already taken.", req));
     } else if (password !== repeatPassword) {
-      res.status(400).send({
-        success: false,
-        data: "",
-        error: "Incorrect passwords.",
-        method: "POST",
-        route: "/users/register",
-        status: 400,
-      });
+      res
+        .status(400)
+        .send(responses.create400Response("Incorrect passwords.", req));
     } else {
       const newUser = new UsersModel({
         username: username,
@@ -122,18 +93,13 @@ router.post("/register", (req, res) => {
         role: ROLES.user,
       });
       await newUser.save();
-      res.status(200).send({
-        success: true,
-        data: newUser,
-        error: "",
-        method: "POST",
-        route: "/users/register",
-        status: 400,
-        title: "Home",
-        msg: "Created user!",
-      });
+      res.status(400).send(responses.create200Response(newUser._id, req));
     }
-  });
+  } catch (error) {
+    res
+      .status(400)
+      .send(responses.create400Response(error, req.method, req.path));
+  }
 });
 
 module.exports = router;
