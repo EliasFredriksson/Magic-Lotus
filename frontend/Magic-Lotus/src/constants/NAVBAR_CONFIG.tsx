@@ -5,7 +5,7 @@ type INavbarConfig = {
   [Property in AuthRole]: { to: string; text: React.ReactNode }[];
 };
 const NAVBAR_CONFIGS: INavbarConfig = {
-  Public: [
+  public: [
     {
       to: "/",
       text: <FaHome />,
@@ -23,7 +23,7 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       text: "Register",
     },
   ],
-  User: [
+  user: [
     {
       to: "/",
       text: "Home",
@@ -41,7 +41,7 @@ const NAVBAR_CONFIGS: INavbarConfig = {
       text: "Logout",
     },
   ],
-  Admin: [
+  admin: [
     {
       to: "/",
       text: "Home",

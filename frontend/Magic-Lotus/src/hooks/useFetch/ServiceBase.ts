@@ -1,64 +1,57 @@
 import axios, { AxiosRequestConfig } from "axios";
 
 interface IFetchOptions {
-  base: "SCRYFALL" | "STRAPI";
+  base: "SCRYFALL" | "BACKEND";
   route: string;
   options: AxiosRequestConfig;
   data?: any;
 }
 
 const BASE_SCRYFALL = import.meta.env.VITE_SCRYFALL_API;
-const BASE_STRAPI = import.meta.env.VITE_STRAPI_API;
+const BASE_BACKEND = import.meta.env.VITE_BACKEND_API;
 
 const POST = async <T>(args: IFetchOptions) => {
   let base;
-  if (args.base === "STRAPI") base = BASE_STRAPI;
+  if (args.base === "BACKEND") base = BASE_BACKEND;
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for POST (ServiceBase.ts)");
-  return await axios.post<T>(
-    `${base + args.route}`,
-    args.data && args.data,
-    args.options
-  );
+  return await axios.post<T>(`${base + args.route}`, args.data && args.data, {
+    withCredentials: true, // NEEDED TO TELL AXIOS TO INCLUDE CREDENTIALS COOKIES
+    ...args.options,
+  });
 };
 
 const PUT = async <T>(args: IFetchOptions) => {
   let base;
-  if (args.base === "STRAPI") base = BASE_STRAPI;
+  if (args.base === "BACKEND") base = BASE_BACKEND;
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for PUT (ServiceBase.ts)");
-  return await axios.put<T>(
-    `${base + args.route}`,
-    args.data && args.data,
-    args.options
-  );
+  return await axios.put<T>(`${base + args.route}`, args.data && args.data, {
+    withCredentials: true,
+    ...args.options,
+  });
 };
-
-// Access-Control-Allow-Origin: http://localhost:9999
 
 const GET = async <T>(args: IFetchOptions) => {
   let base;
-  if (args.base === "STRAPI") base = base = BASE_STRAPI;
+  if (args.base === "BACKEND") base = base = BASE_BACKEND;
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for GET (ServiceBase.ts)");
-
-  console.log("BASE: ", base);
-
   return await axios.get<T>(`${base + args.route}`, {
-    headers: {
-      "Access-Control-Allow-Origin": "http://localhost:3000",
-      ...args.options.headers,
-    },
+    withCredentials: true,
     ...args.options,
   });
 };
 
 const DELETE = async <T>(args: IFetchOptions) => {
   let base;
-  if (args.base === "STRAPI") base = base = BASE_STRAPI;
+  if (args.base === "BACKEND") base = base = BASE_BACKEND;
   else if (args.base === "SCRYFALL") base = BASE_SCRYFALL;
   if (!base) throw new Error("No baseURL provided for DELETE (ServiceBase.ts)");
-  return await axios.delete<T>(`${base + args.route}`, args.options);
+  return await axios.delete<T>(`${base + args.route}`, {
+    withCredentials: true,
+    ...args.options,
+  });
 };
 
 // EXPORTED FETCH METHODS

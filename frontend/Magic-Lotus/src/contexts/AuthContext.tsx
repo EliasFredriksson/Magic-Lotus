@@ -1,26 +1,18 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import AuthRole from "../hooks/useAuth/AuthRole";
 import useFetch from "../hooks/useFetch/useFetch";
 import useObjectState from "../hooks/useObjectState/useObjectState";
-import {
-  BLANK_STRAPI_USER,
-  IStrapiUser,
-} from "../models/strapi/interfaces/IStrapiUser";
-
-interface ICredentials {
-  user: IStrapiUser;
-  jwt: string;
-  role: AuthRole;
-}
+import IServiceResponse from "../models/backend/interfaces/IServiceResponse";
+import IUser, { BLANK_IUSER } from "../models/backend/interfaces/IUser";
+import { POST_USERS_LOGOUT } from "../services/backend/Users.routes";
 
 interface IAuthContext {
-  credentials: ICredentials;
+  credentials: IUser;
   logout: () => void;
-  login: (data: Partial<ICredentials>) => void;
+  login: (data: IUser) => void;
 }
 
 export const AuthContext = createContext<IAuthContext>({
-  credentials: { user: BLANK_STRAPI_USER, jwt: "", role: "Public" },
+  credentials: BLANK_IUSER,
   logout: () => {},
   login: () => {},
 });
@@ -29,47 +21,26 @@ interface IProps {
   children?: React.ReactNode;
 }
 export const AuthContextProvider = (props: IProps) => {
-  const [user, setUser] = useObjectState<IStrapiUser>(BLANK_STRAPI_USER);
-  const [role, setRole] = useState<AuthRole>("Public");
-  const [jwt, setJwt] = useState("");
+  const [user, setUser] = useObjectState<IUser>(BLANK_IUSER);
 
-  const FetchUser = useFetch<null, null, any>({
-    base: "STRAPI",
-    route: "/users/me",
-    method: "GET",
+  const FetchLogout = useFetch<IServiceResponse<string>>({
+    route: POST_USERS_LOGOUT(),
+    base: "BACKEND",
+    method: "POST",
   });
 
-  const logout = useCallback(() => {
-    setUser(BLANK_STRAPI_USER);
-    setRole("Public");
-    setJwt("");
+  const logout = useCallback(async () => {
+    setUser(BLANK_IUSER);
+    const res = await FetchLogout.triggerFetch();
   }, []);
-  const login = useCallback((data: Partial<ICredentials>) => {
-    if (data.user) setUser(data.user);
-    if (data.jwt) setJwt(data.jwt);
-    if (data.role) setRole(data.role);
-
-    FetchUser.triggerFetch({
-      headers: {
-        Authentication: `Bearer ${data.jwt}`,
-      },
-    });
+  const login = useCallback((data: IUser) => {
+    setUser(data);
   }, []);
-
-  useEffect(() => {
-    console.log("CREDENTIALS: ");
-    console.table({ role, jwt });
-    console.table(user);
-  }, [user, role, jwt]);
 
   return (
     <AuthContext.Provider
       value={{
-        credentials: {
-          user,
-          role,
-          jwt,
-        },
+        credentials: user,
         logout,
         login,
       }}

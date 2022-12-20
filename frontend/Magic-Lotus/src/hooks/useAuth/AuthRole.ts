@@ -1,2 +1,2 @@
-type AuthRole = "Public" | "User" | "Admin";
+type AuthRole = "public" | "user" | "admin";
 export default AuthRole;

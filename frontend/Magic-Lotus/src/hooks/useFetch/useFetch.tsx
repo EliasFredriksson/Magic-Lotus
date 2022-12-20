@@ -4,33 +4,16 @@ import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import useAuth from "../useAuth/useAuth";
 import { MethodName, METHODS_MAP } from "./ServiceBase";
 
-interface IHeader {
-  [key: string]: string;
-}
-
-// #################################### DEFINE UNION SERVICE RESPONSE TO GET DYNAMIC TYPING ####################################
-interface ServiceResult<IResult> {
-  success: true;
-  data: IResult;
-}
-interface ServiceError<IError> {
-  success: false;
-  data: IError;
-}
-type ServiceResponse<IResult, IError> =
-  | ServiceResult<IResult>
-  | ServiceError<IError>;
 // #############################################################################################################################
 
 interface ITriggerFetch<QParams, BodyParams> {
   params?: QParams;
   data?: BodyParams;
-  headers?: IHeader;
 }
 
 interface IProps {
   method: MethodName;
-  base: "SCRYFALL" | "STRAPI";
+  base: "SCRYFALL" | "BACKEND";
   route: string;
   debug?: boolean;
 }
@@ -41,13 +24,13 @@ const debug = (query: string, data: any, res: any) => {
   console.log("RES\t\t", res, "\n\n\n");
 };
 
-const useFetch = <QParams, BodyParams, IResult = any, IError = any>(
+const useFetch = <IResult = any, BodyParams = any, QParams = any>(
   props: IProps
 ): {
   isLoading: boolean;
   triggerFetch: (
     queryParams?: ITriggerFetch<QParams, BodyParams>
-  ) => Promise<ServiceResponse<IResult, IError>>;
+  ) => Promise<IResult>;
   abort: () => void;
 } => {
   const { credentials } = useAuth();
@@ -60,9 +43,7 @@ const useFetch = <QParams, BodyParams, IResult = any, IError = any>(
   }, []);
 
   const triggerFetch = useCallback(
-    async (
-      args?: ITriggerFetch<QParams, BodyParams>
-    ): Promise<ServiceResponse<IResult, IError>> => {
+    async (args?: ITriggerFetch<QParams, BodyParams>): Promise<IResult> => {
       setIsLoading(true);
       try {
         if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -80,7 +61,6 @@ const useFetch = <QParams, BodyParams, IResult = any, IError = any>(
           data: data,
           options: {
             signal: abortControllerRef.current.signal,
-            headers: args?.headers ? args.headers : undefined,
           },
         });
 
@@ -89,23 +69,14 @@ const useFetch = <QParams, BodyParams, IResult = any, IError = any>(
 
         // TURN OFF LOADING AND RETURN DATA.
         setIsLoading(false);
-        return {
-          success: true,
-          data: res.data,
-        };
+        return res.data;
       } catch (error) {
         // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
         if (!((error as Error).name === "CanceledError")) setIsLoading(false);
         if ((error as Error).name === "AxiosError") {
-          return {
-            success: false,
-            data: (error as AxiosError<IError>).response?.data as IError,
-          };
+          return (error as AxiosError<IResult>).response?.data as IResult;
         }
-        return {
-          success: false,
-          data: error as IError,
-        };
+        return error as IResult;
       }
     },
 

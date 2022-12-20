@@ -1,6 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import { lazy } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import RequireRole from "./components/RequireRole/RequireRole";
 import Layout from "./Layout";
 
 const Router = () => {
@@ -23,8 +24,11 @@ const Router = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/search" element={<Search />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
+
+          <Route element={<RequireRole roles={["user", "admin"]} />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
 
           {/* NOT FOUND (404) */}
           <Route path="*" element={<NotFound />} />

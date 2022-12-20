@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
@@ -10,34 +10,35 @@ import useAuth from "../../hooks/useAuth/useAuth";
 import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
-import IStrapiError from "../../models/strapi/interfaces/IStrapiError";
-import { IStrapiLogin } from "../../models/strapi/interfaces/IStrapiLogin";
-import { IStrapiAuthBody } from "../../services/StrapiAuth.service";
+import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
+import IUser from "../../models/backend/interfaces/IUser";
 import "./login.scss";
 
 interface IInputValidity {
-  username: boolean;
+  email: boolean;
   password: boolean;
 }
 const BLANK_INPUT_VALIDITY: IInputValidity = {
-  username: true,
+  email: true,
   password: true,
 };
 
 interface IInputState {
-  username: string;
+  email: string;
   password: string;
 }
 const BLANK_INPUT_STATE: IInputState = {
-  username: "",
+  email: "",
   password: "",
 };
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
 
-  const [errorMsg, setErrorMsg] = useState("sdasdadsasd");
+  const [errorMsg, setErrorMsg] = useState("");
   const [errorModal, openErrorModal] = useModal({
     innerTsx: (
       <span
@@ -51,35 +52,35 @@ const Login = () => {
     confirmTextOrButton: "Ok",
   });
 
-  const [liveValidate, setLiveValidate] = useState(false);
-
+  // ============================== INPUT STATES AND VALIDATION ==============================
+  const [liveValidate, setLiveValidate] = useState(false); // LIVE VALIDATE
   const [inputValidity, setInputValidity] =
-    useObjectState<IInputValidity>(BLANK_INPUT_VALIDITY);
-
+    useObjectState<IInputValidity>(BLANK_INPUT_VALIDITY); // INPUT VALIDITY
   const [validationMsg, setValidationMsg] =
-    useObjectState<IInputState>(BLANK_INPUT_STATE);
-
+    useObjectState<IInputState>(BLANK_INPUT_STATE); // VALIDATION MSG
   const [inputState, setInputState] =
-    useObjectState<IInputState>(BLANK_INPUT_STATE);
+    useObjectState<IInputState>(BLANK_INPUT_STATE); // INPUT STATES
+  // =========================================================================================
 
   const FetchLogin = useFetch<
-    null, // Query
-    IStrapiAuthBody, // Body
-    IStrapiLogin, // Response
-    IStrapiError // Error
+    IServiceResponse<IUser>,
+    {
+      email: string;
+      password: string;
+    }
   >({
     method: "POST",
-    route: "/auth/local",
-    base: "STRAPI",
+    route: "/users/login",
+    base: "BACKEND",
   });
 
   const isFormValid = useCallback((): boolean => {
     const validity = { ...BLANK_INPUT_VALIDITY };
 
-    if (isEmpty(inputState.username)) {
-      validity.username = false;
+    if (isEmpty(inputState.email)) {
+      validity.email = false;
       setValidationMsg({
-        username: "You must enter your username!",
+        email: "You must enter your email!",
       });
     }
     if (isEmpty(inputState.password)) {
@@ -108,39 +109,31 @@ const Login = () => {
         console.log("SUBMITTED!");
         const res = await FetchLogin.triggerFetch({
           data: {
-            identifier: inputState.username,
+            email: inputState.email,
             password: inputState.password,
           },
         });
 
         if (res.success) {
-          login({
-            user: res.data.user,
-            jwt: res.data.jwt,
-            role: "Admin",
-          });
-          navigate("/");
+          login(res.data);
+          navigate(from, { replace: true }); // REPLACES CURRENT URL SO LOGIN PAGE IS NOT REMEMBERED.
         } else {
-          const { error } = res.data;
-
-          if (!error) {
-            console.warn("UNKNOWN ERROR!: ", res.data);
+          if (!res.error) {
+            console.warn("UNKNOWN ERROR!: ", res);
             return;
           }
 
-          if (error.name === "ValidationError") {
-            setLiveValidate(true);
-            setErrorMsg("Incorrect username / password. Try again.");
-            openErrorModal();
-            setValidationMsg({
-              username: "",
-              password: "",
-            });
-            setInputValidity({
-              username: false,
-              password: false,
-            });
-          }
+          setLiveValidate(true);
+          setErrorMsg("Incorrect username / password. Try again.");
+          openErrorModal();
+          setValidationMsg({
+            email: "",
+            password: "",
+          });
+          setInputValidity({
+            email: false,
+            password: false,
+          });
         }
       }
     },
@@ -154,18 +147,18 @@ const Login = () => {
       <Card>
         <form onSubmit={handleSubmit} className="login-form">
           <Input
-            label="Username"
+            label="Email"
             id="login-username"
             type="text"
-            placeholder="Your username"
-            value={inputState.username}
+            placeholder="Your email"
+            value={inputState.email}
             onChange={(e) => {
               setInputState({
-                username: e.target.value,
+                email: e.target.value,
               });
             }}
-            isValid={inputValidity.username}
-            validationMsg={validationMsg.username}
+            isValid={inputValidity.email}
+            validationMsg={validationMsg.email}
           />
 
           <Input

@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .cert
 .env
+mkcert.exe
 
 # Editor directories and files
 .vscode/*

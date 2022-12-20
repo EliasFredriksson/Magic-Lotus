@@ -7,19 +7,25 @@ import useAuth from "../../hooks/useAuth/useAuth";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { credentials } = useAuth();
+  const { credentials, logout } = useAuth();
   return (
     <nav className="main-navbar">
-      {NAVBAR_CONFIGS[credentials.role].map((link) => (
-        <Button
-          key={link.to}
-          onClick={() => {
-            navigate(link.to);
-          }}
-        >
-          {link.text}
-        </Button>
-      ))}
+      {NAVBAR_CONFIGS[credentials.role].map((link, index) =>
+        link.text === "Logout" ? (
+          <Button key={index} onClick={logout}>
+            {link.text}
+          </Button>
+        ) : (
+          <Button
+            key={link.to}
+            onClick={() => {
+              navigate(link.to);
+            }}
+          >
+            {link.text}
+          </Button>
+        )
+      )}
     </nav>
   );
 };
