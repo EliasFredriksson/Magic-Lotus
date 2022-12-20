@@ -44,6 +44,10 @@ const Landing = () => {
   return (
     <main id="landing-page">
       <h1>Welcome to Magic Lotus!</h1>
+      <em>
+        A <cite>Magic the Gathering</cite> card search website based on{" "}
+        <cite>Scryfall</cite>
+      </em>
 
       <form onSubmit={handleSearch} className="landing-form">
         <Input
