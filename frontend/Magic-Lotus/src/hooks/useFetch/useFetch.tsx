@@ -8,7 +8,7 @@ import { MethodName, METHODS_MAP } from "./ServiceBase";
 
 interface ITriggerFetch<QParams, BodyParams> {
   params?: QParams;
-  data?: BodyParams;
+  body?: BodyParams;
 }
 
 interface IProps {
@@ -29,9 +29,7 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
   props: IProps
 ): {
   isLoading: boolean;
-  triggerFetch: (
-    queryParams?: ITriggerFetch<QParams, BodyParams>
-  ) => Promise<IResult>;
+  triggerFetch: (args?: ITriggerFetch<QParams, BodyParams>) => Promise<IResult>;
   abort: () => void;
 } => {
   const { credentials } = useAuth();
@@ -56,7 +54,7 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
         const query = props.encodeUri
           ? encodeURI(convertObjectToQuery(args?.params))
           : convertObjectToQuery(args?.params);
-        const data = args?.data ? args.data : null;
+        const data = args?.body ? args.body : null;
 
         const res = await method<IResult>({
           base: props.base,

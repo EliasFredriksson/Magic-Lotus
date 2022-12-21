@@ -1,21 +1,22 @@
-import { useEffect } from "react";
-import useAuth from "../../hooks/useAuth/useAuth";
+import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch/useFetch";
+import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
 import IUser, { BLANK_IUSER } from "../../models/backend/interfaces/IUser";
 import { GET_USER_PROFILE } from "../../services/backend/Users.routes";
 import "./profile.scss";
 
-type Props = {};
+const Profile = () => {
+  const [errorMsg, setErrorMsg] = useState("");
+  const [ErrorModal, openErrorModal] = useModal({
+    innerTsx: <span>ERROR HERE</span>,
+    confirmTextOrButton: "Ok",
+  });
 
-const Profile = (props: Props) => {
   const [profile, setProfile] = useObjectState<IUser>(BLANK_IUSER);
-
-  const { credentials } = useAuth();
-
   const FetchProfile = useFetch<IServiceResponse<IUser>>({
-    route: GET_USER_PROFILE(credentials.id),
+    route: GET_USER_PROFILE(),
     base: "BACKEND",
     method: "GET",
   });
@@ -24,8 +25,11 @@ const Profile = (props: Props) => {
     const fetchProfile = async () => {
       const res = await FetchProfile.triggerFetch();
       if (res.success) {
+        setErrorMsg("");
         setProfile(res.data);
       } else {
+        setErrorMsg(res.error);
+        // openErrorModal();
         setProfile(BLANK_IUSER);
       }
     };
@@ -42,6 +46,7 @@ const Profile = (props: Props) => {
         <p>ROLE: {profile.role}</p>
         <p>EMAIL: {profile.email}</p>
       </div>
+      {ErrorModal}
     </main>
   );
 };

@@ -1,17 +1,26 @@
 @use "../variables/spacings" as *;
 @use "../variables/colors" as *;
+@use "../variables/breakpoints" as *;
 @use "./scheme" as *;
+@use "./display" as *;
 
 @mixin page-base {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: $spacing-xl;
+  padding: $spacing-xl;
 
   @include dark-mode {
     background: $main-gradient-dark;
   }
   @include light-mode {
     background: $main-gradient-light;
+  }
+
+  & > .middle {
+    @include display-flex-column;
+    max-width: $breakpoint-laptop;
   }
 }

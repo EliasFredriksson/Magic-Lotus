@@ -25,7 +25,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(cookieParser()); // Used to more easily read cookies.
 app.use(express.urlencoded({ extended: true })); //  So we can use froms.
-app.use(express.json()); // Tell express to enable json as a valid format for req.body.
+app.use(
+  express.json({
+    limit: "5mb",
+  })
+); // Tell express to enable json as a valid format for req.body.
 app.use(express.static("./public")); // Public folder. Css and  JS access.
 app.use(morgan("dev"));
 app.use(helmet());

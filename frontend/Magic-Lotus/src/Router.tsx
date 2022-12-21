@@ -15,6 +15,7 @@ const Router = () => {
   const Settings = lazy(() => import("./pages/Settings/Settings"));
   const Search = lazy(() => import("./pages/Search/Search"));
   const Admin = lazy(() => import("./pages/Admin/Admin"));
+  const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
 
   return (
     <AnimatePresence mode="wait">
@@ -34,6 +35,7 @@ const Router = () => {
           <Route element={<RequireRole roles={["admin"]} />}>
             <Route path="/admin">
               <Route index element={<Admin />} />
+              <Route path="catalog/:name" element={<Catalog />} />
             </Route>
           </Route>
 

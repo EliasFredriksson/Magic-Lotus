@@ -17,9 +17,9 @@
 }
 
 @mixin button-base {
-  font-family: $main-font;
-  font-size: $size-2xl;
-  font-weight: $weight-bold;
+  // font-family: $main-font;
+  // font-size: $size-2xl;
+  // font-weight: $weight-bold;
   padding: $spacing-s $spacing-m;
   border-radius: $border-radius-medium;
   border: 0;
@@ -28,6 +28,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-grow: 0;
+  flex-shrink: 0;
 
   &:focus {
     border: 0;
@@ -38,10 +40,6 @@
   }
   &:active {
     transform: scale(0.95);
-  }
-
-  @include breakpoint-laptop {
-    font-size: $size-l;
   }
 }
 
@@ -70,16 +68,56 @@
 
   @include dark-mode {
     color: $white;
-    background-color: $secondary-500;
+    background-color: $secondary-800;
     &:hover {
-      background-color: $secondary-100;
+      background-color: $secondary-500;
     }
   }
   @include light-mode {
-    color: $secondary-800;
-    background-color: $white;
+    color: $white;
+    background-color: $secondary-100;
     &:hover {
-      background-color: $gray-100;
+      background-color: $secondary-500;
+    }
+  }
+}
+
+@mixin success-button {
+  @include button-base;
+
+  @include dark-mode {
+    color: $white;
+    background-color: $success-500;
+    &:hover {
+      background-color: $success-100;
+    }
+  }
+  @include light-mode {
+    color: $white;
+    background-color: $success-100;
+
+    &:hover {
+      filter: brightness(110%);
+    }
+  }
+}
+
+@mixin alert-button {
+  @include button-base;
+
+  @include dark-mode {
+    color: $white;
+    background-color: $alert-800;
+    &:hover {
+      background-color: $alert-500;
+    }
+  }
+  @include light-mode {
+    color: $white;
+    background-color: $alert-100;
+
+    &:hover {
+      background-color: $alert-500;
     }
   }
 }
@@ -133,20 +171,34 @@
   border: 0;
   transition: all 0.2s ease;
   cursor: pointer;
-  color: $primary-800;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: fit-content;
 
   &:focus {
     border: 0;
     outline: 0;
   }
   &:hover {
-    color: $primary-100;
     transform: scale(1.2);
   }
   &:active {
     transform: scale(0.95);
+  }
+
+  @include light-mode {
+    color: $primary-800;
+
+    &:hover {
+      color: $primary-100;
+    }
+  }
+  @include dark-mode {
+    color: $primary-100;
+
+    &:hover {
+      color: $primary-800;
+    }
   }
 }

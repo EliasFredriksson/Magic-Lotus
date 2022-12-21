@@ -39,7 +39,7 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
 
   const [errorMsg, setErrorMsg] = useState("");
-  const [errorModal, openErrorModal] = useModal({
+  const [ErrorModal, openErrorModal] = useModal({
     innerTsx: (
       <span
         style={{
@@ -108,7 +108,7 @@ const Login = () => {
       if (isFormValid()) {
         console.log("SUBMITTED!");
         const res = await FetchLogin.triggerFetch({
-          data: {
+          body: {
             email: inputState.email,
             password: inputState.password,
           },
@@ -185,7 +185,7 @@ const Login = () => {
         </Button>
       </Card>
       <Button onClick={openErrorModal}>Open modal</Button>
-      {errorModal}
+      {ErrorModal}
     </main>
   );
 };

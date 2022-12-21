@@ -7,8 +7,17 @@
   &.secondary {
     @include secondary-button;
   }
+  &.success {
+    @include success-button;
+  }
+  &.alert {
+    @include alert-button;
+  }
   &.link {
     @include link-button;
+  }
+  &.icon {
+    @include icon-button;
   }
 
   &.small {
@@ -23,4 +32,10 @@
   &.none {
     border-radius: 0;
   }
+
+  // FONT SIZES
+  @include font-sizes;
+
+  // FONT WEIGHTS
+  @include font-weights;
 }

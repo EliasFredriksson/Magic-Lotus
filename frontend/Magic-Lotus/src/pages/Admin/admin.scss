@@ -2,4 +2,29 @@
 
 #admin-page {
   @include page-base;
+
+  @include breakpoint-laptop {
+    align-items: center;
+  }
+
+  .middle {
+    .catalogs {
+      @include display-flex-column;
+
+      @include breakpoint-tablet {
+        max-width: 42rem;
+      }
+
+      .names {
+        @include display-flex-column;
+        gap: $spacing-m;
+
+        .inner {
+          display: flex;
+          flex-wrap: wrap;
+          gap: $spacing-m;
+        }
+      }
+    }
+  }
 }

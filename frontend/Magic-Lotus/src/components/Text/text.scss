@@ -1,0 +1,25 @@
+@use "../../styles/all" as *;
+
+.text-component {
+  // LIGHT / DARK MODE
+  @include light-mode {
+    color: $black;
+  }
+  @include dark-mode {
+    color: $white;
+  }
+
+  // FONT FAMILY
+  &.main {
+    font-family: $main-font;
+  }
+  &.heading {
+    font-family: $heading-font;
+  }
+
+  // FONT WEIGHT
+  @include font-weights;
+
+  // FONT SIZES
+  @include font-sizes;
+}

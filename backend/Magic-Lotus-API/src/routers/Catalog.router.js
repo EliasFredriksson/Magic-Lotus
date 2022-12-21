@@ -8,28 +8,32 @@ const responses = require("../helpers/Response");
 
 const router = express.Router();
 
-// CREATE CATALOG
+// CREATE CATALOG / UPDATE CATALOGS
 router.post("/", auth.checkIfAdmin, async (req, res) => {
   try {
     const { category, data } = req.body;
 
     const catalog = await CatalogModel.findOne({ category });
     if (catalog) {
-      // USER NOT FOUND IN DATABASE
-      // INVALIDATE AUTH TOKEN
-      // SEND RESPONSE
+      catalog.update({
+        uri: data.uri,
+        total_values: data.total_values,
+        data: data.data,
+      });
       res
-        .status(400)
+        .status(200)
         .send(
-          responses.create400Response(
-            `Catalog ${category} already exists!`,
+          responses.create200Response(
+            `Catalog ${category} already exists, updated instead.`,
             req
           )
         );
     } else {
       const newCatalog = new CatalogModel({
         category: category,
-        data: data,
+        uri: data.uri,
+        total_values: data.total_values,
+        data: data.data,
       });
       await newCatalog.save();
       res
@@ -37,12 +41,13 @@ router.post("/", auth.checkIfAdmin, async (req, res) => {
         .send(responses.create200Response(newCatalog._id, "POST", "/catalog/"));
     }
   } catch (error) {
+    console.warn("ERROR: ", error);
     res.status(400).send(responses.create400Response(error, req));
   }
 });
 
 // GET ALL CATALOGS
-router.get("/", async (req, res) => {
+router.get("/", auth.checkIfAdmin, async (req, res) => {
   try {
     const catalogs = await CatalogModel.find();
     res.status(200).send(responses.create200Response(catalogs, req));
@@ -50,9 +55,47 @@ router.get("/", async (req, res) => {
     res.status(400).send(responses.create400Response(error, req));
   }
 });
+// GET ALL CATALOG NAMES
+router.get("/names", async (req, res) => {
+  try {
+    const catalogs = await CatalogModel.find().select("-data");
+    const data = catalogs.map((c) => c.category);
+    res.status(200).send(responses.create200Response(data, req));
+  } catch (error) {
+    res.status(400).send(responses.create400Response(error, req));
+  }
+});
+
+// GET CATALOG BY CATEGORY NAME
+router.get("/:name", async (req, res) => {
+  try {
+    const name = req.params.name;
+    if (name) {
+      const catalog = await CatalogModel.findOne({ category: name });
+      if (!catalog) {
+        res
+          .status(400)
+          .send(
+            responses.create400Response(
+              `No catalog found with name: ${name}`,
+              req
+            )
+          );
+      } else {
+        res.status(200).send(responses.create200Response(catalog, req));
+      }
+    } else {
+      res
+        .status(400)
+        .send(responses.create400Response(`Catalog name not provided!`, req));
+    }
+  } catch (error) {
+    res.status(400).send(responses.create400Response(error, req));
+  }
+});
 
 // GET CATALOG BY ID
-router.get("/:id", async (req, res) => {
+router.get("/id/:id", async (req, res) => {
   try {
     const id = req.params.id;
 

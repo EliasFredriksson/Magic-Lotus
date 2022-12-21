@@ -1,0 +1,58 @@
+@use "../variables/fonts" as *;
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontSize.ts"
+@mixin font-sizes {
+  // FONT SIZES
+  &.xxxxs {
+    font-size: $size-4xs;
+  }
+  &.xxxs {
+    font-size: $size-3xl;
+  }
+  &.xxs {
+    font-size: $size-2xs;
+  }
+  &.xs {
+    font-size: $size-xs;
+  }
+  &.s {
+    font-size: $size-s;
+  }
+  &.m {
+    font-size: $size-m;
+  }
+  &.l {
+    font-size: $size-l;
+  }
+  &.xl {
+    font-size: $size-xl;
+  }
+  &.xxl {
+    font-size: $size-2xl;
+  }
+  &.xxxl {
+    font-size: $size-3xl;
+  }
+  &.xxxxl {
+    font-size: $size-4xl;
+  }
+  &.xxxxxl {
+    font-size: $size-5xl;
+  }
+  &.xxxxxxl {
+    font-size: $size-6xl;
+  }
+}
+
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontWeight.ts"
+@mixin font-weights {
+  // FONT WEIGHT
+  &.light {
+    font-weight: $weight-light;
+  }
+  &.medium {
+    font-weight: $weight-medium;
+  }
+  &.bold {
+    font-weight: $weight-bold;
+  }
+}

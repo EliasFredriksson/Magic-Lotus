@@ -19,7 +19,7 @@ type Order =
 type Dir = "auto" | "asc" | "desc";
 
 // ROUTE
-export const GET_CARDS_SEARCH = "/cards/search";
+export const ROUTE_GET_CARDS_SEARCH = "/cards/search";
 // QUERY PARAMS
 export default interface ICardSearchParams {
   q: string; // A fulltext search query. Make sure that your parameter is properly encoded. Maximum length: 1000 Unicode characters.

@@ -1,0 +1,28 @@
+@use "../../styles/all" as *;
+
+#catalog-page {
+  @include page-base;
+  justify-content: center;
+
+  .middle {
+    .catalog {
+      @include display-flex-column;
+      align-items: center;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+
+        @include breakpoint-laptop {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: $spacing-s;
+        }
+
+        li {
+          margin-left: $spacing-l;
+        }
+      }
+    }
+  }
+}

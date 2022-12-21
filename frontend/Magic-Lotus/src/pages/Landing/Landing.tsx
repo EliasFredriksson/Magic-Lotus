@@ -5,7 +5,7 @@ import { FormEvent, useCallback, useState } from "react";
 import IPaginated from "../../models/scryfall/interfaces/IPaginated";
 import ICard from "../../models/scryfall/interfaces/ICard";
 import ICardSearchParams, {
-  GET_CARDS_SEARCH,
+  ROUTE_GET_CARDS_SEARCH,
 } from "../../services/scryfall/cardsSearch";
 import Button from "../../components/Button/Button";
 import { RxMagnifyingGlass } from "react-icons/rx";
@@ -19,7 +19,7 @@ const Landing = () => {
     null,
     ICardSearchParams
   >({
-    route: GET_CARDS_SEARCH,
+    route: ROUTE_GET_CARDS_SEARCH,
     base: "SCRYFALL",
     method: "GET",
   });

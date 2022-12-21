@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { BREAKPOINTS } from "../../config";
 
 interface IWindowSize {
   width: number;
@@ -7,9 +6,9 @@ interface IWindowSize {
 }
 interface IBreakpoints {
   IS_MOBILE: boolean;
-  IS_TABLET_SMALL: boolean;
-  IS_TABLET_BIG: boolean;
+  IS_TABLET: boolean;
   IS_LAPTOP: boolean;
+  IS_DESKTOP: boolean;
 }
 interface IScreenSizeReturn {
   size: IWindowSize;
@@ -18,9 +17,9 @@ interface IScreenSizeReturn {
 
 const BLANK_IBREAKPOINTS: IBreakpoints = {
   IS_MOBILE: false,
-  IS_TABLET_SMALL: false,
-  IS_TABLET_BIG: false,
+  IS_TABLET: false,
   IS_LAPTOP: false,
+  IS_DESKTOP: false,
 };
 
 const useScreenSize = (): IScreenSizeReturn => {

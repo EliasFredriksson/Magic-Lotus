@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const utils = require("../helpers/utils");
@@ -10,24 +12,7 @@ const { AUTH_TOKEN } = require("../helpers/auth");
 
 const router = express.Router();
 
-router.get("/:id", auth.checkIfLoggedIn, async (req, res) => {
-  try {
-    const id = req.params.id;
-    if (id) {
-      const user = await UsersModel.findById(id);
-      res.status(200).send(create200Response(user, req));
-    } else {
-      res
-        .status(404)
-        .send(
-          create400Response("No ID provided for finding user profile.", req)
-        );
-    }
-  } catch (error) {
-    res.status(400).send(create400Response(error, req.method, req.path));
-  }
-});
-
+// ======================== LOGIN, LOGOUT ========================
 // LOGIN
 router.post("/login", async (req, res) => {
   try {
@@ -46,7 +31,7 @@ router.post("/login", async (req, res) => {
       // Correct login information provided.
       // GENEREATE AUTH COOKIE TOKEN
       const userData = {
-        userId: user._id.toString(),
+        id: user._id.toString(),
         role: user.role,
       };
       // SIGN DATA WITH JWT SECRET
@@ -77,7 +62,6 @@ router.post("/login", async (req, res) => {
     res.status(400).send(create400Response(error, req.method, req.path));
   }
 });
-
 // LOGOUT
 router.post("/logout", auth.checkIfLoggedIn, (req, res) => {
   // We set the token to an empty string. And the option object
@@ -88,8 +72,9 @@ router.post("/logout", auth.checkIfLoggedIn, (req, res) => {
   res.status(200).send(create200Response("Logout successful!", req));
 });
 
-// REGISTER USER
-router.post("/register", async (req, res) => {
+// ======================== CRUD ========================
+// CREATE USER (Register)
+router.post("/", async (req, res) => {
   try {
     // This is deconstructuring.
     const { username, email, password, repeatPassword } = req.body;
@@ -109,6 +94,92 @@ router.post("/register", async (req, res) => {
       });
       await newUser.save();
       res.status(400).send(create200Response(newUser._id, req));
+    }
+  } catch (error) {
+    res.status(400).send(create400Response(error, req.method, req.path));
+  }
+});
+// DELETE USER (Register) // ONLY ALLOWS DELETING YOURSELF.
+router.delete("/", auth.checkIfLoggedIn, async (req, res) => {
+  try {
+    const tokenData = jwt.decode(token, process.env.JWTSECRET);
+    const id = tokenData.id;
+    if (id) {
+      const user = await UsersModel.findById(id);
+      if (user) {
+        await user.delete();
+        res
+          .status(200)
+          .send(
+            create200Response(`Successfully deleted user with ID: ${id}.`, req)
+          );
+      } else {
+        res
+          .status(400)
+          .send(
+            create400Response(`No user found with ID: ${id} to delete.`, req)
+          );
+      }
+    } else {
+      res
+        .status(400)
+        .send(create400Response("No ID provided to delete user.", req));
+    }
+  } catch (error) {
+    res.status(400).send(create400Response(error, req.method, req.path));
+  }
+});
+// GET USER BY LOGGED IN USER.
+router.get("/", auth.checkIfLoggedIn, async (req, res) => {
+  try {
+    const id = req.decodedToken?.id;
+    if (id) {
+      const user = await UsersModel.findById(id);
+      if (user) {
+        res.status(200).send(create200Response(user, req));
+      } else {
+        res
+          .status(404)
+          .send(create400Response(`No user found with ID: ${id}.`, req));
+      }
+    } else {
+      res
+        .status(404)
+        .send(
+          create400Response("No ID provided for finding user profile.", req)
+        );
+    }
+  } catch (error) {
+    console.log("ERROR: ", error);
+    res.status(400).send(create400Response(error, req.method, req.path));
+  }
+});
+// GET PUBLIC PROFILE DATA
+router.get("/:id", auth.checkIfAdmin, async (req, res) => {
+  try {
+    const id = req.params.id;
+    if (id) {
+      const user = await UsersModel.findById(id);
+      if (user) {
+        res
+          .status(200)
+          .send(
+            create200Response(
+              { username: user.username, email: user.email, role: user.role },
+              req
+            )
+          );
+      } else {
+        res
+          .status(404)
+          .send(create400Response(`No user found with ID: ${id}.`, req));
+      }
+    } else {
+      res
+        .status(404)
+        .send(
+          create400Response("No ID provided for finding user profile.", req)
+        );
     }
   } catch (error) {
     res.status(400).send(create400Response(error, req.method, req.path));
