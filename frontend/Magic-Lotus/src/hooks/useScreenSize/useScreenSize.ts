@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 
+const BREAKPOINT_TABLET = 768;
+const BREAKPOINT_LAPTOP = 1024;
+const BREAKPOINT_DESKTOP = 1200;
+
 interface IWindowSize {
   width: number;
   height: number;
@@ -34,15 +38,12 @@ const useScreenSize = (): IScreenSizeReturn => {
   const checkBreakpoints = () => {
     const width = window.innerWidth;
     const breakpointChanges: IBreakpoints = { ...BLANK_IBREAKPOINTS };
-    if (width < BREAKPOINTS.TABLET_SMALL) breakpointChanges.IS_MOBILE = true;
-    else if (
-      width >= BREAKPOINTS.TABLET_SMALL &&
-      width < BREAKPOINTS.TABLET_BIG
-    )
-      breakpointChanges.IS_TABLET_SMALL = true;
-    else if (width >= BREAKPOINTS.TABLET_BIG && width < BREAKPOINTS.LAPTOP)
-      breakpointChanges.IS_TABLET_BIG = true;
-    else if (width >= BREAKPOINTS.LAPTOP) breakpointChanges.IS_LAPTOP = true;
+    if (width < BREAKPOINT_TABLET) breakpointChanges.IS_MOBILE = true;
+    else if (width >= BREAKPOINT_TABLET && width < BREAKPOINT_LAPTOP)
+      breakpointChanges.IS_TABLET = true;
+    else if (width >= BREAKPOINT_LAPTOP && width < BREAKPOINT_DESKTOP)
+      breakpointChanges.IS_LAPTOP = true;
+    else if (width >= BREAKPOINT_DESKTOP) breakpointChanges.IS_DESKTOP = true;
     setBreakpoints(breakpointChanges);
   };
 

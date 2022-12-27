@@ -1,0 +1,18 @@
+@use "../../styles/all" as *;
+
+.magic-card-component {
+  border-radius: 4.75% / 3.5%;
+  overflow: hidden;
+  aspect-ratio: $card-aspect-ratio;
+  box-shadow: $shadow-dark;
+  transition: transform 0.1s ease;
+  cursor: pointer;
+
+  &.disabled {
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: scale(1.025) translate(0, -0.5rem);
+  }
+}

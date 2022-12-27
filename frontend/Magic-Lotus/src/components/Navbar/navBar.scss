@@ -3,7 +3,6 @@
 .main-navbar {
   @include display-flex-row;
   padding: $spacing-m;
-
   z-index: 10;
 
   @include dark-mode {
@@ -15,12 +14,25 @@
     box-shadow: -0.5rem -1rem 5rem 2rem $primary-500;
   }
 
-  height: $size-6xl;
-  @include breakpoint-laptop {
-    height: $size-4xl;
+  .left {
+    .home-button {
+      width: 5rem;
+      height: 5rem;
+    }
   }
 
-  .button-component {
-    max-width: fit-content;
+  .middle {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+
+    form {
+      flex-grow: 1;
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
   }
 }

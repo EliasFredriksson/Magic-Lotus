@@ -24,6 +24,10 @@ interface IProps {
   max?: string;
   // DISABLED
   disabled?: boolean;
+
+  // AFTER / BEFORE DEC
+  beforeDec?: React.ReactElement | string;
+  afterDec?: React.ReactElement | string;
 }
 
 const Input = (props: IProps) => {
@@ -40,7 +44,7 @@ const Input = (props: IProps) => {
             : "You need to provide an 'id' prop for label!"}
         </label>
       )}
-
+      {props.beforeDec && <div className="before">{props.beforeDec}</div>}
       {props.type === "textarea" ? (
         <textarea
           className="input-textarea"
@@ -72,6 +76,7 @@ const Input = (props: IProps) => {
           }}
         />
       )}
+      {props.afterDec && <div className="after">{props.afterDec}</div>}
 
       <span className={`validation-msg ${!props.isValid ? "show" : "hide"}`}>
         {props.validationMsg}

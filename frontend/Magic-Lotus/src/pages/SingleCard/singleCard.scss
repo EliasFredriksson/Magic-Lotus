@@ -1,0 +1,35 @@
+@use "../../styles/all" as *;
+
+#card-page {
+  @include page-base;
+
+  .middle {
+    // border: 5px solid red;
+    width: 100%;
+    border: 5px solid cyan;
+
+    .wrapper {
+      @include display-flex-column;
+      flex-grow: 1;
+      align-items: center;
+
+      @include breakpoint-laptop {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .left {
+        @include display-flex-column;
+        gap: $spacing-m;
+        align-items: center;
+        text-align: center;
+      }
+
+      .right {
+        flex-grow: 1;
+        background-color: blue;
+        height: 100%;
+      }
+    }
+  }
+}

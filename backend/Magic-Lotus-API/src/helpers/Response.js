@@ -1,6 +1,6 @@
 const create400Response = (error, req) => {
   return {
-    success: false,
+    object: "magic_lotus_error",
     data: "",
     error: error,
     method: req.method,
@@ -10,7 +10,7 @@ const create400Response = (error, req) => {
 };
 const create200Response = (data, req) => {
   return {
-    success: true,
+    object: "magic_lotus_success",
     data: data,
     error: "",
     method: req.method,

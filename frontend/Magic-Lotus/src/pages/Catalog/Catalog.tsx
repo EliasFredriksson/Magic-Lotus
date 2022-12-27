@@ -9,8 +9,8 @@ import useObjectState from "../../hooks/useObjectState/useObjectState";
 import ICatalog, {
   BLANK_CATALOG,
 } from "../../models/backend/interfaces/ICatalog";
-import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
-import { GET_CATALOG_BY_CATEGORY_NAME } from "../../services/backend/Catalog.routes";
+import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
+import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
 type Props = {};
 
 const Catalog = (props: Props) => {
@@ -18,7 +18,7 @@ const Catalog = (props: Props) => {
   const [catalog, setCatalog] = useObjectState<ICatalog>(BLANK_CATALOG);
   const FetchCatalog = useFetch<IServiceResponse<ICatalog>>({
     base: "BACKEND",
-    route: GET_CATALOG_BY_CATEGORY_NAME(name ? name : ""),
+    route: CATALOG_ROUTES.GET_CATALOG_BY_CATEGORY_NAME(name ? name : ""),
     method: "GET",
   });
 

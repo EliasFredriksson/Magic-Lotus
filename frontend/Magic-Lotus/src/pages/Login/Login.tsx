@@ -10,9 +10,10 @@ import useAuth from "../../hooks/useAuth/useAuth";
 import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
-import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
+import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import IUser from "../../models/backend/interfaces/IUser";
 import "./login.scss";
+import { useFetchPostUserLogin } from "../../services/backend/User.service";
 
 interface IInputValidity {
   email: boolean;
@@ -62,17 +63,7 @@ const Login = () => {
     useObjectState<IInputState>(BLANK_INPUT_STATE); // INPUT STATES
   // =========================================================================================
 
-  const FetchLogin = useFetch<
-    IServiceResponse<IUser>,
-    {
-      email: string;
-      password: string;
-    }
-  >({
-    method: "POST",
-    route: "/users/login",
-    base: "BACKEND",
-  });
+  const FetchLogin = useFetchPostUserLogin();
 
   const isFormValid = useCallback((): boolean => {
     const validity = { ...BLANK_INPUT_VALIDITY };
@@ -106,7 +97,6 @@ const Login = () => {
       e.preventDefault();
       // LOGIN
       if (isFormValid()) {
-        console.log("SUBMITTED!");
         const res = await FetchLogin.triggerFetch({
           body: {
             email: inputState.email,
@@ -114,15 +104,8 @@ const Login = () => {
           },
         });
 
-        if (res.success) {
-          login(res.data);
-          navigate(from, { replace: true }); // REPLACES CURRENT URL SO LOGIN PAGE IS NOT REMEMBERED.
-        } else {
-          if (!res.error) {
-            console.warn("UNKNOWN ERROR!: ", res);
-            return;
-          }
-
+        if (res.object === "aborted") return;
+        if (res.object === "magic_lotus_error") {
           setLiveValidate(true);
           setErrorMsg("Incorrect username / password. Try again.");
           openErrorModal();
@@ -134,6 +117,9 @@ const Login = () => {
             email: false,
             password: false,
           });
+        } else {
+          login(res.data);
+          navigate(from, { replace: true });
         }
       }
     },

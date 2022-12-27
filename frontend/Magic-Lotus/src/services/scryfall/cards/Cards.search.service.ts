@@ -1,5 +1,10 @@
-type Unique = "cards" | "art" | "prints";
-type Order =
+import useFetch from "../../../hooks/useFetch/useFetch";
+import ICard from "../../../models/scryfall/interfaces/ICard";
+import Paginated from "../../../models/scryfall/types/Paginated";
+import ScryfallError from "../../../models/scryfall/types/ScryfallError";
+
+export type Unique = "cards" | "art" | "prints";
+export type Order =
   | "name"
   | "set"
   | "released"
@@ -16,12 +21,9 @@ type Order =
   | "artist"
   | "review";
 // SORTING ORDER
-type Dir = "auto" | "asc" | "desc";
-
-// ROUTE
-export const ROUTE_GET_CARDS_SEARCH = "/cards/search";
+export type Dir = "auto" | "asc" | "desc";
 // QUERY PARAMS
-export default interface ICardSearchParams {
+export interface ICardSearchParams {
   q: string; // A fulltext search query. Make sure that your parameter is properly encoded. Maximum length: 1000 Unicode characters.
   unique?: Unique; // The strategy for omitting similar cards. See above.
   order?: Order; // The method to sort returned cards. See above.
@@ -33,3 +35,12 @@ export default interface ICardSearchParams {
   format?: "json" | "csv"; // The data format to return: json or csv. Defaults to json.
   pretty?: boolean; // If true, the returned JSON will be prettified. Avoid using for production code.
 }
+// ROUTE
+const useFetchCardSearch = () => {
+  return useFetch<Paginated<ICard[]>, ScryfallError, null, ICardSearchParams>({
+    base: "SCRYFALL",
+    method: "GET",
+    route: "/cards/search",
+  });
+};
+export default useFetchCardSearch;

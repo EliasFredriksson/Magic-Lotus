@@ -1,10 +1,13 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
-import useAuth from "../useAuth/useAuth";
 import { MethodName, METHODS_MAP } from "./ServiceBase";
 
 // #############################################################################################################################
+
+type AbortedError = {
+  object: "aborted";
+};
 
 interface ITriggerFetch<QParams, BodyParams> {
   params?: QParams;
@@ -25,15 +28,15 @@ const debug = (query: string, data: any, res: any) => {
   console.log("RES\t\t", res, "\n\n\n");
 };
 
-const useFetch = <IResult = any, BodyParams = any, QParams = any>(
+const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
   props: IProps
 ): {
   isLoading: boolean;
-  triggerFetch: (args?: ITriggerFetch<QParams, BodyParams>) => Promise<IResult>;
+  triggerFetch: (
+    args?: ITriggerFetch<QParams, BodyParams>
+  ) => Promise<IResult | IError | AbortedError>;
   abort: () => void;
 } => {
-  const { credentials } = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -42,7 +45,9 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
   }, []);
 
   const triggerFetch = useCallback(
-    async (args?: ITriggerFetch<QParams, BodyParams>): Promise<IResult> => {
+    async (
+      args?: ITriggerFetch<QParams, BodyParams>
+    ): Promise<IResult | IError | AbortedError> => {
       setIsLoading(true);
       try {
         if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -54,6 +59,7 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
         const query = props.encodeUri
           ? encodeURI(convertObjectToQuery(args?.params))
           : convertObjectToQuery(args?.params);
+
         const data = args?.body ? args.body : null;
 
         const res = await method<IResult>({
@@ -73,11 +79,13 @@ const useFetch = <IResult = any, BodyParams = any, QParams = any>(
         return res.data;
       } catch (error) {
         // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
-        if (!((error as Error).name === "CanceledError")) setIsLoading(false);
-        if ((error as Error).name === "AxiosError") {
-          return (error as AxiosError<IResult>).response?.data as IResult;
+        if ((error as Error).name === "CanceledError") {
+          return { object: "aborted" } as AbortedError;
         }
-        return error as IResult;
+        setIsLoading(false);
+        if ((error as Error).name === "AxiosError") {
+          return (error as AxiosError<IError>).response?.data as IError;
+        } else return error as IError;
       }
     },
 

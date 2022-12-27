@@ -6,12 +6,11 @@ import Spinner from "../../components/Spinner/Spinner";
 import Text from "../../components/Text/Text";
 import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
-import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
-import { GET_CATALOG_NAMES } from "../../services/backend/Catalog.routes";
+import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import useUpdateAllCatalogs from "../../hooks/useUpdateAllCatalogs/useUpdateAllCatalogs";
 import { useNavigate } from "react-router-dom";
-import BackButton from "../../components/BackButton/BackButton";
 import PageHeader from "../../components/PageHeader/PageHeader";
+import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -46,7 +45,7 @@ const Admin = () => {
   const [catalogNames, setCatalogNames] = useState<string[]>([]);
   const FetchCatalogNames = useFetch<IServiceResponse<string[]>>({
     base: "BACKEND",
-    route: GET_CATALOG_NAMES(),
+    route: CATALOG_ROUTES.GET_CATALOG_NAMES(),
     method: "GET",
   });
 

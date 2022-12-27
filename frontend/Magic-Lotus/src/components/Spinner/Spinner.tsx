@@ -1,7 +1,8 @@
 import "./spinner.scss";
+export type ISpinnerSize = "x-small" | "small" | "medium" | "large" | "x-large";
 
 type Props = {
-  size: "x-small" | "small" | "medium" | "large" | "x-large";
+  size: ISpinnerSize;
 };
 
 const Spinner = ({ size }: Props) => {

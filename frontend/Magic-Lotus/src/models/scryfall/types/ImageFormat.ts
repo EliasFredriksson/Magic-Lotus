@@ -1,4 +1,4 @@
-type Formats =
+export type Formats =
   | "png"
   | "border_crop"
   | "art_crop"

@@ -4,13 +4,14 @@
   @include display-flex-column;
   padding: $spacing-l;
   border-radius: $border-radius-large;
+  min-width: 0px;
 
   @include light-mode {
-    box-shadow: 0 1rem 2rem 0 $gray-900;
+    box-shadow: $shadow-light;
     background: $card-gradient-light;
   }
   @include dark-mode {
-    box-shadow: 0 1rem 2rem 0 $gray-1100;
+    box-shadow: $shadow-dark;
     background: $card-gradient-dark;
   }
 }

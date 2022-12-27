@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import useFetch from "../useFetch/useFetch";
 import useObjectState from "../useObjectState/useObjectState";
-import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
+import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import ICatalog from "../../models/scryfall/interfaces/ICatalog";
-import { POST_CATALOG } from "../../services/backend/Catalog.routes";
 import {
   GET_CATALOG_ABILITY_WORDS,
   GET_CATALOG_ARTIFACT_TYPES,
@@ -21,6 +20,7 @@ import {
   GET_CATALOG_WATERMARKS,
   GET_CATALOG_WORD_BANK,
 } from "../../services/scryfall/Catalog.routes";
+import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
 
 type LoadingState = {
   "card-names": boolean;
@@ -86,7 +86,7 @@ const useUpdateAllCatalogs = (
     { category: string; data: ICatalog }
   >({
     base: "BACKEND",
-    route: POST_CATALOG(),
+    route: CATALOG_ROUTES.POST_CATALOG(),
     method: "POST",
   });
 

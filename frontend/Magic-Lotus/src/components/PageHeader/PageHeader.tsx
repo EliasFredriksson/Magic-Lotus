@@ -5,7 +5,7 @@ import Text from "../Text/Text";
 import "./pageHeader.scss";
 
 type Props = {
-  title: string | React.ReactNode;
+  title?: string | React.ReactNode;
 };
 
 const PageHeader = (props: Props) => {

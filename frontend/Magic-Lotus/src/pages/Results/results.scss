@@ -1,0 +1,42 @@
+@use "../../styles/all" as *;
+
+#results-page {
+  @include page-base;
+
+  .middle {
+    .spinner-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40rem;
+      width: 40rem;
+    }
+
+    .results {
+      &.flex {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        @include breakpoint-laptop {
+          flex-direction: row;
+        }
+      }
+      &.grid {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        grid-template-columns: repeat(1, 1fr);
+        gap: $spacing-m;
+
+        @include breakpoint-tablet {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @include breakpoint-desktop {
+          grid-template-columns: repeat(4, 1fr);
+          gap: $spacing-l;
+        }
+      }
+    }
+  }
+}

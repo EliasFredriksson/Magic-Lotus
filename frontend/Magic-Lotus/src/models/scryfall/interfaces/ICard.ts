@@ -1,4 +1,4 @@
-import { ILanguageCode } from "../../constants/LANGUAGE_DATA";
+import { ILanguageCode } from "../../../constants/LANGUAGE_DATA";
 import BorderColor from "../types/BorderColor";
 import ColorAbbveration from "../types/ColorAbbveration";
 import Finish from "../types/Finish";

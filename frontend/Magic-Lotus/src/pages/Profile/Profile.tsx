@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
-import IServiceResponse from "../../models/backend/interfaces/IServiceResponse";
+import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import IUser, { BLANK_IUSER } from "../../models/backend/interfaces/IUser";
 import { GET_USER_PROFILE } from "../../services/backend/Users.routes";
 import "./profile.scss";
