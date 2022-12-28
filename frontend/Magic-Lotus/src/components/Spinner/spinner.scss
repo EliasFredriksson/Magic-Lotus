@@ -1,27 +1,7 @@
 @use "../../styles/all" as *;
 
 .spinner-component {
-  border-radius: 50%;
-
-  animation: spin 1s linear infinite;
-  flex-grow: 0 !important;
-  flex-shrink: 0 !important;
-
-  filter: drop-shadow(0px 0px 0.2rem lightgrey);
-
-  @include light-mode {
-    border-top: 0.5rem solid $white;
-    border-right: 0.5rem solid $primary-100;
-    border-bottom: 0.5rem solid $primary-100;
-    border-left: 0.5rem solid $primary-100;
-  }
-
-  @include dark-mode {
-    border-top: 0.5rem solid $primary-500;
-    border-right: 0.5rem solid $white;
-    border-bottom: 0.5rem solid $white;
-    border-left: 0.5rem solid $white;
-  }
+  $border-color: $white;
 
   &.x-small {
     border-width: 0.25rem;
@@ -52,13 +32,78 @@
     height: $size-6xl;
     width: $size-6xl;
   }
-}
 
-@keyframes spin {
-  from {
-    rotate: 0deg;
+  &.spinner {
+    border-radius: 50%;
+
+    animation: spin 1s linear infinite;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+
+    filter: drop-shadow(0px 0px 0.2rem $gray-700);
+
+    @include light-mode {
+      border-top: 0.5rem solid $white;
+      border-right: 0.5rem solid $primary-100;
+      border-bottom: 0.5rem solid $primary-100;
+      border-left: 0.5rem solid $primary-100;
+    }
+
+    @include dark-mode {
+      border-top: 0.5rem solid $primary-500;
+      border-right: 0.5rem solid $white;
+      border-bottom: 0.5rem solid $white;
+      border-left: 0.5rem solid $white;
+    }
+
+    @keyframes spin {
+      from {
+        rotate: 0deg;
+      }
+      to {
+        rotate: 360deg;
+      }
+    }
   }
-  to {
-    rotate: 360deg;
+
+  &.pulse {
+    $animation-duration: 2s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    & > div {
+      position: absolute;
+      border-style: solid;
+      border-color: $border-color;
+      opacity: 1;
+      border-radius: 50%;
+      animation: ripple $animation-duration cubic-bezier(0, 0.5, 0.5, 1)
+        infinite forwards;
+      top: 50%;
+      left: 50%;
+      filter: drop-shadow(0px 0px 1rem $border-color);
+
+      &:nth-child(2) {
+        animation-delay: calc(calc($animation-duration / 2) * -1);
+      }
+
+      @keyframes ripple {
+        from {
+          transform: translate(-50%, -50%);
+          width: 0;
+          height: 0;
+          opacity: 1;
+        }
+        to {
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
+      }
+    }
   }
 }

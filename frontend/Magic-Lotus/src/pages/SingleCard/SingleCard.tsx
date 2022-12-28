@@ -10,6 +10,7 @@ import PageHeader from "../../components/PageHeader/PageHeader";
 import useFetchCardById from "../../services/scryfall/cards/Cards.byId.service";
 import useModal from "../../hooks/useModal/useModal";
 import { useFetchSymbologyParseMana } from "../../services/scryfall/CardSymbols.service";
+import Main from "../../components/Main/Main";
 
 const SingleCard = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,7 @@ const SingleCard = () => {
   }, [card]);
 
   return (
-    <main id="card-page">
+    <Main id="card-page">
       <div className="middle">
         <PageHeader />
         {card ? (
@@ -93,7 +94,7 @@ const SingleCard = () => {
         )}
       </div>
       {errorModal}
-    </main>
+    </Main>
   );
 };
 

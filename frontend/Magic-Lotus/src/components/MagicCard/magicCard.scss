@@ -3,7 +3,7 @@
 .magic-card-component {
   border-radius: 4.75% / 3.5%;
   overflow: hidden;
-  aspect-ratio: $card-aspect-ratio;
+  aspect-ratio: 2.5 / 3.5;
   box-shadow: $shadow-dark;
   transition: transform 0.1s ease;
   cursor: pointer;

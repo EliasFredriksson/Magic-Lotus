@@ -44,39 +44,41 @@ const Input = (props: IProps) => {
             : "You need to provide an 'id' prop for label!"}
         </label>
       )}
-      {props.beforeDec && <div className="before">{props.beforeDec}</div>}
-      {props.type === "textarea" ? (
-        <textarea
-          className="input-textarea"
-          tabIndex={props.tabIndex ? props.tabIndex : undefined}
-          id={props.id}
-          name={props.name ? props.name : ""}
-          placeholder={props.placeholder}
-          value={props.value}
-          disabled={props.disabled ? props.disabled : false}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            e.preventDefault();
-            props.onChange(e);
-          }}
-        />
-      ) : (
-        <input
-          className="input-regular"
-          tabIndex={props.tabIndex ? props.tabIndex : undefined}
-          id={props.id}
-          name={props.name ? props.name : ""}
-          type={props.type}
-          placeholder={props.placeholder}
-          value={props.value}
-          disabled={props.disabled ? props.disabled : false}
-          min={props.min}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            e.preventDefault();
-            props.onChange(e);
-          }}
-        />
-      )}
-      {props.afterDec && <div className="after">{props.afterDec}</div>}
+      <div className="inner-wrapper">
+        {props.beforeDec && <div className="before">{props.beforeDec}</div>}
+        {props.type === "textarea" ? (
+          <textarea
+            className="input-textarea"
+            tabIndex={props.tabIndex ? props.tabIndex : undefined}
+            id={props.id}
+            name={props.name ? props.name : ""}
+            placeholder={props.placeholder}
+            value={props.value}
+            disabled={props.disabled ? props.disabled : false}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              e.preventDefault();
+              props.onChange(e);
+            }}
+          />
+        ) : (
+          <input
+            className="input-regular"
+            tabIndex={props.tabIndex ? props.tabIndex : undefined}
+            id={props.id}
+            name={props.name ? props.name : ""}
+            type={props.type}
+            placeholder={props.placeholder}
+            value={props.value}
+            disabled={props.disabled ? props.disabled : false}
+            min={props.min}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              e.preventDefault();
+              props.onChange(e);
+            }}
+          />
+        )}
+        {props.afterDec && <div className="after">{props.afterDec}</div>}
+      </div>
 
       <span className={`validation-msg ${!props.isValid ? "show" : "hide"}`}>
         {props.validationMsg}

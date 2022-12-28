@@ -1,16 +1,16 @@
 import "./landing.scss";
 import Input from "../../components/Input/Input";
 import { FormEvent, useCallback, useState } from "react";
-
 import Button from "../../components/Button/Button";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { isEmpty } from "../../helpers/StringValidations";
-import { useNavigate } from "react-router-dom";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
+import Main from "../../components/Main/Main";
+import useRouterContext from "../../hooks/useRouterContext/useRouterContext";
 
 const Landing = () => {
+  const { navigate } = useRouterContext();
   const [searchText, setSearchText] = useState("");
-  const navigate = useNavigate();
 
   const handleSearch = useCallback(
     async (e: FormEvent) => {
@@ -32,7 +32,7 @@ const Landing = () => {
   );
 
   return (
-    <main id="landing-page">
+    <Main id="landing-page">
       <h1>Welcome to Magic Lotus!</h1>
       <em>
         A <cite>Magic the Gathering</cite> card search website powered by{" "}
@@ -52,7 +52,7 @@ const Landing = () => {
           <RxMagnifyingGlass />
         </Button>
       </form>
-    </main>
+    </Main>
   );
 };
 

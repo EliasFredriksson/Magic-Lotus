@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import { lazy } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import RequireRole from "./components/RequireRole/RequireRole";
@@ -20,34 +19,32 @@ const Router = () => {
   const Card = lazy(() => import("./pages/SingleCard/SingleCard"));
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        {/* LAYOUT FILE */}
-        <Route element={<Layout />}>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/card/:id" element={<Card />} />
+    <Routes location={location} key={location.pathname}>
+      {/* LAYOUT FILE */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/results" element={<Results />} />
+        <Route path="/card/:id" element={<Card />} />
 
-          <Route element={<RequireRole roles={["user", "admin"]} />}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-
-          <Route element={<RequireRole roles={["admin"]} />}>
-            <Route path="/admin">
-              <Route index element={<Admin />} />
-              <Route path="catalog/:name" element={<Catalog />} />
-            </Route>
-          </Route>
-
-          {/* NOT FOUND (404) */}
-          <Route path="*" element={<NotFound />} />
+        <Route element={<RequireRole roles={["user", "admin"]} />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
-      </Routes>
-    </AnimatePresence>
+
+        <Route element={<RequireRole roles={["admin"]} />}>
+          <Route path="/admin">
+            <Route index element={<Admin />} />
+            <Route path="catalog/:name" element={<Catalog />} />
+          </Route>
+        </Route>
+
+        {/* NOT FOUND (404) */}
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 };
 

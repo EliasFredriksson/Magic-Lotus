@@ -23,25 +23,39 @@
     }
   }
 
-  .input-textarea,
-  .input-regular {
+  .inner-wrapper {
     @include basic-input;
-    resize: none;
+    display: flex;
+    align-items: center;
+    gap: $spacing-s;
 
-    // TO HIDE THE BUILD IT "EYE" ICON FOR EDGE
-    &::-ms-reveal,
-    &::-ms-clear {
-      display: none;
+    .input-textarea,
+    .input-regular {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: none;
+
+      // TO HIDE THE BUILD IT "EYE" ICON FOR EDGE
+      &::-ms-reveal,
+      &::-ms-clear {
+        display: none;
+      }
+
+      &:focus {
+        border: 0;
+        outline: 0;
+      }
     }
-  }
 
-  .input-textarea {
-    min-height: 10rem;
-  }
+    .input-textarea {
+      min-height: 10rem;
+    }
 
-  .input-label {
-    @include basic-label;
-    margin-left: $spacing-s;
+    .input-label {
+      @include basic-label;
+      margin-left: $spacing-s;
+    }
   }
 
   .validation-msg {
@@ -61,17 +75,5 @@
       top: calc(100% - 1.5rem);
       opacity: 0;
     }
-  }
-
-  .before,
-  .after {
-    border: 2px solid red;
-    position: absolute;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  .after {
-    right: 0;
   }
 }

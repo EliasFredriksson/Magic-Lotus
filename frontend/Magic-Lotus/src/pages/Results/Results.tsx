@@ -14,9 +14,11 @@ import useFetchCardSearch, {
   Order,
 } from "../../services/scryfall/cards/Cards.search.service";
 import useModal from "../../hooks/useModal/useModal";
+import Main from "../../components/Main/Main";
+import useRouterContext from "../../hooks/useRouterContext/useRouterContext";
 
 const Results = () => {
-  const navigate = useNavigate();
+  const { navigate } = useRouterContext();
   const [query, setQuery] = useSearchParams();
   const [result, setResult] = useObjectState<IPaginated<ICard[]>>(
     BLANK_PAGINATED_CARDS
@@ -40,7 +42,6 @@ const Results = () => {
           order,
         },
       });
-      console.log("RES: ", res);
       if (res.object === "aborted") return;
       if (res.object === "list") {
         setResult(res);
@@ -58,7 +59,7 @@ const Results = () => {
   }, []);
 
   return (
-    <main id="results-page">
+    <Main id="results-page">
       <div className="middle">
         <PageHeader title={`Result`} />
 
@@ -84,7 +85,7 @@ const Results = () => {
         )}
       </div>
       {errorModal}
-    </main>
+    </Main>
   );
 };
 

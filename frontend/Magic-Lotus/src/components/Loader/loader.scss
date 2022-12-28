@@ -12,6 +12,7 @@
   align-items: center;
 
   z-index: 1000;
+  transition: opacity 0.5s ease;
 
   @include dark-mode {
     background: $main-gradient-dark;
@@ -20,20 +21,11 @@
     background: $main-gradient-light;
   }
 
-  margin-top: $size-6xl;
-  height: calc(100vh - $size-6xl);
-
-  @include breakpoint-laptop {
-    margin-top: $size-4xl;
-    height: calc(100vh - $size-4xl);
+  &.fade-in {
+    opacity: 1;
   }
 
-  @include breakpoint-laptop {
-    justify-content: flex-end;
-    align-items: flex-end;
-
-    .spinner-component {
-      margin: 0 $spacing-2xl $spacing-2xl 0;
-    }
+  &.fade-out {
+    opacity: 0;
   }
 }
