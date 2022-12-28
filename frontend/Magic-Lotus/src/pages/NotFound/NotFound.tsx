@@ -1,9 +1,8 @@
+import Main from "../../components/Main/Main";
 import "./notFound.scss";
 
-type Props = {};
-
-const NotFound = (props: Props) => {
-  return <main>404</main>;
+const NotFound = () => {
+  return <Main id="not-found-page">404</Main>;
 };
 
 export default NotFound;

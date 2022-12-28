@@ -6,10 +6,10 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { isEmpty } from "../../helpers/StringValidations";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import Main from "../../components/Main/Main";
-import useRouterContext from "../../hooks/useRouterContext/useRouterContext";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 
 const Landing = () => {
-  const { navigate } = useRouterContext();
+  const { navigate } = useNavigate();
   const [searchText, setSearchText] = useState("");
 
   const handleSearch = useCallback(

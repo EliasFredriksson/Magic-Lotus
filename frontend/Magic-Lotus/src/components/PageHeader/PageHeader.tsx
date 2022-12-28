@@ -1,16 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import "./pageHeader.scss";
 import { IoArrowBackOutline } from "react-icons/io5";
 import Button from "../Button/Button";
 import Text from "../Text/Text";
-import "./pageHeader.scss";
-import useRouterContext from "../../hooks/useRouterContext/useRouterContext";
+import useRouterContext from "../../hooks/useNavigate/useNavigate";
 
 type Props = {
   title?: string | React.ReactNode;
 };
 
 const PageHeader = (props: Props) => {
-  // const navigate = useNavigate();
   const { navigate } = useRouterContext();
   return (
     <header className="page-header">

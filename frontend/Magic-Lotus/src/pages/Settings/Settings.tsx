@@ -1,9 +1,8 @@
+import Main from "../../components/Main/Main";
 import "./settings.scss";
 
-type Props = {};
-
-const Settings = (props: Props) => {
-  return <div>Settings</div>;
+const Settings = () => {
+  return <Main id="settings-page">Settings</Main>;
 };
 
 export default Settings;

@@ -1,15 +1,10 @@
 import { FormEvent, useCallback } from "react";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
-import useFetch from "../../hooks/useFetch/useFetch";
+import Main from "../../components/Main/Main";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import "./register.scss";
-
-interface IStrapiRegisterBody {
-  username: string;
-  email: string;
-  password: string;
-}
 
 interface IInputStates {
   username: string;
@@ -19,6 +14,8 @@ interface IInputStates {
 }
 
 const Register = () => {
+  const { navigate } = useNavigate();
+
   const [inputs, setInputs] = useObjectState<IInputStates>({
     username: "",
     email: "",
@@ -26,25 +23,20 @@ const Register = () => {
     repeatPassword: "",
   });
   //                          Query  Body            Response
-  const { triggerFetch } = useFetch<null, IStrapiRegisterBody, any>({
-    method: "POST",
-    route: "/auth/local/register",
-    base: "STRAPI",
-  });
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
-    triggerFetch({
-      data: {
-        username: inputs.username,
-        email: inputs.email,
-        password: inputs.password,
-      },
-    });
+    // triggerFetch({
+    //   data: {
+    //     username: inputs.username,
+    //     email: inputs.email,
+    //     password: inputs.password,
+    //   },
+    // });
   }, []);
 
   return (
-    <main id="register-page">
+    <Main id="register-page">
       <h1>Register</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <Input
@@ -98,7 +90,7 @@ const Register = () => {
 
         <Button type="submit">Register</Button>
       </form>
-    </main>
+    </Main>
   );
 };
 

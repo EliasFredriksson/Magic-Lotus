@@ -11,9 +11,9 @@ import ICatalog, {
 } from "../../models/backend/interfaces/ICatalog";
 import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
-type Props = {};
+import Main from "../../components/Main/Main";
 
-const Catalog = (props: Props) => {
+const Catalog = () => {
   const { name } = useParams();
   const [catalog, setCatalog] = useObjectState<ICatalog>(BLANK_CATALOG);
   const FetchCatalog = useFetch<IServiceResponse<ICatalog>>({
@@ -35,7 +35,7 @@ const Catalog = (props: Props) => {
   }, []);
 
   return (
-    <main id="catalog-page">
+    <Main id="catalog-page">
       <div className="middle">
         <PageHeader title={<em>{catalog.category}</em>} />
         {FetchCatalog.isLoading ? (
@@ -52,7 +52,7 @@ const Catalog = (props: Props) => {
           </div>
         )}
       </div>
-    </main>
+    </Main>
   );
 };
 

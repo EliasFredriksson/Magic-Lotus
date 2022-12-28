@@ -8,9 +8,11 @@ import { FormEvent, useCallback, useState } from "react";
 import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 import { FaHome } from "react-icons/fa";
 import { RxMagnifyingGlass } from "react-icons/rx";
+import useRouterContext from "../../hooks/useNavigate/useNavigate";
 
 const Navbar = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const { navigate } = useRouterContext();
 
   const [searchTerm, setSearchTerm] = useState("");
 

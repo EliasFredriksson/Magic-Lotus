@@ -1,21 +1,21 @@
 import "./main.scss";
 import { useCallback, useEffect, useState } from "react";
-import useRouterContext from "../../hooks/useRouterContext/useRouterContext";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 
 type Props = {
   id: string;
-  delay?: number;
   children?: React.ReactNode;
   onUnmounted?: () => void;
 };
 
-const DEFAULT_DELAY = 1000; // 500 ms
+const DEFAULT_DELAY = 1000; // 1000 ms
 const Main = (props: Props) => {
-  const { show, goToPage } = useRouterContext();
+  const { show, goToPage } = useNavigate();
   const [shouldRender, setRender] = useState(show);
+
   useEffect(() => {
     if (show) setRender(true);
-  }, [show]);
+  }, []);
 
   const onAnimationEnd = useCallback(() => {
     if (!show) {

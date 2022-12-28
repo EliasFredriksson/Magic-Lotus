@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
@@ -7,13 +7,12 @@ import Spinner from "../../components/Spinner/Spinner";
 import { isValidityValid } from "../../helpers/InputValidityHelpers";
 import { isEmpty } from "../../helpers/StringValidations";
 import useAuth from "../../hooks/useAuth/useAuth";
-import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
-import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
-import IUser from "../../models/backend/interfaces/IUser";
 import "./login.scss";
 import { useFetchPostUserLogin } from "../../services/backend/User.service";
+import Main from "../../components/Main/Main";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 
 interface IInputValidity {
   email: boolean;
@@ -35,7 +34,7 @@ const BLANK_INPUT_STATE: IInputState = {
 
 const Login = () => {
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const { navigate } = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
 
@@ -127,7 +126,7 @@ const Login = () => {
   );
 
   return (
-    <main id="login-page">
+    <Main id="login-page">
       <h1>Login</h1>
 
       <Card>
@@ -172,7 +171,7 @@ const Login = () => {
       </Card>
       <Button onClick={openErrorModal}>Open modal</Button>
       {ErrorModal}
-    </main>
+    </Main>
   );
 };
 

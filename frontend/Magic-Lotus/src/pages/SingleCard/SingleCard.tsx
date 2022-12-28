@@ -29,6 +29,7 @@ const SingleCard = () => {
 
   useEffect(() => {
     const initFetch = async () => {
+      setIsLoading(true);
       const res = await fetchCard.triggerFetch();
       if (res.object === "aborted") return;
       if (res.object === "error") {
@@ -52,6 +53,7 @@ const SingleCard = () => {
         return;
       }
       console.log("PARSED MANA: ", parsed);
+      setIsLoading(false);
     };
     initFetch();
 

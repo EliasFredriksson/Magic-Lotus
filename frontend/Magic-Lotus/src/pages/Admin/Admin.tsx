@@ -8,12 +8,14 @@ import useFetch from "../../hooks/useFetch/useFetch";
 import useModal from "../../hooks/useModal/useModal";
 import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import useUpdateAllCatalogs from "../../hooks/useUpdateAllCatalogs/useUpdateAllCatalogs";
-import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
+import Main from "../../components/Main/Main";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 
 const Admin = () => {
-  const navigate = useNavigate();
+  const { navigate } = useNavigate();
+
   const [errorMsg, setErrorMsg] = useState("");
   const [errorModal, openErrorModal] = useModal({
     innerTsx: <span>{errorMsg}</span>,
@@ -63,7 +65,7 @@ const Admin = () => {
   }, []);
 
   return (
-    <main id="admin-page">
+    <Main id="admin-page">
       <div className="middle">
         <PageHeader title="Admin" />
         <Card className="catalogs">
@@ -95,7 +97,7 @@ const Admin = () => {
       </div>
       {warningModal}
       {errorModal}
-    </main>
+    </Main>
   );
 };
 

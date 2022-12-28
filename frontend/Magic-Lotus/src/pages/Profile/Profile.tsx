@@ -6,11 +6,12 @@ import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import IUser, { BLANK_IUSER } from "../../models/backend/interfaces/IUser";
 import { GET_USER_PROFILE } from "../../services/backend/Users.routes";
 import "./profile.scss";
+import Main from "../../components/Main/Main";
 
 const Profile = () => {
   const [errorMsg, setErrorMsg] = useState("");
-  const [ErrorModal, openErrorModal] = useModal({
-    innerTsx: <span>ERROR HERE</span>,
+  const [errorModal, openErrorModal] = useModal({
+    innerTsx: <span>{errorMsg}</span>,
     confirmTextOrButton: "Ok",
   });
 
@@ -40,14 +41,14 @@ const Profile = () => {
   }, []);
 
   return (
-    <main id="profile-page">
+    <Main id="profile-page">
       <div className="middle">
         <p>USERNAME: {profile.username}</p>
         <p>ROLE: {profile.role}</p>
         <p>EMAIL: {profile.email}</p>
       </div>
-      {ErrorModal}
-    </main>
+      {errorModal}
+    </Main>
   );
 };
 
