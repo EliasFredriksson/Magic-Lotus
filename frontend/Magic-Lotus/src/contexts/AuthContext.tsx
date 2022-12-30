@@ -12,6 +12,7 @@ interface IAuthContext {
   logout: () => void;
   login: (data: IUser) => void;
   openStatusModal: (msg: string) => void;
+  isLoggedIn: boolean;
 }
 
 export const AuthContext = createContext<IAuthContext>({
@@ -19,12 +20,14 @@ export const AuthContext = createContext<IAuthContext>({
   logout: () => {},
   login: () => {},
   openStatusModal: (msg: string) => {},
+  isLoggedIn: false,
 });
 
 interface IProps {
   children?: React.ReactNode;
 }
 export const AuthContextProvider = (props: IProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useObjectState<IUser>(BLANK_IUSER);
 
   const FetchLogout = useFetchPostUserLogout();
@@ -41,11 +44,13 @@ export const AuthContextProvider = (props: IProps) => {
     }
 
     setUser(BLANK_IUSER);
+    setIsLoggedIn(false);
     setMsg("Logout successful!");
     openModal();
   }, []);
   const login = useCallback((data: IUser) => {
     setUser(data);
+    setIsLoggedIn(true);
   }, []);
 
   const [msg, setMsg] = useState("");
@@ -66,6 +71,7 @@ export const AuthContextProvider = (props: IProps) => {
         logout,
         login,
         openStatusModal,
+        isLoggedIn,
       }}
     >
       {props.children}

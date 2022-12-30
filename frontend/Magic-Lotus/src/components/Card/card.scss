@@ -3,7 +3,7 @@
 .card-component {
   @include display-flex-column;
   padding: $spacing-l;
-  border-radius: $border-radius-large;
+  border-radius: $border-radius-medium;
   min-width: 0px;
 
   @include light-mode {

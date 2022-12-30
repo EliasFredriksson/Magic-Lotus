@@ -65,7 +65,7 @@ const Results = () => {
 
         {isLoading ? (
           <div className="spinner-wrapper">
-            <Spinner size="large" />
+            <Spinner size="x-large" variant="pulse" />
           </div>
         ) : (
           <div

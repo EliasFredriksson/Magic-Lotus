@@ -1,0 +1,10 @@
+@use "../../styles/all" as *;
+
+.collapse-component {
+  overflow: hidden;
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-m;
+  }
+}

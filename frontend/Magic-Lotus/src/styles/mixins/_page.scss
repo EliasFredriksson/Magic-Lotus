@@ -11,6 +11,7 @@
   align-items: center;
   gap: $spacing-xl;
   padding: $spacing-xl;
+  margin-top: $spacing-4xl;
 
   @include dark-mode {
     background: $main-gradient-dark;

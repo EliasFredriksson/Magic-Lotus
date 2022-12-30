@@ -8,7 +8,6 @@ type Props = {
   onUnmounted?: () => void;
 };
 
-const DEFAULT_DELAY = 1000; // 1000 ms
 const Main = (props: Props) => {
   const { show, goToPage } = useNavigate();
   const [shouldRender, setRender] = useState(show);
@@ -28,10 +27,7 @@ const Main = (props: Props) => {
   return shouldRender ? (
     <main
       id={props.id}
-      className="use-render-animation-hook"
-      style={{
-        animation: `${show ? "show" : "hide"} ${DEFAULT_DELAY}ms forwards`,
-      }}
+      className={`main-component${show ? " show" : " hide"}`}
       onAnimationEnd={onAnimationEnd}
     >
       {props.children}

@@ -39,7 +39,7 @@ const Login = () => {
   const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
 
   const [errorMsg, setErrorMsg] = useState("");
-  const [ErrorModal, openErrorModal] = useModal({
+  const [errorModal, openErrorModal] = useModal({
     innerTsx: (
       <span
         style={{
@@ -116,10 +116,11 @@ const Login = () => {
             email: false,
             password: false,
           });
-        } else {
-          login(res.data);
-          navigate(from, { replace: true });
+          return;
         }
+
+        login(res.data);
+        navigate(from, { replace: true });
       }
     },
     [inputState]
@@ -162,15 +163,18 @@ const Login = () => {
           />
 
           <Button type="submit">
-            {FetchLogin.isLoading ? <Spinner size="medium" /> : "Login"}
+            {FetchLogin.isLoading ? (
+              <Spinner size="medium" variant="pulse" />
+            ) : (
+              "Login"
+            )}
           </Button>
         </form>
         <Button variant="link">
           <Link to="/register">Register</Link>
         </Button>
       </Card>
-      <Button onClick={openErrorModal}>Open modal</Button>
-      {ErrorModal}
+      {errorModal}
     </Main>
   );
 };

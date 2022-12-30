@@ -4,9 +4,7 @@
   @include page-base;
 
   .middle {
-    // border: 5px solid red;
     width: 100%;
-    border: 5px solid cyan;
 
     .wrapper {
       @include display-flex-column;

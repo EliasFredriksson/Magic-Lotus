@@ -6,7 +6,6 @@
   gap: $spacing-s;
   font-size: $size-m;
   position: relative;
-  z-index: 2;
 
   &.invalid {
     color: $alert-100 !important;
@@ -61,7 +60,6 @@
   .validation-msg {
     font-family: $main-font;
     position: absolute;
-    z-index: 1;
     left: $spacing-m;
     transition: top 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     font-size: 0.8em;

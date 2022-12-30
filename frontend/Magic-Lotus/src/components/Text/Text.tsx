@@ -18,7 +18,9 @@ const Text = (props: Props) => {
         props.className ? ` ${props.className}` : ""
       }${props.family ? ` ${props.family}` : " main"}${
         props.size ? ` ${props.size}` : " m"
-      }${props.weight ? ` ${props.weight}` : " medium"}`}
+      }${props.weight ? ` ${props.weight}` : " medium"}${
+        props.onClick ? " clickable" : ""
+      }`}
     >
       {props.children}
     </span>

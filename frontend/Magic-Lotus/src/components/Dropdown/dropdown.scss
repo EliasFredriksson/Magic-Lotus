@@ -1,0 +1,9 @@
+@use "/src/styles_NEW_STRUCTURE/globalAll" as *;
+
+.dropdown {
+  @include default-dropdown;
+  // @include validation-alert;
+  & > .input-label {
+    @include basic-label;
+  }
+}

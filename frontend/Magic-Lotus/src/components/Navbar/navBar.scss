@@ -2,8 +2,15 @@
 
 .main-navbar {
   @include display-flex-row;
+  gap: $spacing-m;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
   padding: $spacing-m;
   z-index: 10;
+
+  height: $spacing-4xl;
 
   @include dark-mode {
     background: $navbar-gradient-dark;
@@ -14,25 +21,68 @@
     box-shadow: -0.5rem -1rem 5rem 2rem $primary-500;
   }
 
-  .left {
-    .home-button {
-      width: 5rem;
-      height: 5rem;
+  .home-button {
+    @include breakpoint-laptop {
+      width: 4rem;
+      height: 4rem;
     }
   }
 
   .middle {
     flex-grow: 1;
-    display: flex;
-    align-items: center;
+    // .search-form {
+    //   @include breakpoint-tablet {
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     transform: translate(-50%, -50%);
+    //   }
+    // }
+  }
 
-    form {
-      flex-grow: 1;
+  .background-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color: $gray-1100, $alpha: 0.5);
+    transition: opacity 0.5s ease;
+
+    &.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    &.closed {
+      opacity: 0;
+      pointer-events: none;
     }
   }
 
-  .right {
+  .mobile-nav {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: $card-gradient-dark;
+    box-shadow: 0 0 4rem 0 $gray-1100;
+
+    .inner {
+      padding: $spacing-m;
+
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .account {
     display: flex;
     align-items: center;
+    gap: $spacing-l;
   }
 }

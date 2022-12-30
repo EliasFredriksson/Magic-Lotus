@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Spinner, { ISpinnerSize } from "../Spinner/Spinner";
 import "./image.scss";
 
@@ -13,6 +13,7 @@ interface IProps {
   spinnerSize: ISpinnerSize;
   borderRadius?: string;
   alt?: string;
+  onClick?: () => void;
 }
 
 const Image = (props: IProps) => {
@@ -22,13 +23,14 @@ const Image = (props: IProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (props.imageUrl && previewUrl !== props.imageUrl)
+    if (props.imageUrl && previewUrl !== props.imageUrl) {
       setPreviewUrl(props.imageUrl);
+    }
   }, [props.imageUrl]);
 
   return (
     <div
-      className="image-component"
+      className={`image-component${props.onClick ? " clickable" : ""}`}
       style={
         props.imageSize
           ? {
@@ -39,6 +41,7 @@ const Image = (props: IProps) => {
       }
     >
       <img
+        onClick={props.onClick}
         alt={props.alt}
         src={previewUrl}
         onLoad={() => {
@@ -50,6 +53,7 @@ const Image = (props: IProps) => {
         style={{
           borderRadius: props.borderRadius ? props.borderRadius : "1rem",
         }}
+        loading="lazy"
       />
 
       <div
@@ -58,7 +62,7 @@ const Image = (props: IProps) => {
           borderRadius: props.borderRadius ? props.borderRadius : "1rem",
         }}
       >
-        <Spinner size={props.spinnerSize} />
+        <Spinner size={props.spinnerSize} variant="pulse" />
       </div>
     </div>
   );

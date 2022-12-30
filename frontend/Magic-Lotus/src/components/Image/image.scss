@@ -55,4 +55,12 @@
       transition-delay: 0.2s;
     }
   }
+
+  &.clickable {
+    cursor: pointer;
+    transition: filter 0.1s ease;
+    &:active {
+      filter: brightness(80%);
+    }
+  }
 }

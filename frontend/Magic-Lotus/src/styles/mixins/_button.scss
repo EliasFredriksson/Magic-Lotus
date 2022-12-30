@@ -140,27 +140,23 @@
     transition: all 0.2s ease;
     border: 0;
     outline: 0;
+  }
 
-    &:focus {
-      border: 0;
-      outline: 0;
-      text-decoration: underline;
+  &:hover {
+    color: $white;
+    a {
+      color: $white;
     }
   }
 
-  &:hover > a {
-    color: $white;
-  }
   &:active {
     transform: scale(0.95);
   }
   @include dark-mode {
     color: $link-blue-dark;
-    text-decoration-color: $link-blue-dark;
   }
   @include light-mode {
     color: $link-blue-light;
-    text-decoration-color: $link-blue-light;
   }
 }
 

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import {
   NavigateOptions,
   To,
@@ -31,17 +31,20 @@ export const NavigateContextProvider = (props: IProps) => {
   const [to, setTo] = useState<To>();
   const [navOptions, setNavOptions] = useState<NavigateOptions>();
   const [goBack, setGoBack] = useState(false);
-  const navigate = useCallback((to: To | number, options?: NavigateOptions) => {
-    if (typeof to === "number") {
-      setGoBack(true);
-      setShow(false);
-    } else {
-      if (to === pathname && !options) return; // INGORE NAVIGATIONS TO SAME PATH
-      setTo(to);
-      setNavOptions(options);
-      setShow(false);
-    }
-  }, []);
+  const navigate = useCallback(
+    (to: To | number, options?: NavigateOptions) => {
+      if (to === pathname) return; // INGORE NAVIGATIONS TO SAME PATH
+      if (typeof to === "number") {
+        setGoBack(true);
+        setShow(false);
+      } else {
+        setTo(to);
+        setNavOptions(options);
+        setShow(false);
+      }
+    },
+    [pathname]
+  );
 
   const goToPage = useCallback(() => {
     if (goBack) {
