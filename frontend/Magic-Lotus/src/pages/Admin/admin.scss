@@ -8,18 +8,24 @@
   }
 
   .middle {
-    .catalogs {
+    .cards {
       @include display-flex-column;
+      flex-wrap: wrap;
 
-      @include breakpoint-tablet {
-        max-width: 42rem;
+      @include breakpoint-laptop {
+        flex-direction: row;
       }
 
-      .names {
+      .catalogs,
+      .symbols {
         @include display-flex-column;
-        gap: $spacing-m;
+
+        @include breakpoint-tablet {
+          max-width: 42rem;
+        }
 
         .inner {
+          flex-grow: 1;
           display: flex;
           flex-wrap: wrap;
           gap: $spacing-m;

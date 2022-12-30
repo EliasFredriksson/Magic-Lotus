@@ -67,6 +67,18 @@ const Navbar = () => {
     </Button>
   );
 
+  const adminButton = credentials.role === "admin" && (
+    <Button
+      fontSize="m"
+      onClick={() => {
+        off();
+        navigate("/admin");
+      }}
+    >
+      Admin
+    </Button>
+  );
+
   return (
     <nav className="main-navbar">
       {breakpoints.IS_MOBILE ? (
@@ -96,6 +108,7 @@ const Navbar = () => {
             </div>
             {loginLogoutButton}
             <Account closeMenu={off} />
+            {adminButton}
             {homeButton}
           </Collapse>
         </>
@@ -105,6 +118,7 @@ const Navbar = () => {
           {homeButton}
           {searchForm}
           {loginLogoutButton}
+          {adminButton}
           <Account />
         </>
       )}

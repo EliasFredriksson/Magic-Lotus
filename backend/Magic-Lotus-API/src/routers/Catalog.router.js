@@ -36,9 +36,7 @@ router.post("/", auth.checkIfAdmin, async (req, res) => {
         data: data.data,
       });
       await newCatalog.save();
-      res
-        .status(200)
-        .send(responses.create200Response(newCatalog._id, "POST", "/catalog/"));
+      res.status(200).send(responses.create200Response(newCatalog._id, req));
     }
   } catch (error) {
     console.warn("ERROR: ", error);

@@ -109,6 +109,7 @@ const useUpdateAllCatalogs = (
 
   const start = useCallback(async () => {
     setIsLoading(true);
+    setDone(false);
     ALL_SCRYFALL_FETCH_CALLS.forEach(async (call, index) => {
       try {
         await new Promise((res) =>

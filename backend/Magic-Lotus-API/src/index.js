@@ -38,9 +38,11 @@ app.use(helmet());
 // ### ROUTERS ###
 const UsersRouter = require("./routers/User.router");
 const CatalogRouter = require("./routers/Catalog.router");
+const SymbolRouter = require("./routers/Symbols.router");
 
 app.use("/users", UsersRouter);
 app.use("/catalogs", CatalogRouter);
+app.use("/symbols", SymbolRouter);
 // -------------------------------------------------------
 
 // ======= ROUTES =======

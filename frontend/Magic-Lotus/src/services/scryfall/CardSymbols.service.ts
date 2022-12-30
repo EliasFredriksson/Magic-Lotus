@@ -5,6 +5,7 @@ import ScryfallError from "../../models/scryfall/types/ScryfallError";
 import Paginated from "../../models/scryfall/types/Paginated";
 
 // ################################ ROUTE ################################
+// Get all symbols from Scryfall
 // GET      /symbology
 type GetSymbologyParams = {
   format: "json";
@@ -19,11 +20,12 @@ export const useFetchSymbology = () => {
   >({
     base: "SCRYFALL",
     method: "GET",
-    route: "/symbology/parse-mana",
+    route: "/symbology",
   });
 };
 
 // ################################ ROUTE ################################
+// Parse a string and get back an object telling which symbols are used in the text.
 // GET      /symbology/parse-mana
 type ParseManaParams = {
   cost: string; // The mana string to parse.

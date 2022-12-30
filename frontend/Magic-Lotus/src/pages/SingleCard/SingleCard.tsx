@@ -39,20 +39,20 @@ const SingleCard = () => {
       }
 
       setCard(res);
-      if (!res.mana_cost) return;
-      const parsed = await parseMana.triggerFetch({
-        params: {
-          cost: res.mana_cost,
-        },
-      });
+      // if (!res.mana_cost) return;
+      // const parsed = await parseMana.triggerFetch({
+      //   params: {
+      //     cost: res.mana_cost,
+      //   },
+      // });
 
-      if (parsed.object === "aborted") return;
-      if (parsed.object === "error") {
-        setErrorMsg(parsed.details);
-        openErrorModal();
-        return;
-      }
-      console.log("PARSED MANA: ", parsed);
+      // if (parsed.object === "aborted") return;
+      // if (parsed.object === "error") {
+      //   setErrorMsg(parsed.details);
+      //   openErrorModal();
+      //   return;
+      // }
+      // console.log("PARSED MANA: ", parsed);
       setIsLoading(false);
     };
     initFetch();

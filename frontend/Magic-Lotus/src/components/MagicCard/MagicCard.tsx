@@ -28,6 +28,8 @@ const MagicCard = (props: Props) => {
         imageSize={{
           width: calcWidth(),
         }}
+        width={745}
+        height={1040}
       />
       CARD
     </div>

@@ -17,13 +17,7 @@
     min-width: 0px;
     object-fit: cover;
     object-position: center;
-
-    @include dark-mode {
-      background-color: $primary-800;
-    }
-    @include light-mode {
-      background-color: $primary-100;
-    }
+    background-color: transparent;
   }
 
   .loading-overlay {

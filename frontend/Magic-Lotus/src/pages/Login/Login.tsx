@@ -13,6 +13,7 @@ import "./login.scss";
 import { useFetchPostUserLogin } from "../../services/backend/User.service";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
+import useUtility from "../../hooks/useUtility/useUtility";
 
 interface IInputValidity {
   email: boolean;
@@ -33,24 +34,11 @@ const BLANK_INPUT_STATE: IInputState = {
 };
 
 const Login = () => {
-  const { login } = useAuth();
-  const { navigate } = useNavigate();
+  const { openStatusModal } = useUtility(); // UTILITY FUNCTIONS
+  const { login } = useAuth(); // AUTHENTICATION
+  const { navigate } = useNavigate(); // NAVIGATE
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
-
-  const [errorMsg, setErrorMsg] = useState("");
-  const [errorModal, openErrorModal] = useModal({
-    innerTsx: (
-      <span
-        style={{
-          fontSize: "1.5rem",
-        }}
-      >
-        {errorMsg}
-      </span>
-    ),
-    confirmTextOrButton: "Ok",
-  });
 
   // ============================== INPUT STATES AND VALIDATION ==============================
   const [liveValidate, setLiveValidate] = useState(false); // LIVE VALIDATE
@@ -106,8 +94,7 @@ const Login = () => {
         if (res.object === "aborted") return;
         if (res.object === "magic_lotus_error") {
           setLiveValidate(true);
-          setErrorMsg("Incorrect username / password. Try again.");
-          openErrorModal();
+          openStatusModal("Incorrect username / password. Try again.");
           setValidationMsg({
             email: "",
             password: "",
@@ -174,7 +161,6 @@ const Login = () => {
           <Link to="/register">Register</Link>
         </Button>
       </Card>
-      {errorModal}
     </Main>
   );
 };
