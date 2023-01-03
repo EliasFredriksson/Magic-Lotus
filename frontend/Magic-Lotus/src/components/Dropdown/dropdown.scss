@@ -24,7 +24,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: $spacing-m;
     background-color: $white;
     cursor: pointer;
 
@@ -58,7 +57,7 @@
     }
 
     &.searchable {
-      cursor: text;
+      cursor: default;
       .text-field {
         pointer-events: all;
       }
@@ -86,9 +85,11 @@
           gap: $spacing-m;
           font-size: $font-size;
           padding: $spacing-s $spacing-m;
+          pointer-events: none;
 
           .remove-tag-button {
             cursor: pointer;
+            pointer-events: all;
             font-size: $font-size;
             color: $gray-900;
             border: 2px solid $gray-900;
@@ -192,7 +193,6 @@
 
       .entry {
         opacity: 1;
-        transition-delay: 0.2s;
         pointer-events: all;
       }
     }
@@ -225,7 +225,7 @@
       cursor: pointer;
       padding: 0.1rem;
       transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-      transition-delay: 0s !important;
+      transition-delay: 0s;
 
       &:hover {
         background-color: $white;

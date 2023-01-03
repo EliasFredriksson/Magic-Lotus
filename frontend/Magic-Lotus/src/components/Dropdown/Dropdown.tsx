@@ -66,7 +66,6 @@ const Dropdown = (props: IProps): ReactElement => {
       () => {
         if (props.onSearch) props.onSearch(e.target.value);
         setIsOpen(true);
-        console.log("SEARCH TEXT:", e.target.value);
         const filteredList = props.data.filter((data) =>
           data.name.toLowerCase().includes(e.target.value.toLowerCase())
         );
@@ -92,9 +91,9 @@ const Dropdown = (props: IProps): ReactElement => {
     }
   };
 
-  const removeActiveEntry = (givenSchool: IData) => {
-    const filtered = activeEntries.filter((school) => {
-      return !areObjectsEqual(givenSchool, school);
+  const removeActiveEntry = (entry: IData) => {
+    const filtered = activeEntries.filter((activeEntry) => {
+      return !areObjectsEqual(entry, activeEntry);
     });
     setActiveEntries(filtered);
     props.onSelect(filtered);
@@ -127,7 +126,7 @@ const Dropdown = (props: IProps): ReactElement => {
         className={`top${props.searchable ? " searchable" : " normal"}`}
         onClick={() => {
           if (props.disabled && props.disabled === true) return;
-          setIsOpen(!isOpen);
+          setIsOpen(true);
         }}
       >
         <div className={`text-field`}>

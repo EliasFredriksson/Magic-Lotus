@@ -138,8 +138,8 @@ const Search = () => {
 
             <Dropdown
               multiChoice
-              menuPosition="relative"
               searchable
+              menuPosition="relative"
               placeholder="Enter a type or choose from the list"
               data={[
                 {
