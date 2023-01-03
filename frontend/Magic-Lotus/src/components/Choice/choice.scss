@@ -1,0 +1,148 @@
+@use "../../styles/all" as *;
+
+.choice-component {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-m;
+
+  .choice-label {
+    @include basic-label;
+    transition: color 0.2s ease;
+    &.invalid {
+      color: $alert-500;
+    }
+  }
+
+  .choice {
+    font-family: $main-font;
+    font-size: $size-m;
+    background: none;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: $spacing-m;
+    white-space: nowrap;
+    cursor: pointer;
+
+    & > * {
+      pointer-events: none;
+    }
+
+    &.radio,
+    &.checkbox {
+      @include dark-mode {
+        color: $white;
+      }
+      @include light-mode {
+        color: $black;
+      }
+    }
+
+    &.radio {
+      border-radius: $border-radius-medium;
+      padding: $spacing-s $spacing-m;
+      transition: box-shadow 0.1s ease, transform 0.1s ease;
+
+      $border-width: 0.2rem;
+      box-shadow: 0px 0px 0px $border-width rgba($gray-700, 0.4);
+      margin: $border-width;
+
+      &.checked {
+        box-shadow: 0px 0px 0px 2px $secondary-100;
+        color: $white;
+        font-weight: $weight-bold;
+
+        &::before {
+          background-color: $secondary-100;
+          box-shadow: 0px 0px 0px 2px $secondary-500;
+        }
+      }
+
+      &::before {
+        content: "";
+        border: none;
+        outline: none;
+        border-radius: 60%;
+        height: 1.2rem;
+        width: 1.2rem;
+        background-color: white;
+        transition: background-color 0.1s ease, box-shadow 0.1s ease;
+
+        $border-width: 1px; // WE BREAK OUT THE BORDER WIDTH INTO A VARIABLE FOR EASY FUTURE MODIFICATIONS.
+        box-shadow: 0px 0px 0px $border-width $primary-500; // WE USE THIS A BORDER TO PREVENT SIZING CHANGES DUE TO BORDER ANIMATION.
+      }
+
+      &:active {
+        transform: translate(0.5rem, 0);
+      }
+    }
+    &.checkbox {
+      &.checked {
+        color: $white;
+        font-weight: $weight-bold;
+
+        &::before {
+          content: "\2713";
+          background-color: $secondary-100;
+          box-shadow: 0px 0px 0px 2px $secondary-500;
+        }
+      }
+
+      &::before {
+        content: "";
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        outline: none;
+        border-radius: $border-radius-small;
+        height: $size-xl;
+        width: $size-xl;
+        background-color: transparent;
+        transition: background-color 0.1s ease, box-shadow 0.1s ease;
+
+        $border-width: 0.2rem; // WE BREAK OUT THE BORDER WIDTH INTO A VARIABLE FOR EASY FUTURE MODIFICATIONS.
+        box-shadow: 0px 0px 0px $border-width $gray-900; // WE USE THIS A BORDER TO PREVENT SIZING CHANGES DUE TO BORDER ANIMATION.
+        margin: $border-width;
+      }
+    }
+
+    & > label {
+      display: flex;
+      align-items: center;
+      gap: $spacing-s;
+      .image {
+        width: $size-xl;
+        img {
+          width: 100%;
+        }
+      }
+    }
+
+    & > input {
+      display: none;
+    }
+  }
+
+  .validation-msg {
+    font-family: $main-font;
+    position: absolute;
+    transition: top 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    font-size: $size-m;
+    color: $alert-500;
+
+    &.show {
+      top: calc(99% + $spacing-s);
+      opacity: 1;
+    }
+
+    &.hide {
+      top: calc(100% - 1.5rem);
+      opacity: 0;
+    }
+  }
+}

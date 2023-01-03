@@ -52,7 +52,7 @@ const MagicCard = (props: Props) => {
     <div className={`magic-card-component ${props.disabled ? "disabled" : ""}`}>
       <Image
         imageUrl={calcImage()}
-        fallbackImageUrl={""}
+        fallbackImageUrl={""} // TO BE ADDED
         spinnerSize="medium"
         imageSize={calcSize()}
       />

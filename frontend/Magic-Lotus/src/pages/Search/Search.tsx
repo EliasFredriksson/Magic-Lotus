@@ -9,11 +9,13 @@ import ICatalog from "../../models/backend/interfaces/ICatalog";
 import { useFetchGetCatalogs } from "../../services/backend/Catalog.service";
 import { ICardSearchParams } from "../../services/scryfall/cards/Cards.search.service";
 import { GoCreditCard } from "react-icons/go";
+import { VscSymbolColor } from "react-icons/vsc";
 import "./search.scss";
 import { TfiText } from "react-icons/tfi";
 import { IoFingerPrintOutline } from "react-icons/io5";
 import { IFullTextParams } from "../../helpers/fullTextConverter/FullTextConverter";
 import Dropdown from "../../components/Dropdown/Dropdown";
+import Choice from "../../components/Choice/Choice";
 
 type IInputState = {
   [Property in keyof Required<IFullTextParams>]: string;
@@ -84,6 +86,7 @@ const Search = () => {
         return;
       }
       setCatalogs(catRes.data);
+      console.log("CATALOGS: ", catRes.data);
     };
     init();
   }, []);
@@ -188,6 +191,47 @@ const Search = () => {
                 },
               ]}
               onSelect={(active) => {}}
+            />
+          </div>
+
+          <div className="search-field">
+            <div className="label">
+              <VscSymbolColor className="icon" />
+              <Text size="xl">Colors</Text>
+            </div>
+            <Choice
+              // multiChoice
+              variant="checkbox"
+              data={[
+                {
+                  id: "1",
+                  name: "White",
+                  img: "https://svgs.scryfall.io/card-symbols/BG.svg",
+                },
+                {
+                  id: "2",
+                  name: "Blue",
+                },
+                {
+                  id: "3",
+                  name: "Black",
+                },
+                {
+                  id: "4",
+                  name: "Red",
+                },
+                {
+                  id: "5",
+                  name: "Green",
+                },
+                {
+                  id: "6",
+                  name: "Colorless",
+                },
+              ]}
+              onChange={(choices) => {
+                console.log("ACTIVE: ", choices);
+              }}
             />
           </div>
         </Card>

@@ -1,9 +1,10 @@
 import "./dropdown.scss";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { RiArrowDownSLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
 import { FiTrash2 } from "react-icons/fi";
 import useOutsideClick from "../../hooks/useOutsideClick/useOutsideClick";
 import { areObjectsEqual } from "../../helpers/ObjectValidations";
+import useKeyboard from "../../hooks/useKeyboard/useKeyboard";
 
 interface IData {
   id: string;
@@ -50,6 +51,16 @@ const Dropdown = (props: IProps): ReactElement => {
     props.startValue ? props.startValue : []
   );
 
+  useKeyboard({
+    targetKeys: "Enter",
+    onKeyDown: () => {
+      if (!isOpen) return;
+      if (filtered.length === 1) {
+        handleSelect(filtered[0]);
+      }
+    },
+  });
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => {
     if (!props.multiChoice) {
@@ -58,46 +69,55 @@ const Dropdown = (props: IProps): ReactElement => {
     setIsOpen(false);
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!props.searchable) return;
-    setInputText(e.target.value);
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(
-      () => {
-        if (props.onSearch) props.onSearch(e.target.value);
-        setIsOpen(true);
-        const filteredList = props.data.filter((data) =>
-          data.name.toLowerCase().includes(e.target.value.toLowerCase())
-        );
-        setFiltered(filteredList);
-      },
-      props.minimumWaitTime ? props.minimumWaitTime : MINIMUM_INPUT_WAIT_TIME
-    );
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!props.searchable) return;
+      setInputText(e.target.value);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(
+        () => {
+          if (props.onSearch) props.onSearch(e.target.value);
+          setIsOpen(true);
+          const filteredList = props.data.filter((data) =>
+            data.name.toLowerCase().includes(e.target.value.toLowerCase())
+          );
+          setFiltered(filteredList);
+        },
+        props.minimumWaitTime ? props.minimumWaitTime : MINIMUM_INPUT_WAIT_TIME
+      );
+    },
+    [props.searchable, props.data, props.onSearch, props.minimumWaitTime]
+  );
 
-  const handleSelect = (entry: IData) => {
-    if (!props.multiChoice) setIsOpen(false);
-    if (activeEntries.find((tag) => tag.id === entry.id)) {
-      if (props.multiChoice) removeActiveEntry(entry);
-    } else {
-      if (!props.multiChoice) {
-        setInputText(entry.name);
-        setActiveEntries([entry]);
-        props.onSelect([entry]);
+  const handleSelect = useCallback(
+    (entry: IData) => {
+      if (!props.multiChoice) setIsOpen(false);
+      if (activeEntries.find((tag) => tag.id === entry.id)) {
+        if (props.multiChoice) removeActiveEntry(entry);
       } else {
-        setActiveEntries([...activeEntries, entry]);
-        props.onSelect([...activeEntries, entry]);
+        if (!props.multiChoice) {
+          setInputText(entry.name);
+          setActiveEntries([entry]);
+          props.onSelect([entry]);
+        } else {
+          setActiveEntries([...activeEntries, entry]);
+          props.onSelect([...activeEntries, entry]);
+        }
       }
-    }
-  };
+    },
+    [props.multiChoice, activeEntries]
+  );
 
-  const removeActiveEntry = (entry: IData) => {
-    const filtered = activeEntries.filter((activeEntry) => {
-      return !areObjectsEqual(entry, activeEntry);
-    });
-    setActiveEntries(filtered);
-    props.onSelect(filtered);
-  };
+  const removeActiveEntry = useCallback(
+    (entry: IData) => {
+      const filtered = activeEntries.filter((activeEntry) => {
+        return !areObjectsEqual(entry, activeEntry);
+      });
+      setActiveEntries(filtered);
+      props.onSelect(filtered);
+    },
+    [activeEntries, props.onSelect]
+  );
 
   useEffect(() => {
     if (!props.multiChoice && activeEntries[0])

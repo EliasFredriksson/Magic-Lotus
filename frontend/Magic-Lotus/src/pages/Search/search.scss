@@ -41,6 +41,13 @@
         }
       }
 
+      .choice-component {
+        @include breakpoint-tablet {
+          flex-direction: row;
+          gap: $spacing-l;
+        }
+      }
+
       @include breakpoint-laptop {
         flex-direction: row;
         gap: $spacing-xl;
