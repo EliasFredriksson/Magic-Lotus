@@ -1,37 +1,61 @@
 import "./magicCard.scss";
 import ICard from "../../models/scryfall/interfaces/ICard";
 import Image from "../Image/Image";
-import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 import { useCallback } from "react";
+import { Formats } from "../../models/scryfall/types/ImageFormat";
 
 type Props = {
   card: ICard | null;
   disabled?: boolean;
+  size: "small" | "normal" | "large";
+  quality: Formats;
 };
 
 const MagicCard = (props: Props) => {
-  const { breakpoints } = useScreenSize();
+  const calcSize = useCallback(() => {
+    switch (props.size) {
+      case "small":
+        return {
+          width: "11rem",
+        };
+      case "normal":
+        return {
+          width: "22rem",
+        };
+      case "large":
+        return {
+          width: "30rem",
+        };
+    }
+  }, []);
 
-  const calcWidth = useCallback(() => {
-    if (breakpoints.IS_MOBILE) return "30rem";
-    if (breakpoints.IS_TABLET) return "25rem";
-    if (breakpoints.IS_LAPTOP) return "25rem";
-    if (breakpoints.IS_DESKTOP) return "22rem";
-  }, [breakpoints]);
+  const calcImage = useCallback(() => {
+    switch (props.quality) {
+      case "small": // LOWEST QUALITY
+        return props.card?.image_uris?.small;
+      case "normal":
+        return props.card?.image_uris?.normal;
+      case "large":
+        return props.card?.image_uris?.large;
+      case "png": // HIGHEST QUALITY
+        return props.card?.image_uris?.png;
+      case "art_crop":
+        return props.card?.image_uris?.art_crop;
+      case "border_crop":
+        return props.card?.image_uris?.border_crop;
+      default:
+        return props.card?.image_uris?.normal;
+    }
+  }, []);
 
   return (
     <div className={`magic-card-component ${props.disabled ? "disabled" : ""}`}>
       <Image
-        imageUrl={props.card?.image_uris?.large}
+        imageUrl={calcImage()}
         fallbackImageUrl={""}
         spinnerSize="medium"
-        imageSize={{
-          width: calcWidth(),
-        }}
-        width={745}
-        height={1040}
+        imageSize={calcSize()}
       />
-      CARD
     </div>
   );
 };

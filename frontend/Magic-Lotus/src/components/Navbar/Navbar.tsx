@@ -13,19 +13,30 @@ import useBoolean from "../../hooks/useBoolean/useBoolean";
 import Text from "../Text/Text";
 import { IoClose, IoMenu } from "react-icons/io5";
 import Account from "./Account/Account";
+import useSearch from "../../hooks/useSearch/useSearch";
+import { isEmpty } from "../../helpers/StringValidations";
 
 const Navbar = () => {
   const { navigate } = useRouterContext();
-  const { credentials, logout, isLoggedIn } = useAuth();
+  const { credentials, isLoggedIn } = useAuth();
   const { breakpoints } = useScreenSize();
   const { value: isMenuOpen, on, off } = useBoolean();
+  const { search, latestSearch } = useSearch();
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSubmit = useCallback((e: FormEvent) => {
-    e.preventDefault();
-    console.log("SUBMITTED IN NAVBAR!");
-  }, []);
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      if (!isEmpty(searchTerm) && searchTerm !== latestSearch.query.q) {
+        search({
+          q: searchTerm,
+          order: "color",
+        });
+      }
+    },
+    [searchTerm]
+  );
 
   const searchForm = (
     <div className="middle">
@@ -39,6 +50,19 @@ const Navbar = () => {
             setSearchTerm(e.target.value);
           }}
         />
+        {!breakpoints.IS_MOBILE && (
+          <Button
+            type="button"
+            variant="secondary"
+            fontSize="m"
+            onClick={() => {
+              off();
+              navigate("/search");
+            }}
+          >
+            Advanced search
+          </Button>
+        )}
       </form>
     </div>
   );
@@ -109,6 +133,24 @@ const Navbar = () => {
             {loginLogoutButton}
             <Account closeMenu={off} />
             {adminButton}
+            <Button
+              variant="link"
+              onClick={() => {
+                off();
+                navigate("/admin");
+              }}
+            >
+              Admin
+            </Button>
+            <Button
+              variant="link"
+              onClick={() => {
+                off();
+                navigate("/search");
+              }}
+            >
+              Advanced search
+            </Button>
             {homeButton}
           </Collapse>
         </>
@@ -117,6 +159,7 @@ const Navbar = () => {
         <>
           {homeButton}
           {searchForm}
+
           {loginLogoutButton}
           {adminButton}
           <Account />

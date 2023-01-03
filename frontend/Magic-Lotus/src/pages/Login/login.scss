@@ -5,11 +5,6 @@
   justify-content: center;
   align-items: center;
 
-  & > h1 {
-    font-size: $size-4xl;
-    color: $white;
-  }
-
   .login-form {
     @include display-flex-column;
     // gap: 2.5rem;

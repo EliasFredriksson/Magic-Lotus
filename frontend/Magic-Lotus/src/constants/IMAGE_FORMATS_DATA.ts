@@ -11,8 +11,8 @@ type ImageFormats = "JPG" | "PNG";
 type IImageFormats = {
   [Property in Formats]: {
     size: {
-      width: number | null;
-      height: number | null;
+      width: number;
+      height: number;
     };
     format: ImageFormats;
     description: string;
@@ -40,8 +40,8 @@ const IMAGE_FORMATS_DATA: IImageFormats = {
   },
   art_crop: {
     size: {
-      width: null, // It varies
-      height: null, // It vaires
+      width: -1, // It varies
+      height: -1, // It vaires
     },
     format: "JPG",
     description:

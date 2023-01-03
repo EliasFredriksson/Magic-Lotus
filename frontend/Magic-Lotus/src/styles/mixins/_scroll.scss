@@ -1,0 +1,59 @@
+@use "../variables/colors" as *;
+@use "./scheme" as *;
+
+@mixin primary-scrollbar {
+  ::-webkit-scrollbar {
+    width: 3rem;
+    padding: 1rem;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 2rem;
+    background-color: transparent;
+    border: solid 1rem transparent;
+
+    @include light-mode {
+      box-shadow: inset -1rem 0 0 1rem $gray-700;
+    }
+    @include dark-mode {
+      box-shadow: inset -1rem 0 0 1rem $gray-1100;
+    }
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 2rem;
+    box-shadow: inset -1rem 0 0 1rem $primary-500;
+    border: solid 1rem transparent;
+    // border-right: solid 1rem transparent;
+    // border-left: solid 1rem transparent;
+    min-height: 3rem;
+    cursor: grab;
+  }
+}
+@mixin secondary-scrollbar {
+  ::-webkit-scrollbar {
+    width: 3rem;
+    padding: 1rem;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 2rem;
+    background-color: transparent;
+    border: solid 1rem transparent;
+
+    @include light-mode {
+      box-shadow: inset -1rem 0 0 1rem $gray-700;
+    }
+    @include dark-mode {
+      box-shadow: inset -1rem 0 0 1rem $gray-1100;
+    }
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 2rem;
+    box-shadow: inset -1rem 0 0 1rem $secondary-100;
+    border: solid 1rem transparent;
+    // border-right: solid 1rem transparent;
+    // border-left: solid 1rem transparent;
+    min-height: 3rem;
+    cursor: grab;
+  }
+}

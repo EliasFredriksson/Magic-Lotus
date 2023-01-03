@@ -1,9 +1,14 @@
 import { createContext, useCallback, useState } from "react";
+import { convertObjectToQuery } from "../helpers/QueryConverter";
+import useNavigate from "../hooks/useNavigate/useNavigate";
+import useUtility from "../hooks/useUtility/useUtility";
 import ICard from "../models/scryfall/interfaces/ICard";
 import IPaginated, {
   BLANK_PAGINATED_CARDS,
 } from "../models/scryfall/types/Paginated";
-import { ICardSearchParams } from "../services/scryfall/cards/Cards.search.service";
+import useFetchCardSearch, {
+  ICardSearchParams,
+} from "../services/scryfall/cards/Cards.search.service";
 
 type NewHistory = {
   query: ICardSearchParams;
@@ -27,25 +32,25 @@ const BLANK_HISTORY: History = {
 interface ISearchContext {
   history: History[];
   latestSearch: History;
-  addToHistory: (newHistory: NewHistory) => void;
-  removeFromHistory: (currentHistory: History) => void;
   clearHistory: () => void;
-  removeLastHistory: () => void;
+  search: (params: ICardSearchParams) => Promise<void>;
+  isLoading: boolean;
 }
 
 export const SearchContext = createContext<ISearchContext>({
   history: [],
   latestSearch: BLANK_HISTORY,
-  addToHistory: () => {},
-  removeFromHistory: () => {},
   clearHistory: () => {},
-  removeLastHistory: () => {},
+  search: async (params: ICardSearchParams) => {},
+  isLoading: false,
 });
 
 interface IProps {
   children?: React.ReactNode;
 }
 export const SearchContextProvider = (props: IProps) => {
+  const { openStatusModal } = useUtility();
+  const { navigate } = useNavigate();
   const [currentHistory, setCurrentHistory] = useState<History[]>([]);
 
   // CALCULATE NEW ID FOR NEW HISTORY ENTRY
@@ -69,21 +74,32 @@ export const SearchContextProvider = (props: IProps) => {
     },
     [currentHistory]
   );
-  const removeFromHistory = useCallback(
-    (history: History) => {
-      setCurrentHistory(
-        currentHistory.filter((entry) => entry.id !== history.id)
-      );
-    },
-    [currentHistory]
-  );
   const clearHistory = useCallback(() => {
     setCurrentHistory([]);
   }, []);
-  const removeLastHistory = useCallback(() => {
-    setCurrentHistory([...currentHistory].splice(-1));
-  }, [currentHistory]);
 
+  const fetchSearchCards = useFetchCardSearch();
+  const search = useCallback(async (params: ICardSearchParams) => {
+    const res = await fetchSearchCards.triggerFetch({
+      params: params,
+    });
+    if (res.object === "aborted") return;
+    if (res.object === "error") {
+      openStatusModal(res.details);
+      return;
+    }
+
+    addToHistory({
+      query: params,
+      data: res,
+    });
+    navigate({
+      pathname: "/results",
+      search: convertObjectToQuery(params),
+    });
+  }, []);
+
+  // CALC LATEST SEARCH
   const latest = currentHistory[currentHistory.length - 1]
     ? currentHistory[currentHistory.length - 1]
     : BLANK_HISTORY;
@@ -92,10 +108,9 @@ export const SearchContextProvider = (props: IProps) => {
       value={{
         history: currentHistory,
         latestSearch: latest,
-        addToHistory,
-        removeFromHistory,
         clearHistory,
-        removeLastHistory,
+        search,
+        isLoading: fetchSearchCards.isLoading,
       }}
     >
       {props.children}

@@ -1,11 +1,14 @@
 import "./dropdown.scss";
 import { ReactElement, useEffect, useRef, useState } from "react";
-import useOutsideClick from "../../../hooks/useOutsideClick/useOutsideClick";
-import IData from "../../../models/general/IData";
 import { RiArrowDownSLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
-import { areObjectsEqual } from "../../../helpers/ObjectValidations";
-import { areListsEqual } from "../../../helpers/ListValidations";
 import { FiTrash2 } from "react-icons/fi";
+import useOutsideClick from "../../hooks/useOutsideClick/useOutsideClick";
+import { areObjectsEqual } from "../../helpers/ObjectValidations";
+
+interface IData {
+  id: string;
+  name: string;
+}
 
 interface IProps {
   data: IData[];
@@ -14,6 +17,10 @@ interface IProps {
 
   // OPTIONAL
   startValue?: IData[];
+
+  // SEARCHABLE
+  searchable?: boolean; // Default = false. // true = you can enter text
+  onSearch?: (value: string) => void; // Provide this if searchable
 
   // IF TRUE, ONLY ALLOWS MULTIPLE ENTRIES TO BE CHOSEN.
   // onSelect WILL SEND BACK A LIST WITH ONLY
@@ -32,10 +39,13 @@ interface IProps {
   testId?: string;
 }
 
+const MINIMUM_INPUT_WAIT_TIME = 100; // In milliseconds
+let timer: NodeJS.Timeout | null = null;
+
 const Dropdown = (props: IProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState("");
-
+  const [filtered, setFiltered] = useState<IData[]>(props.data);
   const [activeEntries, setActiveEntries] = useState<IData[]>(
     props.startValue ? props.startValue : []
   );
@@ -48,8 +58,26 @@ const Dropdown = (props: IProps): ReactElement => {
     setIsOpen(false);
   });
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!props.searchable) return;
+    setInputText(e.target.value);
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(
+      () => {
+        if (props.onSearch) props.onSearch(e.target.value);
+        setIsOpen(true);
+        console.log("SEARCH TEXT:", e.target.value);
+        const filteredList = props.data.filter((data) =>
+          data.name.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+        setFiltered(filteredList);
+      },
+      props.minimumWaitTime ? props.minimumWaitTime : MINIMUM_INPUT_WAIT_TIME
+    );
+  };
+
   const handleSelect = (entry: IData) => {
-    if (!props.stayOpenOnSelect) setIsOpen(false);
+    if (!props.multiChoice) setIsOpen(false);
     if (activeEntries.find((tag) => tag.id === entry.id)) {
       if (props.multiChoice) removeActiveEntry(entry);
     } else {
@@ -73,11 +101,6 @@ const Dropdown = (props: IProps): ReactElement => {
   };
 
   useEffect(() => {
-    if (!areListsEqual(props.data, activeEntries))
-      setActiveEntries(props.startValue ? props.startValue : []);
-  }, [props.data, props.startValue]);
-
-  useEffect(() => {
     if (!props.multiChoice && activeEntries[0])
       setInputText(activeEntries[0].name ? activeEntries[0].name : "");
   }, [activeEntries]);
@@ -86,11 +109,14 @@ const Dropdown = (props: IProps): ReactElement => {
     if (props.startValue) setActiveEntries(props.startValue);
   }, [props.startValue]);
 
+  const displayedList = props.searchable ? filtered : props.data;
   return (
     <div
       data-testid={props.testId ? props.testId : "dropdown"}
       ref={dropdownRef}
-      className={`dropdown${props.disabled === true ? " Disabled" : ""}`}
+      className={`dropdown-componenet${
+        props.disabled === true ? " Disabled" : ""
+      }`}
     >
       {props.label && (
         <label className="input-label" htmlFor={props.id}>
@@ -98,21 +124,22 @@ const Dropdown = (props: IProps): ReactElement => {
         </label>
       )}
       <div
-        className="top"
+        className={`top${props.searchable ? " searchable" : " normal"}`}
         onClick={() => {
           if (props.disabled && props.disabled === true) return;
           setIsOpen(!isOpen);
         }}
       >
-        <div className="text-field">
+        <div className={`text-field`}>
           <input
             disabled={props.disabled === true ? props.disabled : false}
             id={props.id ? props.id : ""}
-            readOnly
+            readOnly={props.searchable ? false : true}
             type="text"
             name={props.name}
             value={inputText}
             placeholder={props.placeholder}
+            onChange={props.searchable ? handleChange : undefined}
           />
           <RiArrowDownSLine className={`arrow ${isOpen ? "open" : "close"}`} />
         </div>
@@ -152,7 +179,7 @@ const Dropdown = (props: IProps): ReactElement => {
           props.menuPosition ? " " + props.menuPosition : ""
         }`}
       >
-        {props.data.map((tag: IData, index) => {
+        {displayedList.map((tag: IData, index) => {
           if (!tag.id || !tag.name || tag.name.length <= 0) return;
           const isActive = activeEntries.find((active) => active.id === tag.id);
           return (
@@ -169,6 +196,11 @@ const Dropdown = (props: IProps): ReactElement => {
             </div>
           );
         })}
+        {displayedList.length <= 0 && (
+          <div className={`entry disabled`}>
+            <span>No hits..</span>
+          </div>
+        )}
       </div>
     </div>
   );

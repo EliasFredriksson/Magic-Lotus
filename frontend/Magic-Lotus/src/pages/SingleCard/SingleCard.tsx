@@ -76,7 +76,7 @@ const SingleCard = () => {
         {card ? (
           <div className="wrapper">
             <div className="left">
-              <MagicCard disabled card={card} />
+              <MagicCard disabled card={card} size="large" quality="large" />
               <Text size="xl" family="heading">
                 {card.name}
               </Text>

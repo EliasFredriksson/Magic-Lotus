@@ -14,6 +14,7 @@ import { useFetchPostUserLogin } from "../../services/backend/User.service";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useUtility from "../../hooks/useUtility/useUtility";
+import Text from "../../components/Text/Text";
 
 interface IInputValidity {
   email: boolean;
@@ -34,7 +35,7 @@ const BLANK_INPUT_STATE: IInputState = {
 };
 
 const Login = () => {
-  const { openStatusModal } = useUtility(); // UTILITY FUNCTIONS
+  const { openStatusModal, updateTitle } = useUtility(); // UTILITY FUNCTIONS
   const { login } = useAuth(); // AUTHENTICATION
   const { navigate } = useNavigate(); // NAVIGATE
   const location = useLocation();
@@ -113,10 +114,15 @@ const Login = () => {
     [inputState]
   );
 
+  useEffect(() => {
+    updateTitle("Login");
+  }, []);
+
   return (
     <Main id="login-page">
-      <h1>Login</h1>
-
+      <Text family="heading" size="xxxxl" weight="bold">
+        Login
+      </Text>
       <Card>
         <form onSubmit={handleSubmit} className="login-form">
           <Input

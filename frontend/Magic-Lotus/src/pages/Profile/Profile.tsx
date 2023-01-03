@@ -1,13 +1,13 @@
+import "./profile.scss";
 import { useEffect } from "react";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import IUser, { BLANK_IUSER } from "../../models/backend/interfaces/IUser";
-import "./profile.scss";
 import Main from "../../components/Main/Main";
 import useUtility from "../../hooks/useUtility/useUtility";
 import { useFetchGetLoggedInUser } from "../../services/backend/User.service";
 
 const Profile = () => {
-  const { openStatusModal } = useUtility();
+  const { openStatusModal, updateTitle } = useUtility();
   const [profile, setProfile] = useObjectState<IUser>(BLANK_IUSER);
   const FetchProfile = useFetchGetLoggedInUser();
 
@@ -23,9 +23,7 @@ const Profile = () => {
       setProfile(res.data);
     };
     fetchProfile();
-    return () => {
-      FetchProfile.abort();
-    };
+    updateTitle("Your profile");
   }, []);
 
   return (

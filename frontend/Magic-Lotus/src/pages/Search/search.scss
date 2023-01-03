@@ -2,4 +2,49 @@
 
 #search-page {
   @include page-base;
+
+  .middle {
+    width: 100%;
+  }
+
+  .card-component {
+    gap: $spacing-l;
+
+    .search-field {
+      @include display-flex-column;
+      gap: $spacing-m;
+
+      .label {
+        display: flex;
+        align-items: center;
+        gap: $spacing-m;
+        align-items: flex-start;
+
+        .icon {
+          font-size: $size-xl;
+        }
+        @include breakpoint-laptop {
+          flex-basis: 15%;
+          flex-shrink: 0;
+        }
+      }
+
+      .input-component {
+        @include breakpoint-laptop {
+          flex-grow: 1;
+        }
+      }
+
+      .dropdown-componenet {
+        @include breakpoint-laptop {
+          flex-grow: 1;
+        }
+      }
+
+      @include breakpoint-laptop {
+        flex-direction: row;
+        gap: $spacing-xl;
+      }
+    }
+  }
 }

@@ -14,10 +14,6 @@ interface IProps {
   borderRadius?: string;
   alt?: string;
   onClick?: () => void;
-
-  // SIZES // 745 × 1040
-  width?: number;
-  height?: number;
 }
 
 const Image = (props: IProps) => {
@@ -38,8 +34,8 @@ const Image = (props: IProps) => {
       style={
         props.imageSize
           ? {
-              width: props.imageSize.width,
-              height: props.imageSize.height,
+              width: props.imageSize?.width,
+              height: props.imageSize?.height,
             }
           : undefined
       }
@@ -58,8 +54,8 @@ const Image = (props: IProps) => {
           borderRadius: props.borderRadius ? props.borderRadius : "1rem",
         }}
         loading="lazy"
-        width={props.width}
-        height={props.height}
+        width={props.imageSize?.width}
+        height={props.imageSize?.height}
       />
 
       <div

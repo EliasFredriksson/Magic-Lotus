@@ -6,11 +6,6 @@
   justify-content: center;
   align-items: center;
 
-  & > h1 {
-    font-size: $size-4xl;
-    color: $white;
-  }
-
   .register-form {
     @include display-flex-column;
   }

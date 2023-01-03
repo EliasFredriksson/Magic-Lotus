@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { SearchContext } from "../../contexts/SearchContext";
 
-const useSearchHistory = () => {
+const useSearch = () => {
   return useContext(SearchContext);
 };
 
-export default useSearchHistory;
+export default useSearch;

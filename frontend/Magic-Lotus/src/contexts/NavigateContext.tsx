@@ -26,14 +26,22 @@ interface IProps {
 export const NavigateContextProvider = (props: IProps) => {
   const [show, setShow] = useState(true);
   const nav = useNavigate();
-  const { pathname } = useLocation();
 
   const [to, setTo] = useState<To>();
   const [navOptions, setNavOptions] = useState<NavigateOptions>();
   const [goBack, setGoBack] = useState(false);
   const navigate = useCallback(
     (to: To | number, options?: NavigateOptions) => {
-      if (to === pathname) return; // INGORE NAVIGATIONS TO SAME PATH
+      const pathname = window.location.pathname;
+      console.log("TO: ", to, "  PATH: ", pathname);
+      if (to === window.location.pathname) return; // INGORE NAVIGATIONS TO SAME PATH
+      if (
+        typeof to !== "number" &&
+        typeof to !== "string" &&
+        to.pathname === pathname
+      )
+        return; // INGORE NAVIGATIONS TO SAME PATH
+      console.log("PASSED");
       if (typeof to === "number") {
         setGoBack(true);
         setShow(false);
@@ -43,7 +51,7 @@ export const NavigateContextProvider = (props: IProps) => {
         setShow(false);
       }
     },
-    [pathname]
+    [window.location.pathname]
   );
 
   const goToPage = useCallback(() => {

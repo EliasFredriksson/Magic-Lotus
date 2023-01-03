@@ -4,27 +4,21 @@ import { FormEvent, useCallback, useState } from "react";
 import Button from "../../components/Button/Button";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { isEmpty } from "../../helpers/StringValidations";
-import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import Main from "../../components/Main/Main";
-import useNavigate from "../../hooks/useNavigate/useNavigate";
+import useSearch from "../../hooks/useSearch/useSearch";
 
 const Landing = () => {
-  const { navigate } = useNavigate();
   const [searchText, setSearchText] = useState("");
+
+  const { search } = useSearch();
 
   const handleSearch = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-
       if (!isEmpty(searchText)) {
-        const query = {
+        search({
           q: searchText,
           order: "color",
-        };
-
-        navigate({
-          pathname: "/results",
-          search: convertObjectToQuery(query),
         });
       }
     },

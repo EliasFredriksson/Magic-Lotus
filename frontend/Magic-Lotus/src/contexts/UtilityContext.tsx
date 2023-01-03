@@ -1,18 +1,14 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-import {
-  NavigateOptions,
-  To,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
 import useModal from "../hooks/useModal/useModal";
 
 type UtilityContext = {
   openStatusModal: (msg: string) => void;
+  updateTitle: (title: string) => void;
 };
 
 export const UtilityContext = createContext<UtilityContext>({
   openStatusModal: (msg: string) => {},
+  updateTitle: (title: string) => {},
 });
 
 interface IProps {
@@ -30,10 +26,20 @@ export const UtilityContextProvider = (props: IProps) => {
     openModal();
   }, []);
 
+  const [title, setTitle] = useState("Magic Lotus");
+  const updateTitle = useCallback((title: string) => {
+    setTitle(title);
+  }, []);
+  // ON MOUNT,  UPDATE DOCUMENT TITLE
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
   return (
     <UtilityContext.Provider
       value={{
         openStatusModal,
+        updateTitle,
       }}
     >
       {props.children}

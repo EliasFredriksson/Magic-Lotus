@@ -7,7 +7,7 @@ import IPaginated, {
   BLANK_PAGINATED_CARDS,
 } from "../../models/scryfall/types/Paginated";
 import ICard from "../../models/scryfall/interfaces/ICard";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import Spinner from "../../components/Spinner/Spinner";
 import useFetchCardSearch, {
@@ -16,8 +16,11 @@ import useFetchCardSearch, {
 import useModal from "../../hooks/useModal/useModal";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
+import useSearch from "../../hooks/useSearch/useSearch";
 
 const Results = () => {
+  const { breakpoints } = useScreenSize();
   const { navigate } = useNavigate();
   const [query, setQuery] = useSearchParams();
   const [result, setResult] = useObjectState<IPaginated<ICard[]>>(
@@ -30,33 +33,15 @@ const Results = () => {
     confirmTextOrButton: "Ok",
   });
 
-  const { isLoading, triggerFetch, abort } = useFetchCardSearch();
+  const { isLoading, latestSearch } = useSearch();
 
   useEffect(() => {
-    const fetchSearch = async () => {
-      const q = query.get("q") || "";
-      const order = query.get("order") as Order;
-      const res = await triggerFetch({
-        params: {
-          q,
-          order,
-        },
-      });
-      if (res.object === "aborted") return;
-      if (res.object === "list") {
-        setResult(res);
-      } else {
-        setErrorMsg(res.details);
-        openErrorModal();
-        setResult(BLANK_PAGINATED_CARDS);
-      }
-    };
-    fetchSearch();
-    return () => {
-      abort();
-      setResult(BLANK_PAGINATED_CARDS);
-    };
-  }, []);
+    if (!isLoading) {
+      setResult(latestSearch.data);
+    } else {
+      console.log("SEARCH IS LOADING...");
+    }
+  }, [isLoading]);
 
   return (
     <Main id="results-page">
@@ -78,7 +63,7 @@ const Results = () => {
                   navigate(`/card/${card.id}`);
                 }}
               >
-                <MagicCard card={card} />
+                <MagicCard card={card} size="normal" quality="normal" />
               </div>
             ))}
           </div>
