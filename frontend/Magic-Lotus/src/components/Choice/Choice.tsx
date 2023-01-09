@@ -1,26 +1,37 @@
 import "./choice.scss";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { isObjectInListNonInclude } from "../../helpers/ListValidations";
 
-interface IData {
+type ChoiceWithImg = {
   id: string;
   name: string;
-  img?: string;
-}
+  image: string;
+  fallbackImage: string;
+  meta?: any;
+};
+
+type ChoiceBasic = {
+  id: string;
+  name: string;
+  image?: undefined;
+  fallbackImage?: undefined;
+  meta?: any;
+};
+
+type Choice = ChoiceBasic | ChoiceWithImg;
 
 type Props = {
-  data: IData[];
+  data: Choice[];
   // DEFAULT BEHAVIOR IS THAT ONLY ONE RADIO IS ACTIVE AT A TIME.
   // IF YOU WANT TO BE ABLE TO SELECT MULTIPLE RADIOS, PASS THE
   // PROP multiChoice.
-  onChange: (choices: IData[]) => void;
+  onChange: (choices: Choice[]) => void;
 
   // VARIANT
   variant: "checkbox" | "radio";
 
   // OPTIONAL
-  startValue?: IData[];
-  multiChoice?: boolean;
+  startValue?: Choice[];
   label?: string;
   isValidState?: boolean;
   validationMsg?: string;
@@ -28,19 +39,22 @@ type Props = {
 
 let initLoad = true;
 const Choice = (props: Props) => {
-  const [activeChoices, setActiveChoices] = useState<IData[]>(
+  const [activeChoices, setActiveChoices] = useState<Choice[]>(
     props.startValue ? props.startValue : []
   );
-  const handleChange = (choice: IData) => {
-    if (props.variant === "radio") {
-      setActiveChoices([choice]);
-    } else {
-      const included = isObjectInListNonInclude(choice, activeChoices);
-      if (included) {
-        setActiveChoices(activeChoices.filter((l) => l.id !== choice.id));
-      } else setActiveChoices([...activeChoices, choice]);
-    }
-  };
+  const handleChange = useCallback(
+    (choice: Choice) => {
+      if (props.variant === "radio") {
+        setActiveChoices([choice]);
+      } else {
+        const included = isObjectInListNonInclude(choice, activeChoices);
+        if (included) {
+          setActiveChoices(activeChoices.filter((l) => l.id !== choice.id));
+        } else setActiveChoices([...activeChoices, choice]);
+      }
+    },
+    [activeChoices, props.variant]
+  );
 
   useEffect(() => {
     if (initLoad) {
@@ -64,38 +78,19 @@ const Choice = (props: Props) => {
           {props.label}
         </label>
       )}
-      {props.data.map((radio: IData, index) => {
-        const checked = isObjectInListNonInclude(radio, activeChoices);
-        const id = `${radio.id}-${index}`;
+      {props.data.map((choice: Choice, index) => {
+        const id = `${choice.id}-${index}`;
         return (
-          <div
+          <ChoiceEntry
             key={id}
-            className={`choice${checked ? " checked" : ""} ${props.variant}`}
+            choice={choice}
+            checked={isObjectInListNonInclude(choice, activeChoices)}
+            id={id}
+            variant={props.variant}
             onClick={() => {
-              handleChange(radio);
+              handleChange(choice);
             }}
-          >
-            <label htmlFor={id}>
-              {radio.img && (
-                <div className="image">
-                  <img src={radio.img} />
-                </div>
-              )}
-              {radio.name}
-            </label>
-
-            <input
-              key={id}
-              id={id}
-              type={props.variant}
-              value={radio.name}
-              data-testid="choice-input"
-              checked={checked}
-              onChange={(e) => {
-                e.preventDefault();
-              }}
-            />
-          </div>
+          />
         );
       })}
       {props.validationMsg && props.validationMsg.length > 0 && (
@@ -105,6 +100,45 @@ const Choice = (props: Props) => {
           {props.validationMsg}
         </span>
       )}
+    </div>
+  );
+};
+
+type PropsEntry = {
+  choice: Choice;
+  id: string;
+  checked: boolean;
+  variant: "checkbox" | "radio";
+  onClick: () => void;
+};
+const ChoiceEntry = (props: PropsEntry) => {
+  return (
+    <div
+      key={props.id}
+      className={`choice${props.checked ? " checked" : ""} ${props.variant}`}
+      onClick={() => {
+        props.onClick();
+      }}
+    >
+      <label htmlFor={props.id}>
+        {props.choice.image && (
+          <div className="image">
+            <img src={props.choice.image} />
+          </div>
+        )}
+        {props.choice.name}
+      </label>
+
+      <input
+        id={props.id}
+        type={props.variant}
+        value={props.choice.name}
+        data-testid="choice-input"
+        checked={props.checked}
+        onChange={(e) => {
+          e.preventDefault();
+        }}
+      />
     </div>
   );
 };

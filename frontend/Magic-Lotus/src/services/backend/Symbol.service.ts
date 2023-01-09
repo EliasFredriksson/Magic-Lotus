@@ -18,6 +18,17 @@ export const useFetchSymbols = () => {
 };
 
 // ################################ ROUTE ################################
+// Get all mana symbols
+// GET     /symbols
+export const useFetchManaSymbols = () => {
+  return useFetch<MagicLotusResponse<ISymbol[]>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "GET",
+    route: "/symbols/mana",
+  });
+};
+
+// ################################ ROUTE ################################
 // Create new symbol / update existing symbol
 // POST     /symbols
 type IPostSymbol = {

@@ -6,18 +6,28 @@ import useOutsideClick from "../../hooks/useOutsideClick/useOutsideClick";
 import { areObjectsEqual } from "../../helpers/ObjectValidations";
 import useKeyboard from "../../hooks/useKeyboard/useKeyboard";
 
-interface IData {
+type DataCategory = {
   id: string;
+  title: string;
+  name?: undefined;
+  meta?: undefined;
+};
+type DataEntry = {
+  id: string;
+  title?: undefined;
   name: string;
-}
+  meta?: any;
+};
+
+type Data = DataEntry | DataCategory;
 
 interface IProps {
-  data: IData[];
-  onSelect: (entries: IData[]) => void;
+  data: Data[];
+  onSelect: (entries: Data[]) => void;
   placeholder: string;
 
   // OPTIONAL
-  startValue?: IData[];
+  startValue?: Data[];
 
   // SEARCHABLE
   searchable?: boolean; // Default = false. // true = you can enter text
@@ -38,6 +48,9 @@ interface IProps {
   minimumWaitTime?: number;
   onError?: (error: string) => void;
   testId?: string;
+
+  // OPEN HEIGHT
+  menuHeight?: string;
 }
 
 const MINIMUM_INPUT_WAIT_TIME = 100; // In milliseconds
@@ -46,8 +59,8 @@ let timer: NodeJS.Timeout | null = null;
 const Dropdown = (props: IProps): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [filtered, setFiltered] = useState<IData[]>(props.data);
-  const [activeEntries, setActiveEntries] = useState<IData[]>(
+  const [filtered, setFiltered] = useState<Data[]>(props.data);
+  const [activeEntries, setActiveEntries] = useState<Data[]>(
     props.startValue ? props.startValue : []
   );
 
@@ -56,7 +69,8 @@ const Dropdown = (props: IProps): ReactElement => {
     onKeyDown: () => {
       if (!isOpen) return;
       if (filtered.length === 1) {
-        handleSelect(filtered[0]);
+        // UGLY SOLUTIOn
+        handleSelect(filtered[0] as DataEntry);
       }
     },
   });
@@ -64,7 +78,10 @@ const Dropdown = (props: IProps): ReactElement => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => {
     if (!props.multiChoice) {
-      if (activeEntries[0]) setInputText(activeEntries[0].name);
+      if (activeEntries[0]) {
+        // POTENTIAL UGLY SOLUTION HERE
+        setInputText(activeEntries[0].name ? activeEntries[0].name : "");
+      }
     }
     setIsOpen(false);
   });
@@ -78,9 +95,13 @@ const Dropdown = (props: IProps): ReactElement => {
         () => {
           if (props.onSearch) props.onSearch(e.target.value);
           setIsOpen(true);
-          const filteredList = props.data.filter((data) =>
-            data.name.toLowerCase().includes(e.target.value.toLowerCase())
-          );
+          const filteredList = props.data.filter((data) => {
+            if (data.name)
+              return data.name
+                .toLowerCase()
+                .includes(e.target.value.toLowerCase());
+            else return true;
+          });
           setFiltered(filteredList);
         },
         props.minimumWaitTime ? props.minimumWaitTime : MINIMUM_INPUT_WAIT_TIME
@@ -90,7 +111,7 @@ const Dropdown = (props: IProps): ReactElement => {
   );
 
   const handleSelect = useCallback(
-    (entry: IData) => {
+    (entry: DataEntry) => {
       if (!props.multiChoice) setIsOpen(false);
       if (activeEntries.find((tag) => tag.id === entry.id)) {
         if (props.multiChoice) removeActiveEntry(entry);
@@ -109,7 +130,7 @@ const Dropdown = (props: IProps): ReactElement => {
   );
 
   const removeActiveEntry = useCallback(
-    (entry: IData) => {
+    (entry: Data) => {
       const filtered = activeEntries.filter((activeEntry) => {
         return !areObjectsEqual(entry, activeEntry);
       });
@@ -127,6 +148,10 @@ const Dropdown = (props: IProps): ReactElement => {
   useEffect(() => {
     if (props.startValue) setActiveEntries(props.startValue);
   }, [props.startValue]);
+
+  useEffect(() => {
+    if (props.searchable) setFiltered(props.data);
+  }, [props.data]);
 
   const displayedList = props.searchable ? filtered : props.data;
   return (
@@ -197,23 +222,44 @@ const Dropdown = (props: IProps): ReactElement => {
         className={`menu ${isOpen ? "opened" : "closed"}${
           props.menuPosition ? " " + props.menuPosition : ""
         }`}
+        // TO ANIMATE OPEN AND CLOSING + CUSTOMIZE MENU HEIGHT
+        style={{
+          maxHeight: isOpen
+            ? props.menuHeight
+              ? props.menuHeight
+              : "30rem"
+            : "0px",
+        }}
       >
-        {displayedList.map((tag: IData, index) => {
-          if (!tag.id || !tag.name || tag.name.length <= 0) return;
+        {/* RENDERED LIST */}
+        {displayedList.map((tag: Data, index) => {
+          if (!tag.id) return;
           const isActive = activeEntries.find((active) => active.id === tag.id);
-          return (
-            <div
-              className={`entry${isActive ? " active" : ""}`}
-              key={`${tag.id}-${index}`}
-              onClick={() => {
-                handleSelect(tag);
-              }}
-            >
-              <span>
-                {tag.name} {isActive && <RiCheckLine />}
-              </span>
-            </div>
-          );
+          const id = `${tag.id}-${index}`;
+          // IF ITS A CATEGORY TITLE
+          if (tag.title) {
+            return (
+              <div key={id} className="category">
+                <span>{tag.title}</span>
+              </div>
+            );
+          }
+          // IF ITS A NORMAL ENTRY
+          else if (tag.name) {
+            return (
+              <div
+                className={`entry${isActive ? " active" : ""}`}
+                key={id}
+                onClick={() => {
+                  handleSelect(tag);
+                }}
+              >
+                <span>
+                  {tag.name} {isActive && <RiCheckLine />}
+                </span>
+              </div>
+            );
+          } else return <></>;
         })}
         {displayedList.length <= 0 && (
           <div className={`entry disabled`}>

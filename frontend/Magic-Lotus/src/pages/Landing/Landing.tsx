@@ -42,7 +42,7 @@ const Landing = () => {
             setSearchText(e.target.value);
           }}
         />
-        <Button type="submit">
+        <Button type="submit" variant="secondary">
           <RxMagnifyingGlass />
         </Button>
       </form>

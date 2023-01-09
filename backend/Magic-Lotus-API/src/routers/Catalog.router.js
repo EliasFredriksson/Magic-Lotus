@@ -64,6 +64,18 @@ router.get("/names", async (req, res) => {
   }
 });
 
+// ============ ADVANCED SEARCH ============
+router.get("/types", async (req, res) => {
+  try {
+    const catalogs = await CatalogModel.find({
+      category: /-types$/,
+    });
+    res.status(200).send(responses.create200Response(catalogs, req));
+  } catch (error) {
+    res.status(400).send(responses.create400Response(error, req));
+  }
+});
+
 // GET CATALOG BY CATEGORY NAME
 router.get("/:name", async (req, res) => {
   try {

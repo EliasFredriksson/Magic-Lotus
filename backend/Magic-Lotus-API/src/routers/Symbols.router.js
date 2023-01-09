@@ -56,6 +56,18 @@ router.get("/", auth.checkIfAdmin, async (req, res) => {
   }
 });
 
+// GET ALL MANA SYMBOLS
+router.get("/mana", async (req, res) => {
+  try {
+    const symbols = await SymbolModel.find({
+      represents_mana: true,
+    });
+    res.status(200).send(create200Response(symbols, req));
+  } catch (error) {
+    res.status(400).send(create400Response(error, req));
+  }
+});
+
 // GET SYMBOL BY ID
 router.get("/:id", async (req, res) => {
   try {

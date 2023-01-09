@@ -20,7 +20,8 @@ import {
   GET_CATALOG_WATERMARKS,
   GET_CATALOG_WORD_BANK,
 } from "../../services/scryfall/Catalog.routes";
-import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
+import { useFetchPostCatalog } from "../../services/backend/Catalog.service";
+// import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
 
 type LoadingState = {
   "card-names": boolean;
@@ -66,7 +67,7 @@ interface IProps {
   onError: (error: Error) => void;
 }
 
-const FETCH_CALLS_DELAY = 1000;
+const FETCH_CALLS_DELAY = 500;
 
 const useUpdateAllCatalogs = (
   props: IProps
@@ -81,14 +82,7 @@ const useUpdateAllCatalogs = (
     useObjectState(BLANK_LOADING_STATE);
 
   // ==================== FETCH REQUEST BACKEND ====================
-  const FetchStoreCatalog = useFetch<
-    IServiceResponse<string>,
-    { category: string; data: ICatalog }
-  >({
-    base: "BACKEND",
-    route: CATALOG_ROUTES.POST_CATALOG(),
-    method: "POST",
-  });
+  const FetchStoreCatalog = useFetchPostCatalog();
 
   const storeCatalog = useCallback(
     async (category: string, catalog: ICatalog): Promise<boolean> => {
@@ -98,11 +92,13 @@ const useUpdateAllCatalogs = (
           data: catalog,
         },
       });
-      if (res.success) return true;
-      else {
+
+      if (res.object === "aborted") return false;
+      if (res.object === "magic_lotus_error") {
         props.onError(new Error(res.error));
         return false;
       }
+      return true;
     },
     []
   );

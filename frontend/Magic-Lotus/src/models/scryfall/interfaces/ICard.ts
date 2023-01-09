@@ -30,7 +30,7 @@ export default interface ICard {
   readonly tcgplayer_etched_id?: number | null; // The foiled card's ID on TCGPlayer API.
   readonly cardmarket_id?: number | null; // The card's id on CardMarket
   readonly object: "card"; // The content type for this object. Always "card".
-  readonly oracle_id: string; // UUID // This is the oravle identity.
+  readonly oracle_id: string; // UUID // This is the oracle identity.
   readonly prints_search_uri: string; // URI // A link to where you can begin paginating all re/prints for this cad on Scryfall's API
   readonly rulins_uri: string; // URI // A link to this card's ruling list on Scryfall's API.
   readonly scryfall_uri: string; // URI // A link to this card's permapage on Scryfall's website.

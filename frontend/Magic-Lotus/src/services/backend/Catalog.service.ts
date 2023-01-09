@@ -5,6 +5,7 @@ import MagicLotusError from "../../models/backend/types/MagicLotusError";
 import MagicLotusResponse from "../../models/backend/types/MagicLotusResponse";
 
 // ################################ ROUTE ################################
+// Get all catalogs
 // GET     /catalogs
 export const useFetchGetCatalogs = () => {
   return useFetch<MagicLotusResponse<ICatalog[]>, MagicLotusError, null, null>({
@@ -15,6 +16,7 @@ export const useFetchGetCatalogs = () => {
 };
 
 // ################################ ROUTE ################################
+// Create new catalog
 // POST     /catalogs
 type IPostCatalog = {
   category: string;
@@ -34,6 +36,7 @@ export const useFetchPostCatalog = () => {
 };
 
 // ################################ ROUTE ################################
+// Get all catalog names
 // GET     /catalogs/names
 export const useFetchGetCatalogNames = () => {
   return useFetch<MagicLotusResponse<string[]>, MagicLotusError, null, null>({
@@ -44,6 +47,7 @@ export const useFetchGetCatalogNames = () => {
 };
 
 // ################################ ROUTE ################################
+// Get catalog by name
 // GET     /catalogs/:name
 export const useFetchGetCatalogByName = (name: string) => {
   return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
@@ -54,6 +58,7 @@ export const useFetchGetCatalogByName = (name: string) => {
 };
 
 // ################################ ROUTE ################################
+// Get catalog by id
 // GET     /catalogs/id/:id
 export const useFetchGetCatalogById = (id: string) => {
   return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
@@ -64,16 +69,17 @@ export const useFetchGetCatalogById = (id: string) => {
 };
 
 // ################################ ROUTE ################################
-// PUT     /catalogs/:id
-// export const useFetchPutCatalogById = (id: string) => {
-//   return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
-//     base: "BACKEND",
-//     method: "GET",
-//     route: `/catalogs/id/${id}`,
-//   });
-// };
+// GET     /catalogs/types
+export const useFetchGetTypesCatalogs = () => {
+  return useFetch<MagicLotusResponse<ICatalog[]>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "GET",
+    route: `/catalogs/types`,
+  });
+};
 
 // ################################ ROUTE ################################
+// Delete catalog by id
 // DELETE     /catalogs/:id
 export const useFetchDeleteCatalogById = (id: string) => {
   return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({

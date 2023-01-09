@@ -1,6 +1,7 @@
-import BasicLand from "../models/types/BasicLand";
-import ColorAbbveration from "../models/types/ColorAbbveration";
-import ColorName from "../models/types/ColorName";
+import BasicLand from "../models/scryfall/types/BasicLand";
+import ColorAbbveration from "../models/scryfall/types/ColorAbbveration";
+import ColorName from "../models/scryfall/types/ColorName";
+// import ColorAbbveration from "../models/types/ColorAbbveration";
 
 // COLOR MANA SYMBOLS PUBLIC PATHS
 const MANA_SYMBOL_URLS = [
@@ -17,6 +18,7 @@ type Color = {
   [Property in BasicLand]: {
     abbveration: ColorAbbveration;
     color: ColorName;
+    symbol: string;
     symbolUrl: ColorSymbol;
   };
 };
@@ -24,26 +26,31 @@ const COLOR_DATA: Color = {
   Plains: {
     abbveration: "W",
     color: "White",
+    symbol: "{W}",
     symbolUrl: "/Mana_Symbols/Plains.svg",
   },
   Island: {
     abbveration: "U",
     color: "Blue",
+    symbol: "{U}",
     symbolUrl: "/Mana_Symbols/Island.svg",
   },
   Swamp: {
     abbveration: "B",
     color: "Black",
+    symbol: "{B}",
     symbolUrl: "/Mana_Symbols/Swamp.svg",
   },
   Mountain: {
     abbveration: "R",
     color: "Red",
+    symbol: "{R}",
     symbolUrl: "/Mana_Symbols/Mountain.svg",
   },
   Forest: {
     abbveration: "G",
     color: "Green",
+    symbol: "{G}",
     symbolUrl: "/Mana_Symbols/Forest.svg",
   },
 };

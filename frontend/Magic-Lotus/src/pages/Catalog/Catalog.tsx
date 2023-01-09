@@ -10,22 +10,27 @@ import ICatalog, {
   BLANK_CATALOG,
 } from "../../models/backend/interfaces/ICatalog";
 import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
-import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
+// import CATALOG_ROUTES from "../../services/backend/Catalog.routes";
 import Main from "../../components/Main/Main";
+import { useFetchGetCatalogByName } from "../../services/backend/Catalog.service";
+import useUtility from "../../hooks/useUtility/useUtility";
 
 const Catalog = () => {
   const { name } = useParams();
+  const { openStatusModal } = useUtility();
   const [catalog, setCatalog] = useObjectState<ICatalog>(BLANK_CATALOG);
-  const FetchCatalog = useFetch<IServiceResponse<ICatalog>>({
-    base: "BACKEND",
-    route: CATALOG_ROUTES.GET_CATALOG_BY_CATEGORY_NAME(name ? name : ""),
-    method: "GET",
-  });
+
+  const FetchCatalog = useFetchGetCatalogByName(name ? name : "");
 
   useEffect(() => {
     const fetchCatalog = async () => {
       const res = await FetchCatalog.triggerFetch();
-      if (res.success) setCatalog(res.data);
+      if (res.object === "aborted") return;
+      if (res.object === "magic_lotus_error") {
+        openStatusModal(res.error);
+        return;
+      }
+      if (res.data) setCatalog(res.data);
       else setCatalog(BLANK_CATALOG);
     };
     fetchCatalog();

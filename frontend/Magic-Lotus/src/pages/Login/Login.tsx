@@ -5,7 +5,7 @@ import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
 import Spinner from "../../components/Spinner/Spinner";
 import { isValidityValid } from "../../helpers/InputValidityHelpers";
-import { isEmpty } from "../../helpers/StringValidations";
+import { isEmail, isEmpty } from "../../helpers/StringValidations";
 import useAuth from "../../hooks/useAuth/useAuth";
 import useModal from "../../hooks/useModal/useModal";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
@@ -56,10 +56,10 @@ const Login = () => {
   const isFormValid = useCallback((): boolean => {
     const validity = { ...BLANK_INPUT_VALIDITY };
 
-    if (isEmpty(inputState.email)) {
+    if (!isEmail(inputState.email)) {
       validity.email = false;
       setValidationMsg({
-        email: "You must enter your email!",
+        email: "You must enter a valid email!",
       });
     }
     if (isEmpty(inputState.password)) {

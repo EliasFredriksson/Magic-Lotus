@@ -33,7 +33,6 @@ export const NavigateContextProvider = (props: IProps) => {
   const navigate = useCallback(
     (to: To | number, options?: NavigateOptions) => {
       const pathname = window.location.pathname;
-      console.log("TO: ", to, "  PATH: ", pathname);
       if (to === window.location.pathname) return; // INGORE NAVIGATIONS TO SAME PATH
       if (
         typeof to !== "number" &&
@@ -41,7 +40,6 @@ export const NavigateContextProvider = (props: IProps) => {
         to.pathname === pathname
       )
         return; // INGORE NAVIGATIONS TO SAME PATH
-      console.log("PASSED");
       if (typeof to === "number") {
         setGoBack(true);
         setShow(false);

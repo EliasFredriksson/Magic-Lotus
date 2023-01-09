@@ -5,52 +5,65 @@
 
   .middle {
     width: 100%;
-  }
 
-  .card-component {
-    gap: $spacing-l;
+    .card-component {
+      gap: $spacing-l;
 
-    .search-field {
-      @include display-flex-column;
-      gap: $spacing-m;
-
-      .label {
-        display: flex;
-        align-items: center;
+      .search-field {
+        @include display-flex-column;
         gap: $spacing-m;
-        align-items: flex-start;
-
-        .icon {
-          font-size: $size-xl;
-        }
         @include breakpoint-laptop {
-          flex-basis: 15%;
-          flex-shrink: 0;
-        }
-      }
-
-      .input-component {
-        @include breakpoint-laptop {
-          flex-grow: 1;
-        }
-      }
-
-      .dropdown-componenet {
-        @include breakpoint-laptop {
-          flex-grow: 1;
-        }
-      }
-
-      .choice-component {
-        @include breakpoint-tablet {
+          align-items: flex-start;
           flex-direction: row;
-          gap: $spacing-l;
+          gap: $spacing-xl;
         }
-      }
 
-      @include breakpoint-laptop {
-        flex-direction: row;
-        gap: $spacing-xl;
+        .label {
+          display: flex;
+          align-items: center;
+          gap: $spacing-m;
+
+          .icon {
+            font-size: $size-xl;
+          }
+          @include breakpoint-laptop {
+            flex-basis: 15%;
+            flex-shrink: 0;
+          }
+        }
+
+        .input-component {
+          @include breakpoint-laptop {
+            flex-grow: 1;
+          }
+        }
+
+        .dropdown-componenet {
+          @include breakpoint-laptop {
+            flex-grow: 1;
+          }
+        }
+
+        .choice-component {
+          @include breakpoint-tablet {
+            flex-direction: row;
+            gap: $spacing-l;
+          }
+        }
+
+        &.rarity {
+          // RARITY COLORS
+
+          .choice:nth-child(2) label {
+            color: #d1d1d1;
+          }
+          .choice:nth-child(3) label {
+            color: #f0e264;
+          }
+          .choice:nth-child(4) label {
+            color: #ff7a0e;
+          }
+        }
       }
     }
   }
