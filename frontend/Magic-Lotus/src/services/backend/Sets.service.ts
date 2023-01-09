@@ -1,14 +1,13 @@
 import useFetch from "../../hooks/useFetch/useFetch";
-import ICatalog from "../../models/backend/interfaces/ICatalog";
-import { default as ScryfallCatalog } from "../../models/scryfall/interfaces/ICatalog";
 import MagicLotusError from "../../models/backend/types/MagicLotusError";
 import MagicLotusResponse from "../../models/backend/types/MagicLotusResponse";
+import ISet from "../../models/scryfall/interfaces/ISet";
 
 // ################################ ROUTE ################################
-// Get all catalogs
-// GET     /catalogs
-export const useFetchSets = () => {
-  return useFetch<MagicLotusResponse<ICatalog[]>, MagicLotusError, null, null>({
+// Get all sets
+// GET     /sets
+export const useFetchGetAllSets = () => {
+  return useFetch<MagicLotusResponse<ISet[]>, MagicLotusError, null, null>({
     base: "BACKEND",
     method: "GET",
     route: "/sets",
@@ -16,75 +15,26 @@ export const useFetchSets = () => {
 };
 
 // ################################ ROUTE ################################
-// Create new catalog
-// POST     /catalogs
-type IPostCatalog = {
-  category: string;
-  data: ScryfallCatalog;
+// Create new set
+// POST     /sets
+type IPostSet = {
+  set: ISet;
 };
-export const useFetchPostCatalog = () => {
-  return useFetch<
-    MagicLotusResponse<string>,
-    MagicLotusError,
-    IPostCatalog,
-    null
-  >({
+export const useFetchPostSet = () => {
+  return useFetch<MagicLotusResponse<string>, MagicLotusError, IPostSet, null>({
     base: "BACKEND",
     method: "POST",
-    route: "/catalogs",
+    route: "/sets",
   });
 };
 
 // ################################ ROUTE ################################
-// Get all catalog names
-// GET     /catalogs/names
-export const useFetchGetCatalogNames = () => {
-  return useFetch<MagicLotusResponse<string[]>, MagicLotusError, null, null>({
-    base: "BACKEND",
-    method: "GET",
-    route: "/catalogs/names",
-  });
-};
-
-// ################################ ROUTE ################################
-// Get catalog by name
-// GET     /catalogs/:name
-export const useFetchGetCatalogByName = (name: string) => {
-  return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
-    base: "BACKEND",
-    method: "GET",
-    route: `/catalogs/${name}`,
-  });
-};
-
-// ################################ ROUTE ################################
-// Get catalog by id
-// GET     /catalogs/id/:id
-export const useFetchGetCatalogById = (id: string) => {
-  return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
-    base: "BACKEND",
-    method: "GET",
-    route: `/catalogs/id/${id}`,
-  });
-};
-
-// ################################ ROUTE ################################
-// GET     /catalogs/types
-export const useFetchGetTypesCatalogs = () => {
-  return useFetch<MagicLotusResponse<ICatalog[]>, MagicLotusError, null, null>({
-    base: "BACKEND",
-    method: "GET",
-    route: `/catalogs/types`,
-  });
-};
-
-// ################################ ROUTE ################################
-// Delete catalog by id
-// DELETE     /catalogs/:id
+// Delete set by id
+// DELETE     /sets/:id
 export const useFetchDeleteCatalogById = (id: string) => {
-  return useFetch<MagicLotusResponse<ICatalog>, MagicLotusError, null, null>({
+  return useFetch<MagicLotusResponse<ISet>, MagicLotusError, null, null>({
     base: "BACKEND",
     method: "DELETE",
-    route: `/catalogs/id/${id}`,
+    route: `/sets/id/${id}`,
   });
 };
