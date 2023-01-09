@@ -1,0 +1,15 @@
+@use "../../styles/all" as *;
+
+.seperator {
+  border: none;
+  border-radius: 10rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  @include dark-mode {
+    background-color: $gray-700;
+  }
+  @include light-mode {
+    background-color: $gray-300;
+  }
+}

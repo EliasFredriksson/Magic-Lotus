@@ -31,7 +31,7 @@ export const CARD_TYPES = [
 export const SUPER_TYPES = [
   {
     id: "8",
-    name: "Legendary",
+    name: "Legend",
   },
   {
     id: "9",

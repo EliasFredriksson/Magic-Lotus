@@ -38,6 +38,9 @@ interface IProps {
   // ONE IDATA OBJECT IN IT.
   multiChoice?: boolean;
 
+  // asdasd
+  picker?: boolean;
+
   // MORE OPTIONAL CONFIGS
   id?: string;
   name?: string;
@@ -112,7 +115,7 @@ const Dropdown = (props: IProps): ReactElement => {
 
   const handleSelect = useCallback(
     (entry: DataEntry) => {
-      if (!props.multiChoice) setIsOpen(false);
+      if (!props.multiChoice && !props.stayOpenOnSelect) setIsOpen(false);
       if (activeEntries.find((tag) => tag.id === entry.id)) {
         if (props.multiChoice) removeActiveEntry(entry);
       } else {
@@ -181,7 +184,7 @@ const Dropdown = (props: IProps): ReactElement => {
             readOnly={props.searchable ? false : true}
             type="text"
             name={props.name}
-            value={inputText}
+            value={props.picker ? props.placeholder : inputText}
             placeholder={props.placeholder}
             onChange={props.searchable ? handleChange : undefined}
           />
@@ -248,14 +251,14 @@ const Dropdown = (props: IProps): ReactElement => {
           else if (tag.name) {
             return (
               <div
-                className={`entry${isActive ? " active" : ""}`}
+                className={`entry${isActive && !props.picker ? " active" : ""}`}
                 key={id}
                 onClick={() => {
                   handleSelect(tag);
                 }}
               >
                 <span>
-                  {tag.name} {isActive && <RiCheckLine />}
+                  {tag.name} {isActive && !props.picker && <RiCheckLine />}
                 </span>
               </div>
             );

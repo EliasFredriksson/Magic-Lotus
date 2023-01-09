@@ -1,33 +1,38 @@
+import "./search.scss";
 import { useCallback, useEffect, useState } from "react";
 import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
 import Main from "../../components/Main/Main";
 import Text from "../../components/Text/Text";
-import useObjectState from "../../hooks/useObjectState/useObjectState";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import Choice from "../../components/Choice/Choice";
 import useSearch from "../../hooks/useSearch/useSearch";
-import ICatalog, {
-  BLANK_CATALOG,
-} from "../../models/backend/interfaces/ICatalog";
+import useUtility from "../../hooks/useUtility/useUtility";
+import { useFetchManaSymbols } from "../../services/backend/Symbol.service";
 import { useFetchGetTypesCatalogs } from "../../services/backend/Catalog.service";
-import { ICardSearchParams } from "../../services/scryfall/cards/Cards.search.service";
 import { GoCreditCard } from "react-icons/go";
 import { VscSymbolColor } from "react-icons/vsc";
-import "./search.scss";
 import { TfiCrown, TfiText } from "react-icons/tfi";
 import {
   IoFingerPrintOutline,
   IoShieldOutline,
   IoStarOutline,
 } from "react-icons/io5";
+import { ImStatsBars2 } from "react-icons/im";
 import { BiCoinStack } from "react-icons/bi";
-import { IFullTextParams } from "../../helpers/fullTextConverter/FullTextConverter";
-import Dropdown from "../../components/Dropdown/Dropdown";
-import Choice from "../../components/Choice/Choice";
 import { CARD_TYPES, SUPER_TYPES } from "../../constants/CARD_TYPES";
 import Button from "../../components/Button/Button";
-import { useFetchManaSymbols } from "../../services/backend/Symbol.service";
-import useUtility from "../../hooks/useUtility/useUtility";
-import ISymbol from "../../models/backend/interfaces/ISymbol";
+import {
+  EQUAL,
+  IS,
+  LARGER_OR_EQUAL,
+  LARGER_THAN,
+  NOT_EQUAL,
+  SMALLER_OR_EQUAL,
+  SMALLER_THAN,
+} from "../../constants/FILTER_CONDITIONS";
+import { Seperator } from "../../components/Seperator/Seperator";
+import { FiLayers } from "react-icons/fi";
 
 // NEEDED FOR CATEGORIES IN DROPDOWN
 type DataCategory = {
@@ -44,9 +49,9 @@ type DataEntry = {
 };
 type Data = DataEntry | DataCategory;
 
-type IInputState = {
-  [Property in keyof Required<IFullTextParams>]: string;
-};
+const COLOR_CONDITION_START_VALUE = [{ id: "1", name: "Exactly these colors" }];
+const MANA_COST_START_VALUE = [{ id: "1", name: "Exactly this cost" }];
+const STATS_TARGET_START_VALUE = [{ id: "1", name: "Mana Value" }];
 
 const Search = () => {
   const { openStatusModal } = useUtility();
@@ -60,65 +65,36 @@ const Search = () => {
   const getCatalogs = useFetchGetTypesCatalogs();
   const getManaSymbols = useFetchManaSymbols();
 
-  // INPUT STATES
-  const [searchParams, setSearchParams] = useObjectState<IInputState>({
-    q: "",
-    oracle: "",
-    color: "",
-    id: "",
-    type: "",
-    fo: "",
-    keyword: "",
-    mana: "",
-    manavalue: "",
-    cmc: "",
-    devotion: "",
-    produces: "",
-    power: "",
-    toughness: "",
-    powtou: "",
-    loyalty: "",
-    include: "",
-    rarity: "",
-    set: "",
-    cn: "",
-    block: "",
-    st: "",
-    cube: "",
-    format: "",
-    banned: "",
-    restricted: "",
-    tix: "",
-    usd: "",
-    eur: "",
-    cheapest: "",
-    artist: "",
-    flavor: "",
-    watermark: "",
-    border: "",
-    stamp: "",
-    frame: "",
-    game: "",
-    year: "",
-    art: "",
-    function: "",
-    sets: "",
-    papersets: "",
-    paperprints: "",
-    lang: "",
-    unique: "",
-    has: "",
-    new: "",
-    in: "",
-    is: "",
-  });
-
-  const setColors = useCallback(
-    (data: { colors?: string; condition?: string }) => {
-      console.log("COLORS: ", data);
-    },
-    []
-  );
+  // ################################### INPUT STATES ###################################
+  // Card name
+  const [cardName, setCardName] = useState("");
+  // Oracle text
+  const [cardText, setCardText] = useState("");
+  // Card types
+  const [typeLine, setTypeLine] = useState<string[]>([]);
+  const [allowPartial, setAllowPartial] = useState(false);
+  // Card colors
+  const [cardColors, setCardColors] = useState<string>("");
+  const [colorCondition, setColorCondition] = useState(IS);
+  // Commander
+  const [commanderColors, setCommanderColors] = useState<string>("");
+  // Mana const
+  const [manaCost, setManaCost] = useState("");
+  const [manaCondition, setManaCondition] = useState(IS);
+  // Stats
+  const [statTarget, setStatTarget] = useState("cmc");
+  const [statCondition, setStatCondition] = useState("");
+  const [statGoal, setStatGoal] = useState("");
+  // Formats
+  // Sets / Blocks
+  // Rarity
+  // Criteria
+  // Prices
+  // Artists
+  // Flavor text
+  // Lore finder
+  // Language
+  // Preferences
 
   useEffect(() => {
     const init = async () => {
@@ -196,8 +172,33 @@ const Search = () => {
   );
 
   useEffect(() => {
-    console.table(searchParams);
-  }, [searchParams]);
+    console.clear();
+    console.log("\n\nCARD NAME:\t", cardName);
+    console.log("CARD TEXT:\t", cardText);
+    console.log("CARD TYPES:\t", typeLine, "\tALLOW PARTIAL: ", allowPartial);
+    console.log(
+      "CARD COLORS:\t",
+      cardColors,
+      "\tCOLOR CONDITION: ",
+      colorCondition
+    );
+    console.log("COMMANDER:\t", commanderColors);
+    console.log("MANA COST:\t", manaCost, "\tMANA CONDITION:\t", manaCondition);
+    console.log("STATS:\t", statTarget, statCondition, statGoal);
+  }, [
+    cardName,
+    cardText,
+    typeLine,
+    allowPartial,
+    cardColors,
+    colorCondition,
+    commanderColors,
+    manaCost,
+    manaCondition,
+    statTarget,
+    statCondition,
+    statGoal,
+  ]);
 
   return (
     <Main id="search-page">
@@ -215,14 +216,13 @@ const Search = () => {
             <Input
               placeholder={`Any words in the name, e.g. "Fire"`}
               type="text"
-              value={searchParams.q}
+              value={cardName}
               onChange={(e) => {
-                setSearchParams({
-                  q: e.target.value,
-                });
+                setCardName(e.target.value);
               }}
             />
           </div>
+          <Seperator direction="ver" />
           {/* TEXT */}
           <div className="search-field">
             <div className="label">
@@ -232,16 +232,16 @@ const Search = () => {
             <Input
               placeholder={`Any text, e.g. "draw a card"`}
               type="text"
-              value={searchParams.oracle}
+              value={cardText}
               onChange={(e) => {
-                setSearchParams({
-                  oracle: e.target.value,
-                });
+                setCardText(e.target.value);
               }}
             />
           </div>
+          <Seperator direction="ver" />
+
           {/* TYPE LINE */}
-          <div className="search-field">
+          <div className="search-field type">
             <div className="label">
               <IoFingerPrintOutline className="icon" />
               {createText("Type Line")}
@@ -252,23 +252,40 @@ const Search = () => {
               searchable
               placeholder="Enter a type or choose from the list"
               data={catalogs}
-              onSelect={(active) => {}}
+              onSelect={(active) => {
+                setTypeLine(
+                  active.map((type) =>
+                    type.name ? `t:${type.name.toLowerCase()}` : ""
+                  )
+                );
+              }}
               menuHeight="50rem"
               menuPosition="relative"
             />
-            <Choice
-              variant="checkbox"
-              data={[
-                {
-                  id: "allow-partial-types",
-                  name: "Allow partial types",
-                },
-              ]}
-              onChange={(choices) => {}}
-            />
+
+            <div className="inner padded">
+              <Choice
+                variant="checkbox"
+                data={[
+                  {
+                    id: "allow-partial-types",
+                    name: "Allow partial types",
+                  },
+                ]}
+                onChange={(choices) => {
+                  choices[0] ? setAllowPartial(true) : setAllowPartial(false);
+                }}
+              />
+
+              <Text size="xs">
+                Choose any card type, supertype, or subtypes to match.
+              </Text>
+            </div>
           </div>
+          <Seperator direction="ver" />
+
           {/* COLORS */}
-          <div className="search-field">
+          <div className="search-field colors">
             <div className="label">
               <VscSymbolColor className="icon" />
               {createText("Colors")}
@@ -279,68 +296,70 @@ const Search = () => {
                 {
                   id: "1",
                   name: "White",
-                  meta: "{W}",
+                  meta: "w",
                 },
                 {
                   id: "2",
                   name: "Blue",
-                  meta: "{U}",
+                  meta: "u",
                 },
                 {
                   id: "3",
                   name: "Black",
-                  meta: "{B}",
+                  meta: "b",
                 },
                 {
                   id: "4",
                   name: "Red",
-                  meta: "{R}",
+                  meta: "r",
                 },
                 {
                   id: "5",
                   name: "Green",
-                  meta: "{G}",
+                  meta: "g",
                 },
                 {
                   id: "6",
                   name: "Colorless",
+                  meta: "c",
                 },
               ]}
               onChange={(choices) => {
-                console.log("ACTIVE: ", choices);
-                setColors({
-                  colors: choices.map((choice) => choice.meta).join(""),
-                });
+                setCardColors(
+                  `${choices.map((choice) => `${choice.meta}`).join("")}`
+                );
               }}
             />
 
-            <Dropdown
-              placeholder="Choose a color criteria."
-              data={[
-                {
-                  id: "1",
-                  name: "Exactly these colors",
-                  meta: ":",
-                },
-                {
-                  id: "2",
-                  name: "Including these colors",
-                  meta: ">=",
-                },
-                {
-                  id: "3",
-                  name: "At most these colors",
-                  meta: "<=",
-                },
-              ]}
-              onSelect={(entries) => {
-                setColors({
-                  condition: entries[0].meta,
-                });
-              }}
-              startValue={[{ id: "1", name: "Exactly these colors" }]}
-            />
+            <div className="inner">
+              <Dropdown
+                placeholder="Choose a color criteria."
+                data={[
+                  {
+                    id: "1",
+                    name: "Exactly these colors",
+                    meta: ":",
+                  },
+                  {
+                    id: "2",
+                    name: "Including these colors",
+                    meta: ">=",
+                  },
+                  {
+                    id: "3",
+                    name: "At most these colors",
+                    meta: "<=",
+                  },
+                ]}
+                onSelect={(entries) => {
+                  setColorCondition(entries[0]?.meta ? entries[0].meta : ":");
+                }}
+                startValue={COLOR_CONDITION_START_VALUE}
+              />
+            </div>
           </div>
+          <Seperator direction="ver" />
+
           {/* COMMANDER */}
           <div className="search-field">
             <div className="label">
@@ -353,62 +372,238 @@ const Search = () => {
                 {
                   id: "1",
                   name: "White",
-                  meta: "{W}",
+                  meta: "w",
                 },
                 {
                   id: "2",
                   name: "Blue",
-                  meta: "{U}",
+                  meta: "u",
                 },
                 {
                   id: "3",
                   name: "Black",
-                  meta: "{B}",
+                  meta: "b",
                 },
                 {
                   id: "4",
                   name: "Red",
-                  meta: "{R}",
+                  meta: "r",
                 },
                 {
                   id: "5",
                   name: "Green",
-                  meta: "{G}",
+                  meta: "g",
                 },
                 {
                   id: "6",
                   name: "Colorless",
+                  meta: "c",
                 },
               ]}
               onChange={(choices) => {
-                console.log("ACTIVE: ", choices);
+                setCommanderColors(
+                  `${choices.map((choice) => `${choice.meta}`).join("")}`
+                );
               }}
             />
           </div>
+          <Seperator direction="ver" />
 
           {/* MANA COST */}
-          <div className="search-field">
+          <div className="search-field mana-cost">
             <div className="label">
               <BiCoinStack className="icon" />
               {createText("Mana Cost")}
             </div>
 
+            <div className="wrapper">
+              <Input
+                value={manaCost}
+                type="text"
+                placeholder='Any mana symbols, e.g. "{W}{W}"'
+                onChange={(e) => setManaCost(e.target.value)}
+              />
+              <Dropdown
+                picker
+                stayOpenOnSelect={true}
+                placeholder="Add symbol"
+                data={manaSymbols}
+                onSelect={(entries) => {
+                  setManaCost((prev) => prev + entries[0].meta);
+                }}
+              />
+              <Dropdown
+                placeholder="Choose a mana cost criteria."
+                data={[
+                  {
+                    id: "1",
+                    name: "Exactly this cost",
+                    meta: IS,
+                  },
+                  {
+                    id: "2",
+                    name: "This cost or larger",
+                    meta: LARGER_OR_EQUAL,
+                  },
+                  {
+                    id: "3",
+                    name: "This cost or smaller",
+                    meta: SMALLER_OR_EQUAL,
+                  },
+                ]}
+                onSelect={(entries) => {
+                  setManaCondition(entries[0]?.meta ? entries[0].meta : IS);
+                }}
+                startValue={MANA_COST_START_VALUE}
+              />
+            </div>
+          </div>
+          <Seperator direction="ver" />
+
+          {/* STATS */}
+          <div className="search-field">
+            <div className="label">
+              <ImStatsBars2 className="icon" />
+              {createText("Stats")}
+            </div>
+
             <Dropdown
-              searchable
-              multiChoice
-              placeholder="Add symbol"
-              menuPosition="relative"
-              data={manaSymbols}
+              placeholder="Choose a stat"
+              data={[
+                {
+                  id: "1",
+                  name: "Mana Value",
+                  meta: "cmc",
+                },
+                {
+                  id: "2",
+                  name: "Power",
+                  meta: "power",
+                },
+                {
+                  id: "3",
+                  name: "Toughness",
+                  meta: "toughness",
+                },
+                {
+                  id: "4",
+                  name: "Loyalty",
+                  meta: "loyalty",
+                },
+              ]}
               onSelect={(entries) => {
-                setSearchParams({
-                  mana: entries.map((data) => data.meta).join(""),
-                });
+                setStatTarget(entries[0].meta ? entries[0].meta : "cmc");
+              }}
+              startValue={STATS_TARGET_START_VALUE}
+            />
+            <Dropdown
+              placeholder="Choose condition"
+              data={[
+                {
+                  id: "1",
+                  name: "equal to",
+                  meta: EQUAL,
+                },
+                {
+                  id: "2",
+                  name: "less than",
+                  meta: SMALLER_THAN,
+                },
+                {
+                  id: "3",
+                  name: "greater than",
+                  meta: LARGER_THAN,
+                },
+                {
+                  id: "4",
+                  name: "less than or equal",
+                  meta: SMALLER_OR_EQUAL,
+                },
+                {
+                  id: "5",
+                  name: "greater than or equal",
+                  meta: LARGER_OR_EQUAL,
+                },
+                {
+                  id: "6",
+                  name: "not equal to",
+                  meta: NOT_EQUAL,
+                },
+              ]}
+              onSelect={(entries) => {
+                setStatCondition(entries[0].meta ? entries[0].meta : EQUAL);
               }}
             />
+            <Input
+              type="number"
+              placeholder='Any value, e.g. "2"'
+              value={statGoal}
+              onChange={(e) => setStatGoal(e.target.value)}
+            />
           </div>
-          {/* STATS */}
-          {/* FORMATS */}
+          <Seperator direction="ver" />
 
+          {/* FORMATS */}
+          <div className="search-field">
+            <div className="label">
+              <FiLayers className="icon" />
+              {createText("Format")}
+            </div>
+
+            <Dropdown
+              multiChoice
+              searchable
+              placeholder="Enter a type or choose from the list"
+              menuPosition="relative"
+              data={[
+                {
+                  id: "1",
+                  name: "Test",
+                },
+                {
+                  id: "2",
+                  name: "mat",
+                },
+                {
+                  id: "3",
+                  name: "apa",
+                },
+                {
+                  id: "4",
+                  name: "höna",
+                },
+                {
+                  id: "5",
+                  name: "knasig",
+                },
+                {
+                  id: "6",
+                  name: "creature",
+                },
+                {
+                  id: "7",
+                  name: "artifact",
+                },
+                {
+                  id: "8",
+                  name: "instant",
+                },
+                {
+                  id: "9",
+                  name: "mox",
+                },
+                {
+                  id: "10",
+                  name: "flying",
+                },
+                {
+                  id: "11",
+                  name: "hexproof",
+                },
+              ]}
+              onSelect={(active) => {}}
+            />
+          </div>
           {/* SETS / BLOCKS */}
           <div className="search-field">
             <div className="label">
@@ -470,6 +665,7 @@ const Search = () => {
               onSelect={(active) => {}}
             />
           </div>
+          <Seperator direction="ver" />
           {/* RARITY */}
           <div className="search-field rarity">
             <div className="label">
@@ -501,6 +697,7 @@ const Search = () => {
               }}
             />
           </div>
+          <Seperator direction="ver" />
           {/* CRITERIA */}
           {/* PRICES */}
           {/* ARTIST */}

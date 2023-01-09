@@ -12,6 +12,7 @@
       .search-field {
         @include display-flex-column;
         gap: $spacing-m;
+
         @include breakpoint-laptop {
           align-items: flex-start;
           flex-direction: row;
@@ -32,7 +33,7 @@
           }
         }
 
-        .input-component {
+        & > .input-component {
           @include breakpoint-laptop {
             flex-grow: 1;
           }
@@ -49,6 +50,9 @@
             flex-direction: row;
             gap: $spacing-l;
           }
+          @include breakpoint-laptop {
+            flex-grow: 1;
+          }
         }
 
         &.rarity {
@@ -62,6 +66,46 @@
           }
           .choice:nth-child(4) label {
             color: #ff7a0e;
+          }
+        }
+
+        &.type,
+        &.mana-cost,
+        &.colors {
+          .inner {
+            @include display-flex-column;
+            gap: $spacing-m;
+            @include breakpoint-laptop {
+              max-width: 22rem;
+            }
+
+            &.padded {
+              padding: 0 $spacing-m;
+            }
+          }
+        }
+
+        &.mana-cost .wrapper {
+          // border: 2px solid red;
+          @include display-flex-column;
+          justify-content: space-between;
+          gap: $spacing-m;
+          flex-grow: 1;
+
+          @include breakpoint-laptop {
+            flex-direction: row;
+          }
+
+          & > *:nth-child(1) {
+            flex-basis: 50%;
+          }
+          & > *:nth-child(2) {
+            flex-basis: 25%;
+            flex-grow: 0;
+          }
+          & > *:nth-child(3) {
+            flex-basis: 25%;
+            flex-grow: 0;
           }
         }
       }

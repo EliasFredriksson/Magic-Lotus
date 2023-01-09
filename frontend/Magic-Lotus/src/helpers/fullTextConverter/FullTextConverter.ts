@@ -45,7 +45,7 @@ export interface IFullTextParams {
   type?: Param<string[]>; // Find cards of a certain card type. (supertype, card type  or subtype)
 
   // CARD TEXT
-  oracle?: Param<string>[]; // Oracle text // You can use ~ in your text as a placeholder for the card’s name.
+  oracle?: Param<string>; // Oracle text // You can use ~ in your text as a placeholder for the card’s name.
   fo?: Param<string>[]; // Full oracle text only
   keyword?: Param<string>[]; // To search for a card with specific keyword ability.
 
@@ -89,9 +89,9 @@ export interface IFullTextParams {
   cheapest?: Param<"eur" | "usd" | "tix">[];
 
   // ARTISTS, FLAVOR TEXT AND WATERMARK
-  artist?: Param<string[]>;
-  flavor?: Param<string[]>;
-  watermark?: Param<string[]>;
+  artist?: Param<string>;
+  flavor?: Param<string>;
+  watermark?: Param<string>;
 
   // BORDER, FRAME, FOIL & RESOLUTION
   border?: Param<"black" | "white" | "silver" | "borderless">[];

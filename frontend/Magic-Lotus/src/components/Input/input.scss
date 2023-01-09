@@ -37,7 +37,9 @@
 
       // TO HIDE THE BUILD IT "EYE" ICON FOR EDGE
       &::-ms-reveal,
-      &::-ms-clear {
+      &::-ms-clear,
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
         display: none;
       }
 

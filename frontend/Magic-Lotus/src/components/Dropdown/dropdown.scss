@@ -44,11 +44,11 @@
       & > input {
         // @include basic-input;
         padding: $spacing-s $spacing-m;
-
         border: 0;
         background-color: transparent;
         box-shadow: none !important;
         flex-grow: 1;
+        min-width: 0px;
         &:focus {
           border: 0;
           outline: none;
