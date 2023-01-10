@@ -3,7 +3,6 @@
 @mixin default-dropdown {
   $open-menu-height: 30rem;
   $border-radius: $border-radius-medium;
-
   $font-size: 0.8em;
 
   @include secondary-scrollbar;
@@ -177,6 +176,7 @@
     width: 100%;
     border-radius: $border-radius;
     z-index: 100;
+    box-shadow: 0 0.5rem 0.5rem 0 $gray-1100;
 
     @include light-mode {
       background-color: $white;
@@ -241,6 +241,9 @@
       padding: 0.1rem;
       transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
       transition-delay: 0s;
+      display: flex;
+      align-items: center;
+      max-height: 5rem;
 
       &:hover {
         background-color: $white;
@@ -278,6 +281,16 @@
 
       &.active {
         color: $secondary-100;
+      }
+
+      .entry-image {
+        width: 5rem;
+        height: 5rem;
+        padding: $spacing-s;
+        color: $secondary-500;
+        filter: drop-shadow(0px 0px 5px $secondary-100);
+        object-fit: contain;
+        object-position: center;
       }
     }
   }

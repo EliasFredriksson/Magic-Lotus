@@ -33,6 +33,17 @@ import {
 } from "../../constants/FILTER_CONDITIONS";
 import { Seperator } from "../../components/Seperator/Seperator";
 import { FiLayers } from "react-icons/fi";
+import GAME_FORMATS from "../../constants/GAME_FORMATS";
+import { capitalizeWord } from "../../helpers/StringValidations";
+import {
+  ALLOW_PARTIAL_TYPES,
+  COLORS,
+  COLOR_CRITERIA,
+  LEGALITIES,
+  MANA_COST_CRITERIA,
+  STATS,
+} from "../../constants/FILTER_DATA";
+import { useFetchGetAllSets } from "../../services/backend/Sets.service";
 
 // NEEDED FOR CATEGORIES IN DROPDOWN
 type DataCategory = {
@@ -60,10 +71,13 @@ const Search = () => {
   // DATA
   const [catalogs, setCatalogs] = useState<Data[]>([]);
   const [manaSymbols, setManaSymbols] = useState<Data[]>([]);
+  const [formats, setFormats] = useState<Data[]>([]);
+  const [sets, setSets] = useState<Data[]>([]);
 
   // FETCH
   const getCatalogs = useFetchGetTypesCatalogs();
   const getManaSymbols = useFetchManaSymbols();
+  const getSets = useFetchGetAllSets();
 
   // ################################### INPUT STATES ###################################
   // Card name
@@ -86,6 +100,12 @@ const Search = () => {
   const [statCondition, setStatCondition] = useState("");
   const [statGoal, setStatGoal] = useState("");
   // Formats
+  // row 1
+  const [formatOneLegality, setFormatOneLegality] = useState("");
+  const [formatOneTargets, setFormatOneTargets] = useState<string[]>([]);
+  // row 2
+  const [formatTwoLegality, setFormatTwoLegality] = useState("");
+  const [formatTwoTargets, setFormatTwoTargets] = useState<string[]>([]);
   // Sets / Blocks
   // Rarity
   // Criteria
@@ -97,7 +117,7 @@ const Search = () => {
   // Preferences
 
   useEffect(() => {
-    const init = async () => {
+    const fetchCatalogs = async () => {
       // ############################### CATALOGS ###############################
       const catRes = await getCatalogs.triggerFetch();
       if (catRes.object === "aborted") return;
@@ -109,12 +129,7 @@ const Search = () => {
       catRes.data.map((cat, index) => {
         // CONVERT CATEGORY NAME (ex: land-types) TO CAPITALIZED Land Types.
         const words = cat.category.replace("-", " ").split(" ");
-        const title = words
-          .map((word) => {
-            if (word.length > 0)
-              return word[0].toUpperCase() + word.substring(1);
-          })
-          .join(" ");
+        const title = words.map((word) => capitalizeWord(word)).join(" ");
         const categoryTitle = {
           id: `${cat.category}-${index}`,
           title: title,
@@ -145,15 +160,17 @@ const Search = () => {
         ...types,
       ]);
       // #########################################################################
+    };
+    const fetchSymbols = async () => {
       // ############################### MANA SYMBOLS ###############################
-      const manaRes = await getManaSymbols.triggerFetch();
-      if (manaRes.object === "aborted") return;
-      if (manaRes.object === "magic_lotus_error") {
-        openStatusModal(manaRes.error);
+      const res = await getManaSymbols.triggerFetch();
+      if (res.object === "aborted") return;
+      if (res.object === "magic_lotus_error") {
+        openStatusModal(res.error);
         return;
       }
       // Convert recived mana to Data objects.
-      const mana: Data[] = manaRes.data.reverse().map((symbol, i) => {
+      const mana: Data[] = res.data.reverse().map((symbol, i) => {
         return {
           id: `${symbol.symbol}-${i}`,
           name: `${symbol.symbol}  ${symbol.english}`,
@@ -163,7 +180,41 @@ const Search = () => {
       setManaSymbols(mana);
       // ###########################################################################
     };
-    init();
+    const fetchSets = async () => {
+      // ############################### SETS ###############################
+      const res = await getSets.triggerFetch();
+      if (res.object === "aborted") return;
+      if (res.object === "magic_lotus_error") {
+        openStatusModal(res.error);
+        return;
+      }
+      const convertedSets: Data[] = res.data.map((set) => {
+        return {
+          id: set.id,
+          name: set.name,
+          svg: set.icon_svg_uri,
+        };
+      });
+      setSets(convertedSets);
+      // #####################################################################
+    };
+    const fetchFormats = () => {
+      // ############################### FORMATS ###############################
+      setFormats(
+        GAME_FORMATS.map((format, index) => {
+          return {
+            id: `${index}-${format}`,
+            name: capitalizeWord(format),
+          };
+        })
+      );
+      // #######################################################################
+    };
+
+    fetchCatalogs();
+    fetchSymbols();
+    fetchSets();
+    fetchFormats();
   }, []);
 
   const createText = useCallback(
@@ -172,7 +223,7 @@ const Search = () => {
   );
 
   useEffect(() => {
-    console.clear();
+    // console.clear();
     console.log("\n\nCARD NAME:\t", cardName);
     console.log("CARD TEXT:\t", cardText);
     console.log("CARD TYPES:\t", typeLine, "\tALLOW PARTIAL: ", allowPartial);
@@ -185,6 +236,8 @@ const Search = () => {
     console.log("COMMANDER:\t", commanderColors);
     console.log("MANA COST:\t", manaCost, "\tMANA CONDITION:\t", manaCondition);
     console.log("STATS:\t", statTarget, statCondition, statGoal);
+    console.log("FORMATS (ONE):\t", formatOneLegality, formatOneTargets);
+    console.log("FORMATS (TWO):\t", formatTwoLegality, formatTwoTargets);
   }, [
     cardName,
     cardText,
@@ -198,6 +251,10 @@ const Search = () => {
     statTarget,
     statCondition,
     statGoal,
+    formatOneLegality,
+    formatOneTargets,
+    formatTwoLegality,
+    formatTwoTargets,
   ]);
 
   return (
@@ -266,12 +323,7 @@ const Search = () => {
             <div className="inner padded">
               <Choice
                 variant="checkbox"
-                data={[
-                  {
-                    id: "allow-partial-types",
-                    name: "Allow partial types",
-                  },
-                ]}
+                data={ALLOW_PARTIAL_TYPES}
                 onChange={(choices) => {
                   choices[0] ? setAllowPartial(true) : setAllowPartial(false);
                 }}
@@ -292,38 +344,7 @@ const Search = () => {
             </div>
             <Choice
               variant="checkbox"
-              data={[
-                {
-                  id: "1",
-                  name: "White",
-                  meta: "w",
-                },
-                {
-                  id: "2",
-                  name: "Blue",
-                  meta: "u",
-                },
-                {
-                  id: "3",
-                  name: "Black",
-                  meta: "b",
-                },
-                {
-                  id: "4",
-                  name: "Red",
-                  meta: "r",
-                },
-                {
-                  id: "5",
-                  name: "Green",
-                  meta: "g",
-                },
-                {
-                  id: "6",
-                  name: "Colorless",
-                  meta: "c",
-                },
-              ]}
+              data={COLORS}
               onChange={(choices) => {
                 setCardColors(
                   `${choices.map((choice) => `${choice.meta}`).join("")}`
@@ -334,23 +355,7 @@ const Search = () => {
             <div className="inner">
               <Dropdown
                 placeholder="Choose a color criteria."
-                data={[
-                  {
-                    id: "1",
-                    name: "Exactly these colors",
-                    meta: ":",
-                  },
-                  {
-                    id: "2",
-                    name: "Including these colors",
-                    meta: ">=",
-                  },
-                  {
-                    id: "3",
-                    name: "At most these colors",
-                    meta: "<=",
-                  },
-                ]}
+                data={COLOR_CRITERIA}
                 onSelect={(entries) => {
                   setColorCondition(entries[0]?.meta ? entries[0].meta : ":");
                 }}
@@ -368,38 +373,7 @@ const Search = () => {
             </div>
             <Choice
               variant="checkbox"
-              data={[
-                {
-                  id: "1",
-                  name: "White",
-                  meta: "w",
-                },
-                {
-                  id: "2",
-                  name: "Blue",
-                  meta: "u",
-                },
-                {
-                  id: "3",
-                  name: "Black",
-                  meta: "b",
-                },
-                {
-                  id: "4",
-                  name: "Red",
-                  meta: "r",
-                },
-                {
-                  id: "5",
-                  name: "Green",
-                  meta: "g",
-                },
-                {
-                  id: "6",
-                  name: "Colorless",
-                  meta: "c",
-                },
-              ]}
+              data={COLORS}
               onChange={(choices) => {
                 setCommanderColors(
                   `${choices.map((choice) => `${choice.meta}`).join("")}`
@@ -434,23 +408,7 @@ const Search = () => {
               />
               <Dropdown
                 placeholder="Choose a mana cost criteria."
-                data={[
-                  {
-                    id: "1",
-                    name: "Exactly this cost",
-                    meta: IS,
-                  },
-                  {
-                    id: "2",
-                    name: "This cost or larger",
-                    meta: LARGER_OR_EQUAL,
-                  },
-                  {
-                    id: "3",
-                    name: "This cost or smaller",
-                    meta: SMALLER_OR_EQUAL,
-                  },
-                ]}
+                data={MANA_COST_CRITERIA}
                 onSelect={(entries) => {
                   setManaCondition(entries[0]?.meta ? entries[0].meta : IS);
                 }}
@@ -469,28 +427,7 @@ const Search = () => {
 
             <Dropdown
               placeholder="Choose a stat"
-              data={[
-                {
-                  id: "1",
-                  name: "Mana Value",
-                  meta: "cmc",
-                },
-                {
-                  id: "2",
-                  name: "Power",
-                  meta: "power",
-                },
-                {
-                  id: "3",
-                  name: "Toughness",
-                  meta: "toughness",
-                },
-                {
-                  id: "4",
-                  name: "Loyalty",
-                  meta: "loyalty",
-                },
-              ]}
+              data={STATS}
               onSelect={(entries) => {
                 setStatTarget(entries[0].meta ? entries[0].meta : "cmc");
               }}
@@ -544,128 +481,81 @@ const Search = () => {
           <Seperator direction="ver" />
 
           {/* FORMATS */}
-          <div className="search-field">
+          <div className="search-field formats">
             <div className="label">
               <FiLayers className="icon" />
               {createText("Format")}
             </div>
 
-            <Dropdown
-              multiChoice
-              searchable
-              placeholder="Enter a type or choose from the list"
-              menuPosition="relative"
-              data={[
-                {
-                  id: "1",
-                  name: "Test",
-                },
-                {
-                  id: "2",
-                  name: "mat",
-                },
-                {
-                  id: "3",
-                  name: "apa",
-                },
-                {
-                  id: "4",
-                  name: "höna",
-                },
-                {
-                  id: "5",
-                  name: "knasig",
-                },
-                {
-                  id: "6",
-                  name: "creature",
-                },
-                {
-                  id: "7",
-                  name: "artifact",
-                },
-                {
-                  id: "8",
-                  name: "instant",
-                },
-                {
-                  id: "9",
-                  name: "mox",
-                },
-                {
-                  id: "10",
-                  name: "flying",
-                },
-                {
-                  id: "11",
-                  name: "hexproof",
-                },
-              ]}
-              onSelect={(active) => {}}
-            />
+            <div className="wrapper">
+              {/* FIRST ROW */}
+              <Dropdown
+                searchable
+                placeholder="Legality"
+                menuPosition="relative"
+                data={LEGALITIES}
+                onSelect={(active) => {
+                  setFormatOneLegality(active[0].meta ? active[0].meta : "");
+                }}
+              />
+              <Dropdown
+                searchable
+                multiChoice
+                placeholder="Choose formats"
+                menuPosition="relative"
+                data={formats}
+                onSelect={(active) => {}}
+              />
+              {/* SECOND ROW */}
+              <Dropdown
+                searchable
+                placeholder="Legality"
+                menuPosition="relative"
+                data={LEGALITIES}
+                onSelect={(active) => {
+                  setFormatTwoLegality(active[0].meta ? active[0].meta : "");
+                }}
+              />
+              <Dropdown
+                searchable
+                multiChoice
+                placeholder="Choose formats"
+                menuPosition="relative"
+                data={formats}
+                onSelect={(active) => {}}
+              />
+            </div>
           </div>
+          <Seperator direction="ver" />
+
           {/* SETS / BLOCKS */}
-          <div className="search-field">
+          <div className="search-field sets">
             <div className="label">
               <TfiCrown className="icon" />
               {createText("Sets")}
             </div>
 
-            <Dropdown
-              multiChoice
-              searchable
-              placeholder="Enter a type or choose from the list"
-              menuPosition="relative"
-              data={[
-                {
-                  id: "1",
-                  name: "Test",
-                },
-                {
-                  id: "2",
-                  name: "mat",
-                },
-                {
-                  id: "3",
-                  name: "apa",
-                },
-                {
-                  id: "4",
-                  name: "höna",
-                },
-                {
-                  id: "5",
-                  name: "knasig",
-                },
-                {
-                  id: "6",
-                  name: "creature",
-                },
-                {
-                  id: "7",
-                  name: "artifact",
-                },
-                {
-                  id: "8",
-                  name: "instant",
-                },
-                {
-                  id: "9",
-                  name: "mox",
-                },
-                {
-                  id: "10",
-                  name: "flying",
-                },
-                {
-                  id: "11",
-                  name: "hexproof",
-                },
-              ]}
-              onSelect={(active) => {}}
-            />
+            <div className="wrapper">
+              <Dropdown
+                multiChoice
+                searchable
+                placeholder="Enter a set name or choose from the list"
+                menuPosition="relative"
+                data={sets}
+                onSelect={(active) => {}}
+              />
+              <Dropdown
+                multiChoice
+                searchable
+                placeholder="Enter a block name or choose from the list"
+                menuPosition="relative"
+                data={sets}
+                onSelect={(active) => {}}
+              />
+            </div>
           </div>
           <Seperator direction="ver" />
+
           {/* RARITY */}
           <div className="search-field rarity">
             <div className="label">

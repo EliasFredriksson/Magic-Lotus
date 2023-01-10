@@ -49,8 +49,46 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET ALL SET NAMES
+router.get("/names", async (req, res) => {
+  try {
+    const sets = await SetModel.find().select("name");
+    const data = sets.map((c) => c.name);
+    res.status(200).send(responses.create200Response(data, req));
+  } catch (error) {
+    res.status(400).send(responses.create400Response(error, req));
+  }
+});
+
+// GET SET BY NAME
+router.get("/:name", async (req, res) => {
+  try {
+    const name = req.params.name;
+    if (name) {
+      const set = await SetModel.findOne({ name: name });
+      if (!set) {
+        res
+          .status(400)
+          .send(
+            responses.create400Response(`No set found with name: ${name}`, req)
+          );
+      } else res.status(200).send(responses.create200Response(set, req));
+    } else
+      res
+        .status(400)
+        .send(
+          responses.create400Response(
+            "No name parameter provided to find set with.",
+            req
+          )
+        );
+  } catch (error) {
+    res.status(400).send(responses.create400Response(error, req));
+  }
+});
+
 // GET SET BY ID
-router.get("/:id", async (req, res) => {
+router.get("/id/:id", async (req, res) => {
   try {
     const id = req.params.id;
     if (id) {

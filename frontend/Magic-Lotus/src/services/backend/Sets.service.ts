@@ -15,6 +15,27 @@ export const useFetchGetAllSets = () => {
 };
 
 // ################################ ROUTE ################################
+// Get all sets
+// GET     /sets
+export const useFetchGetAllSetNames = () => {
+  return useFetch<MagicLotusResponse<string[]>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "GET",
+    route: "/sets/names",
+  });
+};
+// ################################ ROUTE ################################
+// Get all sets
+// GET     /sets
+export const useFetchGetSetByName = (name: string) => {
+  return useFetch<MagicLotusResponse<ISet>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "GET",
+    route: `/sets/${name}`,
+  });
+};
+
+// ################################ ROUTE ################################
 // Create new set
 // POST     /sets
 type IPostSet = {

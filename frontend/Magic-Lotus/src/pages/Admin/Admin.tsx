@@ -21,9 +21,10 @@ import { useFetchSymbols } from "../../services/backend/Symbol.service";
 import ISymbol from "../../models/backend/interfaces/ISymbol";
 import useUpdateAllSymbols from "../../hooks/useUpdateAllSymbols/useUpdateAllSymbols";
 import Image from "../../components/Image/Image";
-import ISet from "../../models/scryfall/interfaces/ISet";
-import { useFetchGetAllSets } from "../../services/backend/Sets.service";
+import { useFetchGetAllSetNames } from "../../services/backend/Sets.service";
 import useUpdateAllSets from "../../hooks/useUpdateAllSets/useUpdateAllSets";
+
+const MINIMIZED_SETS_COUNT = 20;
 
 const Admin = () => {
   const { navigate } = useNavigate();
@@ -79,12 +80,12 @@ const Admin = () => {
   // DATA STATES
   const [catalogNames, setCatalogNames] = useState<string[]>([]);
   const [symbols, setSymbols] = useState<ISymbol[]>([]);
-  const [sets, setSets] = useState<ISet[]>([]);
+  const [sets, setSets] = useState<string[]>([]);
 
   // FETCHES
   const FetchCatalogNames = useFetchGetCatalogNames(); // Get catalogs from MagicLotusAPI
   const FetchSymbols = useFetchSymbols(); // Get symbols from MagicLotusAPI
-  const FetchSets = useFetchGetAllSets(); // Get sets from MagicLotusAPI
+  const FetchSets = useFetchGetAllSetNames(); // Get sets from MagicLotusAPI
 
   useEffect(() => {
     updateTitle("Admin");
@@ -141,7 +142,7 @@ const Admin = () => {
     });
   }, [showRest]);
   const renderedSets = useMemo(() => {
-    return showRest ? sets : sets.slice(0, 20);
+    return showRest ? sets : sets.slice(0, MINIMIZED_SETS_COUNT);
   }, [showRest, sets]);
 
   return (
@@ -164,7 +165,7 @@ const Admin = () => {
                       variant="secondary"
                       fontWeight="light"
                       onClick={() => {
-                        navigate(`/admin/catalog/${cat}`);
+                        navigate(`/catalog/${cat}`);
                       }}
                     >
                       {cat}
@@ -233,11 +234,10 @@ const Admin = () => {
                       fontWeight="light"
                       fontSize="xs"
                       onClick={() => {
-                        console.log("SET: ", set.name);
-                        // navigate(`/admin/catalog/${set.name}`);
+                        navigate(`/sets/${set}`);
                       }}
                     >
-                      ● {set.name}
+                      ● {set}
                     </Button>
                   ))
                 ) : (

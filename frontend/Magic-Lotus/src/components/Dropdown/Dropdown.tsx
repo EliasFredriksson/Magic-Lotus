@@ -1,25 +1,35 @@
 import "./dropdown.scss";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { RiArrowDownSLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
 import { FiTrash2 } from "react-icons/fi";
 import useOutsideClick from "../../hooks/useOutsideClick/useOutsideClick";
 import { areObjectsEqual } from "../../helpers/ObjectValidations";
 import useKeyboard from "../../hooks/useKeyboard/useKeyboard";
+import Spinner from "../Spinner/Spinner";
 
-type DataCategory = {
+type DropdownCategory = {
   id: string;
   title: string;
   name?: undefined;
   meta?: undefined;
+  svg?: undefined;
 };
-type DataEntry = {
+type DropdownEntry = {
   id: string;
   title?: undefined;
   name: string;
   meta?: any;
+  svg?: string;
 };
 
-type Data = DataEntry | DataCategory;
+type Data = DropdownEntry | DropdownCategory;
 
 interface IProps {
   data: Data[];
@@ -57,6 +67,8 @@ interface IProps {
 }
 
 const MINIMUM_INPUT_WAIT_TIME = 100; // In milliseconds
+const RENDER_COUNT_START = 20;
+const SCROLL_THRESHOLD = 50; // In pixels
 let timer: NodeJS.Timeout | null = null;
 
 const Dropdown = (props: IProps): ReactElement => {
@@ -66,18 +78,22 @@ const Dropdown = (props: IProps): ReactElement => {
   const [activeEntries, setActiveEntries] = useState<Data[]>(
     props.startValue ? props.startValue : []
   );
+  const [renderCount, setRenderCount] = useState(RENDER_COUNT_START);
 
+  // TO GIVE SUPER USERS MORE OPTIONS. WHEN SEARCH SHOWS 1 HIT, PRESS ENTER TO ADD / REMOVE
+  // THAT ENTRY FROM ACTIVE LIST.
   useKeyboard({
     targetKeys: "Enter",
     onKeyDown: () => {
       if (!isOpen) return;
       if (filtered.length === 1) {
         // UGLY SOLUTIOn
-        handleSelect(filtered[0] as DataEntry);
+        handleSelect(filtered[0] as DropdownEntry);
       }
     },
   });
 
+  // CUSTOM HOOK TO DETECT WHEN CLICKS HAPPEND OUTSIDE OF REFERENCED ELEMENT.
   const dropdownRef = useRef<HTMLDivElement>(null);
   useOutsideClick(dropdownRef, () => {
     if (!props.multiChoice) {
@@ -89,6 +105,7 @@ const Dropdown = (props: IProps): ReactElement => {
     setIsOpen(false);
   });
 
+  // WHEN INPUT TEXT CHANGES.
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!props.searchable) return;
@@ -113,8 +130,9 @@ const Dropdown = (props: IProps): ReactElement => {
     [props.searchable, props.data, props.onSearch, props.minimumWaitTime]
   );
 
+  // WHEN USER SELECTS AN ENTRY
   const handleSelect = useCallback(
-    (entry: DataEntry) => {
+    (entry: DropdownEntry) => {
       if (!props.multiChoice && !props.stayOpenOnSelect) setIsOpen(false);
       if (activeEntries.find((tag) => tag.id === entry.id)) {
         if (props.multiChoice) removeActiveEntry(entry);
@@ -132,6 +150,7 @@ const Dropdown = (props: IProps): ReactElement => {
     [props.multiChoice, activeEntries]
   );
 
+  // WHEN USER REMOVES AN ENTRY
   const removeActiveEntry = useCallback(
     (entry: Data) => {
       const filtered = activeEntries.filter((activeEntry) => {
@@ -143,20 +162,65 @@ const Dropdown = (props: IProps): ReactElement => {
     [activeEntries, props.onSelect]
   );
 
+  // IF NOT MULTICHOICE, ADD CHOSEN ENTRY TEXT TO INPUT FIELD.
   useEffect(() => {
     if (!props.multiChoice && activeEntries[0])
       setInputText(activeEntries[0].name ? activeEntries[0].name : "");
   }, [activeEntries]);
 
+  // IF STARTVALUE IS ASYNC, UPDATE THE ACTIVE ENTRIES.
   useEffect(() => {
     if (props.startValue) setActiveEntries(props.startValue);
   }, [props.startValue]);
 
+  // UPDATE THE FILTERED LIST IF DROPDOWN IS SEARCHABLE. NEEDED TO HANDLE IF props.data IS A FETCHED
+  // LIST AND NOT AVALIBLE EMEDIETLY.
   useEffect(() => {
     if (props.searchable) setFiltered(props.data);
   }, [props.data]);
 
-  const displayedList = props.searchable ? filtered : props.data;
+  // CALCULATE WHICH BASE LIST OF DATA TO USE. EITHER FILTERED (WHEN THE DROPDOWN IS SEARCHABLE)
+  // OR THE props.data LIST OTHERWISE.
+  const displayedList = useMemo(
+    () => (props.searchable ? filtered : props.data),
+    [props.searchable, props.data, filtered]
+  );
+  const limitedList = useMemo(
+    () => displayedList.slice(0, renderCount),
+    [displayedList, renderCount]
+  );
+
+  // USED TO NOT RENDER EVERYTHING IN THE DROPDOWN LIST EMEDIETLY, START WITH 20, INCREASE BY 20.
+  // SIMULATES INFINITE SCROLL WITH LISTS THAT ARE CONTAIN 20+ VALUES.
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const menu = menuRef.current;
+    if (menu) {
+      menu.onscroll = () => {
+        if (!isOpen) return;
+        const totalMenuHeight = menu.scrollHeight - menu.offsetHeight;
+        const totalScroll = menu.scrollTop;
+        if (Math.abs(totalMenuHeight - totalScroll) < SCROLL_THRESHOLD) {
+          if (renderCount < displayedList.length)
+            setRenderCount((prev) => (prev += RENDER_COUNT_START));
+        }
+      };
+    }
+  }, [isOpen, menuRef.current]);
+
+  // TO RESET RENDER COUNT AND SCROLL PROGRESS INSIDE MENU ON MENU CLOSED
+  const handleTransitionEnd = useCallback(
+    (e: React.TransitionEvent<HTMLDivElement>) => {
+      if (e.target !== e.currentTarget) return;
+      if (isOpen || !menuRef.current) return;
+      setRenderCount(RENDER_COUNT_START);
+      menuRef.current.scrollTo({
+        top: 0,
+      });
+    },
+    [isOpen, menuRef.current]
+  );
+
   return (
     <div
       data-testid={props.testId ? props.testId : "dropdown"}
@@ -195,7 +259,7 @@ const Dropdown = (props: IProps): ReactElement => {
             <div className="entries-wrapper">
               {activeEntries.map((tag, index) => {
                 return (
-                  <div key={index} className="active-entry">
+                  <div key={`${tag.id}-${index}`} className="active-entry">
                     <span>{tag.name}</span>
                     <RiCloseLine
                       className="remove-tag-button"
@@ -222,6 +286,7 @@ const Dropdown = (props: IProps): ReactElement => {
         ) : null}
       </div>
       <div
+        ref={menuRef}
         className={`menu ${isOpen ? "opened" : "closed"}${
           props.menuPosition ? " " + props.menuPosition : ""
         }`}
@@ -233,9 +298,10 @@ const Dropdown = (props: IProps): ReactElement => {
               : "30rem"
             : "0px",
         }}
+        onTransitionEnd={handleTransitionEnd}
       >
         {/* RENDERED LIST */}
-        {displayedList.map((tag: Data, index) => {
+        {limitedList.map((tag: Data, index) => {
           if (!tag.id) return;
           const isActive = activeEntries.find((active) => active.id === tag.id);
           const id = `${tag.id}-${index}`;
@@ -257,6 +323,9 @@ const Dropdown = (props: IProps): ReactElement => {
                   handleSelect(tag);
                 }}
               >
+                {tag.svg && (
+                  <img className="entry-image" src={tag.svg} alt={tag.name} />
+                )}
                 <span>
                   {tag.name} {isActive && !props.picker && <RiCheckLine />}
                 </span>
@@ -264,10 +333,22 @@ const Dropdown = (props: IProps): ReactElement => {
             );
           } else return <></>;
         })}
-        {displayedList.length <= 0 && (
+        {displayedList.length <= 0 ? (
           <div className={`entry disabled`}>
             <span>No hits..</span>
           </div>
+        ) : (
+          renderCount <= displayedList.length && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "4px",
+              }}
+            >
+              <Spinner variant="pulse" size="medium" />
+            </div>
+          )
         )}
       </div>
     </div>

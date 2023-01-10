@@ -114,3 +114,15 @@ export const isLength = (
       throw "ERROR, faulty condition provided for isLength helper inside 'StringValidations.ts'";
   }
 };
+
+export const capitalizeWord = (word: string): string => {
+  if (word.length > 0) return word[0].toUpperCase() + word.substring(1);
+  else return word;
+};
+
+export const capitalizeWordList = (words: string[]): string[] => {
+  return words.map((word) => {
+    if (word.length > 0) return word[0].toUpperCase() + word.substring(1);
+    else return word;
+  });
+};

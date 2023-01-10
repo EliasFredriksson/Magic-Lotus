@@ -18,6 +18,7 @@ const Router = () => {
   const Search = lazy(() => import("./pages/Search/Search"));
   const Admin = lazy(() => import("./pages/Admin/Admin"));
   const Catalog = lazy(() => import("./pages/Catalog/Catalog"));
+  const Set = lazy(() => import("./pages/Set/Set"));
   const Results = lazy(() => import("./pages/Results/Results"));
   const SingleCard = lazy(() => import("./pages/SingleCard/SingleCard"));
 
@@ -34,6 +35,8 @@ const Router = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/results" element={<Results />} />
           <Route path="/card/:id" element={<SingleCard />} />
+          <Route path="catalog/:name" element={<Catalog />} />
+          <Route path="sets/:name" element={<Set />} />
 
           <Route element={<RequireRole roles={["user", "admin"]} />}>
             <Route path="/profile" element={<Profile />} />
@@ -43,7 +46,6 @@ const Router = () => {
           <Route element={<RequireRole roles={["admin"]} />}>
             <Route path="/admin">
               <Route index element={<Admin />} />
-              <Route path="catalog/:name" element={<Catalog />} />
             </Route>
           </Route>
 
