@@ -89,27 +89,22 @@
           .remove-tag-button {
             cursor: pointer;
             pointer-events: all;
-            font-size: $font-size;
+            font-size: calc($font-size * 1.5);
             color: $gray-900;
-            border: 2px solid $gray-900;
             border-radius: 50%;
-            transition: color 0.1s ease, border-color 0.1s ease;
+            transition: color 0.1s ease;
 
             @include light-mode {
               color: $primary-800;
-              border-color: $primary-800;
 
               &:hover {
                 color: $secondary-500;
-                border-color: $secondary-500;
               }
             }
             @include dark-mode {
               color: $secondary-100;
-              border-color: $secondary-100;
 
               &:hover {
-                border-color: $white;
                 color: $white;
               }
             }

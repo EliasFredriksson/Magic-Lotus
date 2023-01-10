@@ -64,6 +64,14 @@ const COLOR_CONDITION_START_VALUE = [{ id: "1", name: "Exactly these colors" }];
 const MANA_COST_START_VALUE = [{ id: "1", name: "Exactly this cost" }];
 const STATS_TARGET_START_VALUE = [{ id: "1", name: "Mana Value" }];
 
+function sortDataList(dataList: DataEntry[]) {
+  return dataList.sort((a, b) => {
+    const textA = a.name.toUpperCase();
+    const textB = b.name.toUpperCase();
+    return textA < textB ? -1 : textA > textB ? 1 : 0;
+  });
+}
+
 const Search = () => {
   const { openStatusModal } = useUtility();
   const { search } = useSearch();
@@ -73,6 +81,7 @@ const Search = () => {
   const [manaSymbols, setManaSymbols] = useState<Data[]>([]);
   const [formats, setFormats] = useState<Data[]>([]);
   const [sets, setSets] = useState<Data[]>([]);
+  const [blocks, setBlocks] = useState<Data[]>([]);
 
   // FETCH
   const getCatalogs = useFetchGetTypesCatalogs();
@@ -107,6 +116,8 @@ const Search = () => {
   const [formatTwoLegality, setFormatTwoLegality] = useState("");
   const [formatTwoTargets, setFormatTwoTargets] = useState<string[]>([]);
   // Sets / Blocks
+  const [cardSets, setCardSets] = useState<string[]>([]);
+  const [cardBlocks, setCardBlocks] = useState<string[]>([]);
   // Rarity
   // Criteria
   // Prices
@@ -119,14 +130,14 @@ const Search = () => {
   useEffect(() => {
     const fetchCatalogs = async () => {
       // ############################### CATALOGS ###############################
-      const catRes = await getCatalogs.triggerFetch();
-      if (catRes.object === "aborted") return;
-      if (catRes.object === "magic_lotus_error") {
-        openStatusModal(catRes.error);
+      const res = await getCatalogs.triggerFetch();
+      if (res.object === "aborted") return;
+      if (res.object === "magic_lotus_error") {
+        openStatusModal(res.error);
         return;
       }
       let types: Data[] = [];
-      catRes.data.map((cat, index) => {
+      res.data.map((cat, index) => {
         // CONVERT CATEGORY NAME (ex: land-types) TO CAPITALIZED Land Types.
         const words = cat.category.replace("-", " ").split(" ");
         const title = words.map((word) => capitalizeWord(word)).join(" ");
@@ -181,20 +192,44 @@ const Search = () => {
       // ###########################################################################
     };
     const fetchSets = async () => {
-      // ############################### SETS ###############################
+      // ############################### SETS / BLOCKS ###############################
       const res = await getSets.triggerFetch();
       if (res.object === "aborted") return;
       if (res.object === "magic_lotus_error") {
         openStatusModal(res.error);
         return;
       }
-      const convertedSets: Data[] = res.data.map((set) => {
-        return {
-          id: set.id,
-          name: set.name,
-          svg: set.icon_svg_uri,
-        };
-      });
+      // CONVERT AND SORT SETS
+      const convertedSets: Data[] = sortDataList(
+        res.data.map((set) => {
+          return {
+            id: set.id,
+            name: set.name,
+            meta: set.code,
+            svg: set.icon_svg_uri,
+          };
+        })
+      );
+      // CONVERT AND SORT BLOCKS
+      const convertedBlocks: Data[] = res.data
+        .filter((set) => set.block && set.block_code)
+        .map((set, index) => {
+          return {
+            id: `${index}-${set.block}`,
+            name: set.block ? set.block : "NO BLOCK FOUND",
+            meta: set.block_code,
+          };
+        })
+        .filter((set, index, list) => {
+          return (
+            index ===
+            list.findIndex((entry) => {
+              return set.meta === entry.meta;
+            })
+          );
+        });
+
+      setBlocks(convertedBlocks);
       setSets(convertedSets);
       // #####################################################################
     };
@@ -206,7 +241,7 @@ const Search = () => {
             id: `${index}-${format}`,
             name: capitalizeWord(format),
           };
-        })
+        }).sort()
       );
       // #######################################################################
     };
@@ -238,6 +273,8 @@ const Search = () => {
     console.log("STATS:\t", statTarget, statCondition, statGoal);
     console.log("FORMATS (ONE):\t", formatOneLegality, formatOneTargets);
     console.log("FORMATS (TWO):\t", formatTwoLegality, formatTwoTargets);
+    console.log("SETS:\t", cardSets);
+    console.log("BLOCKS:\t", cardBlocks);
   }, [
     cardName,
     cardText,
@@ -255,6 +292,8 @@ const Search = () => {
     formatOneTargets,
     formatTwoLegality,
     formatTwoTargets,
+    cardSets,
+    cardBlocks,
   ]);
 
   return (
@@ -542,15 +581,23 @@ const Search = () => {
                 placeholder="Enter a set name or choose from the list"
                 menuPosition="relative"
                 data={sets}
-                onSelect={(active) => {}}
+                onSelect={(active) => {
+                  setCardSets(
+                    active.map((data) => (data.meta ? data.meta : ""))
+                  );
+                }}
               />
               <Dropdown
                 multiChoice
                 searchable
                 placeholder="Enter a block name or choose from the list"
                 menuPosition="relative"
-                data={sets}
-                onSelect={(active) => {}}
+                data={blocks}
+                onSelect={(active) => {
+                  setCardBlocks(
+                    active.map((data) => (data.meta ? data.meta : ""))
+                  );
+                }}
               />
             </div>
           </div>
@@ -587,7 +634,7 @@ const Search = () => {
               }}
             />
           </div>
-          <Seperator direction="ver" />
+          {/* <Seperator direction="ver" /> */}
           {/* CRITERIA */}
           {/* PRICES */}
           {/* ARTIST */}
@@ -595,13 +642,14 @@ const Search = () => {
           {/* LORE FINDER */}
           {/* LANGUAGE */}
           {/* PREFERENCES */}
-        </Card>
-      </div>
 
-      <div className="submit-wrapper">
-        <Button fontSize="xxxl" variant="success">
-          Search!
-        </Button>
+          {/* SUBMIT */}
+        </Card>
+        <Card className="submit-wrapper">
+          <Button fontSize="xxxl" variant="primary">
+            Search!
+          </Button>
+        </Card>
       </div>
     </Main>
   );

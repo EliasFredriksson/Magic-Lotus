@@ -127,5 +127,15 @@
         }
       }
     }
+
+    .submit-wrapper {
+      // position: sticky;
+      bottom: 100px;
+      align-items: center;
+
+      button {
+        width: min(100%, 30rem);
+      }
+    }
   }
 }
