@@ -74,7 +74,8 @@
 
         &.type,
         &.mana-cost,
-        &.colors {
+        &.colors,
+        &.oracle {
           .inner {
             @include display-flex-column;
             gap: $spacing-m;
@@ -129,11 +130,14 @@
     }
 
     .submit-wrapper {
-      // position: sticky;
-      bottom: 100px;
       align-items: center;
 
-      button {
+      @include breakpoint-tablet {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .search-button {
         width: min(100%, 30rem);
       }
     }

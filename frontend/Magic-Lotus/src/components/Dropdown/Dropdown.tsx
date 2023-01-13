@@ -29,10 +29,10 @@ type DropdownEntry = {
   svg?: string;
 };
 
-type Data = DropdownEntry | DropdownCategory;
+export type Data = DropdownEntry | DropdownCategory;
 
 interface IProps {
-  data: Data[];
+  readonly data: Data[];
   onSelect: (entries: Data[]) => void;
   placeholder: string;
 
@@ -168,9 +168,18 @@ const Dropdown = (props: IProps): ReactElement => {
       setInputText(activeEntries[0].name ? activeEntries[0].name : "");
   }, [activeEntries]);
 
-  // IF STARTVALUE IS ASYNC, UPDATE THE ACTIVE ENTRIES.
+  // IF STARTVALUE IS ASYNC, UPDATE THE ACTIVE ENTRIES AND INPUT TEXT IF NEEDED.
   useEffect(() => {
-    if (props.startValue) setActiveEntries(props.startValue);
+    if (props.startValue) {
+      setActiveEntries(props.startValue);
+      if (!props.multiChoice) {
+        props.startValue.length > 0
+          ? setInputText(
+              props.startValue[0].name ? props.startValue[0].name : ""
+            )
+          : setInputText("");
+      }
+    }
   }, [props.startValue]);
 
   // UPDATE THE FILTERED LIST IF DROPDOWN IS SEARCHABLE. NEEDED TO HANDLE IF props.data IS A FETCHED

@@ -1,6 +1,10 @@
 @use "../../styles/all" as *;
 
 .button-component {
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-m;
+
   &.primary {
     @include primary-button;
   }

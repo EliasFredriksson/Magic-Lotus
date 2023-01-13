@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, CanceledError } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { convertObjectToQuery } from "../../helpers/QueryConverter";
 import { MethodName, METHODS_MAP } from "./ServiceBase";
@@ -7,6 +7,16 @@ import { MethodName, METHODS_MAP } from "./ServiceBase";
 
 type AbortedError = {
   object: "aborted";
+};
+
+type NetworkError = {
+  object: "network_error";
+  error: string;
+};
+
+type UnknownError = {
+  object: "unknown_error";
+  error?: any;
 };
 
 interface ITriggerFetch<QParams, BodyParams> {
@@ -34,7 +44,7 @@ const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
   isLoading: boolean;
   triggerFetch: (
     args?: ITriggerFetch<QParams, BodyParams>
-  ) => Promise<IResult | IError | AbortedError>;
+  ) => Promise<IResult | IError | AbortedError | NetworkError | UnknownError>;
   abort: () => void;
 } => {
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +57,9 @@ const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
   const triggerFetch = useCallback(
     async (
       args?: ITriggerFetch<QParams, BodyParams>
-    ): Promise<IResult | IError | AbortedError> => {
+    ): Promise<
+      IResult | IError | AbortedError | NetworkError | UnknownError
+    > => {
       setIsLoading(true);
       try {
         if (abortControllerRef.current) abortControllerRef.current.abort();
@@ -77,15 +89,48 @@ const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
         // TURN OFF LOADING AND RETURN DATA.
         setIsLoading(false);
         return res.data;
-      } catch (error) {
+      } catch (e) {
+        const error = e as AxiosError | Error;
+        console.log("ERROR: ", error);
         // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
-        if ((error as Error).name === "CanceledError") {
+        if (error.name === "CanceledError") {
           return { object: "aborted" } as AbortedError;
         }
         setIsLoading(false);
-        if ((error as Error).name === "AxiosError") {
-          return (error as AxiosError<IError>).response?.data as IError;
-        } else return error as IError;
+
+        if (error.name === "AxiosError") {
+          const axErr = error as AxiosError<IError>;
+          if (axErr.code === "ERR_NETWORK")
+            return {
+              object: "network_error",
+              error: axErr.message,
+            };
+          else {
+            if (axErr.response) return axErr.response.data as IError;
+            else {
+              return {
+                object: "unknown_error",
+                error: axErr,
+              } as UnknownError;
+            }
+          }
+        }
+
+        if (error.name === "AxiosError") {
+          const axErr = error as AxiosError;
+          if (axErr.code === "ERR_NETWORK") {
+            return {
+              object: "network_error",
+              error: axErr.message,
+            };
+          } else {
+            return (error as AxiosError<IError>).response?.data as IError;
+          }
+        } else
+          return {
+            object: "unknown_error",
+            error: (error as Error).message,
+          } as UnknownError;
       }
     },
 

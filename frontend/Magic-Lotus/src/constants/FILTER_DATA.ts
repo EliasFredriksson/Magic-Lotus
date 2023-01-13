@@ -1,6 +1,14 @@
-import { IS, LARGER_OR_EQUAL, SMALLER_OR_EQUAL } from "./FILTER_CONDITIONS";
+import {
+  EQUAL,
+  IS,
+  LARGER_OR_EQUAL,
+  LARGER_THAN,
+  NOT_EQUAL,
+  SMALLER_OR_EQUAL,
+  SMALLER_THAN,
+} from "./FILTER_CONDITIONS";
 
-export const LEGALITIES = [
+export const FORMAT_LEGALITIES = [
   {
     id: "1",
     name: "Legal",
@@ -109,5 +117,86 @@ export const STATS = [
     id: "4",
     name: "Loyalty",
     meta: "loyalty",
+  },
+];
+export const STATS_CONDITIONS = [
+  {
+    id: "1",
+    name: "equal to",
+    meta: EQUAL,
+  },
+  {
+    id: "2",
+    name: "less than",
+    meta: SMALLER_THAN,
+  },
+  {
+    id: "3",
+    name: "greater than",
+    meta: LARGER_THAN,
+  },
+  {
+    id: "4",
+    name: "less than or equal",
+    meta: SMALLER_OR_EQUAL,
+  },
+  {
+    id: "5",
+    name: "greater than or equal",
+    meta: LARGER_OR_EQUAL,
+  },
+  {
+    id: "6",
+    name: "not equal to",
+    meta: NOT_EQUAL,
+  },
+];
+export const RARITIES = [
+  {
+    id: "1",
+    name: "Common",
+    meta: "common",
+  },
+  {
+    id: "2",
+    name: "Uncommon",
+    meta: "uncommon",
+  },
+  {
+    id: "3",
+    name: "Rare",
+    meta: "rare",
+  },
+  {
+    id: "4",
+    name: "Mythic",
+    meta: "mythic",
+  },
+];
+export const RARITY_CRITERIA = [
+  {
+    id: "1",
+    name: "Is equal to",
+    meta: IS,
+  },
+  {
+    id: "2",
+    name: "Greater than",
+    meta: LARGER_THAN,
+  },
+  {
+    id: "3",
+    name: "Greater than or equal to",
+    meta: LARGER_OR_EQUAL,
+  },
+  {
+    id: "4",
+    name: "Lower than",
+    meta: SMALLER_THAN,
+  },
+  {
+    id: "5",
+    name: "Lower than or equal to",
+    meta: SMALLER_OR_EQUAL,
   },
 ];

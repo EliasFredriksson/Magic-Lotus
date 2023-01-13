@@ -18,20 +18,20 @@ type ChoiceBasic = {
   meta?: any;
 };
 
-type Choice = ChoiceBasic | ChoiceWithImg;
+export type ChoiceData = ChoiceBasic | ChoiceWithImg;
 
 type Props = {
-  data: Choice[];
+  data: ChoiceData[];
   // DEFAULT BEHAVIOR IS THAT ONLY ONE RADIO IS ACTIVE AT A TIME.
   // IF YOU WANT TO BE ABLE TO SELECT MULTIPLE RADIOS, PASS THE
   // PROP multiChoice.
-  onChange: (choices: Choice[]) => void;
+  onChange: (choices: ChoiceData[]) => void;
 
   // VARIANT
   variant: "checkbox" | "radio";
 
   // OPTIONAL
-  startValue?: Choice[];
+  startValue?: ChoiceData[];
   label?: string;
   isValidState?: boolean;
   validationMsg?: string;
@@ -39,11 +39,11 @@ type Props = {
 
 let initLoad = true;
 const Choice = (props: Props) => {
-  const [activeChoices, setActiveChoices] = useState<Choice[]>(
+  const [activeChoices, setActiveChoices] = useState<ChoiceData[]>(
     props.startValue ? props.startValue : []
   );
   const handleChange = useCallback(
-    (choice: Choice) => {
+    (choice: ChoiceData) => {
       if (props.variant === "radio") {
         setActiveChoices([choice]);
       } else {
@@ -62,8 +62,11 @@ const Choice = (props: Props) => {
       return;
     }
     props.onChange(activeChoices);
-    return () => {};
   }, [activeChoices]);
+
+  useEffect(() => {
+    if (props.startValue) setActiveChoices(props.startValue);
+  }, [props.startValue]);
 
   return (
     <div
@@ -78,7 +81,7 @@ const Choice = (props: Props) => {
           {props.label}
         </label>
       )}
-      {props.data.map((choice: Choice, index) => {
+      {props.data.map((choice: ChoiceData, index) => {
         const id = `${choice.id}-${index}`;
         return (
           <ChoiceEntry
@@ -105,7 +108,7 @@ const Choice = (props: Props) => {
 };
 
 type PropsEntry = {
-  choice: Choice;
+  choice: ChoiceData;
   id: string;
   checked: boolean;
   variant: "checkbox" | "radio";

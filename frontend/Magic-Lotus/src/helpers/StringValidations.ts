@@ -47,7 +47,8 @@ export const isPhone = (text: string): boolean => {
   }
 };
 
-export const isEmpty = (text: string): boolean => {
+export const isEmpty = (text: string | string[]): boolean => {
+  if (Array.isArray(text)) return text.length <= 0;
   if (text) return text.trim().length <= 0;
   return true;
 };
