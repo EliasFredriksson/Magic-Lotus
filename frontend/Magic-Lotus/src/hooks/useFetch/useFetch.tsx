@@ -91,15 +91,16 @@ const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
         return res.data;
       } catch (e) {
         const error = e as AxiosError | Error;
-        console.log("ERROR: ", error);
-        // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
         if (error.name === "CanceledError") {
           return { object: "aborted" } as AbortedError;
         }
+
+        // IF ERROR WAS NOT A CANCEL ERROR, UPDATE STATE
         setIsLoading(false);
 
         if (error.name === "AxiosError") {
           const axErr = error as AxiosError<IError>;
+          // HANDLE
           if (axErr.code === "ERR_NETWORK")
             return {
               object: "network_error",
@@ -113,18 +114,6 @@ const useFetch = <IResult = any, IError = any, BodyParams = any, QParams = any>(
                 error: axErr,
               } as UnknownError;
             }
-          }
-        }
-
-        if (error.name === "AxiosError") {
-          const axErr = error as AxiosError;
-          if (axErr.code === "ERR_NETWORK") {
-            return {
-              object: "network_error",
-              error: axErr.message,
-            };
-          } else {
-            return (error as AxiosError<IError>).response?.data as IError;
           }
         } else
           return {

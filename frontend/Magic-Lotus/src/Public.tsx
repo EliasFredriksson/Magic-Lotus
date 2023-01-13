@@ -6,7 +6,7 @@ export const PUBLIC_FOLDER = {
   },
   IMAGES: {
     USERS: {
-      DEFAULT: "/images/lotus_black_white.jpg",
+      DEFAULT: "/images/Default_profile_image.svg",
     },
   },
 } as const;

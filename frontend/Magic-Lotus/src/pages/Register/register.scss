@@ -8,5 +8,23 @@
 
   .register-form {
     @include display-flex-column;
+
+    .inputs {
+      @include display-flex-column;
+
+      @include breakpoint-tablet {
+        flex-direction: row;
+      }
+
+      .left {
+        @include display-flex-column;
+        flex-basis: 70%;
+      }
+
+      .right {
+        @include display-flex-column;
+        flex-basis: 30%;
+      }
+    }
   }
 }

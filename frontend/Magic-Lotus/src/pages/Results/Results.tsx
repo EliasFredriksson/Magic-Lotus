@@ -1,18 +1,13 @@
 import PageHeader from "../../components/PageHeader/PageHeader";
-import Text from "../../components/Text/Text";
 import "./results.scss";
 import MagicCard from "../../components/MagicCard/MagicCard";
-import { useSearchParams } from "react-router-dom";
 import IPaginated, {
   BLANK_PAGINATED_CARDS,
 } from "../../models/scryfall/types/Paginated";
 import ICard from "../../models/scryfall/interfaces/ICard";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import Spinner from "../../components/Spinner/Spinner";
-import useFetchCardSearch, {
-  Order,
-} from "../../services/scryfall/cards/Cards.search.service";
 import useModal from "../../hooks/useModal/useModal";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
@@ -22,7 +17,6 @@ import useSearch from "../../hooks/useSearch/useSearch";
 const Results = () => {
   const { breakpoints } = useScreenSize();
   const { navigate } = useNavigate();
-  const [query, setQuery] = useSearchParams();
   const [result, setResult] = useObjectState<IPaginated<ICard[]>>(
     BLANK_PAGINATED_CARDS
   );

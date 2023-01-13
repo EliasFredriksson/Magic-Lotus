@@ -1,11 +1,7 @@
-import { createContext, useCallback, useEffect, useState } from "react";
-import useFetch from "../hooks/useFetch/useFetch";
+import { createContext, useCallback, useState } from "react";
 import useObjectState from "../hooks/useObjectState/useObjectState";
-import IServiceResponse from "../models/backend/types/MagicLotusResponse";
 import IUser, { BLANK_IUSER } from "../models/backend/interfaces/IUser";
-import { POST_USERS_LOGOUT } from "../services/backend/Users.routes";
 import { useFetchPostUserLogout } from "../services/backend/User.service";
-import useModal from "../hooks/useModal/useModal";
 import useUtility from "../hooks/useUtility/useUtility";
 
 interface IAuthContext {
@@ -34,10 +30,12 @@ export const AuthContextProvider = (props: IProps) => {
 
   const logout = useCallback(async () => {
     const res = await FetchLogout.triggerFetch();
-    console.log("LOGOUT RES: ", res);
-
     if (res.object === "aborted") return;
-    if (res.object === "magic_lotus_error") {
+    if (
+      res.object === "network_error" ||
+      res.object === "unknown_error" ||
+      res.object === "magic_lotus_error"
+    ) {
       openStatusModal(res.error);
       return;
     }

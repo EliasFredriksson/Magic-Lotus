@@ -97,7 +97,7 @@ export const SearchContextProvider = (props: IProps) => {
       return;
     }
 
-    console.log("RESULT: ", res.data);
+    console.log("RESULT: ", res);
     addToHistory({
       query: params,
       data: res,

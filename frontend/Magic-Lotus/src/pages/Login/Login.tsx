@@ -93,6 +93,10 @@ const Login = () => {
         });
 
         if (res.object === "aborted") return;
+        if (res.object === "network_error" || res.object === "unknown_error") {
+          openStatusModal(res.error);
+          return;
+        }
         if (res.object === "magic_lotus_error") {
           setLiveValidate(true);
           openStatusModal("Incorrect username / password. Try again.");

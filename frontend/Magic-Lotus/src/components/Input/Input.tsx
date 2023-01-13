@@ -1,19 +1,40 @@
 import "./input.scss";
 import React from "react";
 
-interface IProps {
+type IProps = PropsInput | PropsTextArea;
+type PropsInput = React.InputHTMLAttributes<HTMLInputElement> & {
   // INPUT TAG
   placeholder: string;
-  type: string;
+  type: // BIT OF AN UGLY SOLUTION BUT IT REMOVES THE * WITH (string & {})
+  | "button"
+    | "checkbox"
+    | "color"
+    | "date"
+    | "datetime-local"
+    | "email"
+    | "file"
+    | "hidden"
+    | "image"
+    | "month"
+    | "number"
+    | "password"
+    | "radio"
+    | "range"
+    | "reset"
+    | "search"
+    | "submit"
+    | "tel"
+    | "text"
+    | "time"
+    | "url"
+    | "week";
   name?: string;
   // LABELS
   label?: string;
   id?: string;
   // INPUT STATE
-  value: string;
-  onChange: (
-    value: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  value?: string;
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
   // VALID STATE
   isValid?: boolean;
   validationMsg?: string;
@@ -28,7 +49,33 @@ interface IProps {
   // AFTER / BEFORE DEC
   beforeDec?: React.ReactElement | string;
   afterDec?: React.ReactElement | string;
-}
+};
+type PropsTextArea = React.HTMLAttributes<HTMLTextAreaElement> & {
+  // INPUT TAG
+  placeholder: string;
+  type: "textarea";
+  name?: string;
+  // LABELS
+  label?: string;
+  id?: string;
+  // INPUT STATE
+  value: string;
+  onChange: (value: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  // VALID STATE
+  isValid?: boolean;
+  validationMsg?: string;
+  // TAB INDEX
+  tabIndex?: number;
+  // IF type="date", DEFINE MIN / MAX
+  min?: string;
+  max?: string;
+  // DISABLED
+  disabled?: boolean;
+
+  // AFTER / BEFORE DEC
+  beforeDec?: React.ReactElement | string;
+  afterDec?: React.ReactElement | string;
+};
 
 const Input = (props: IProps) => {
   return (
@@ -55,7 +102,7 @@ const Input = (props: IProps) => {
             placeholder={props.placeholder}
             value={props.value}
             disabled={props.disabled ? props.disabled : false}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            onChange={(e) => {
               e.preventDefault();
               props.onChange(e);
             }}
@@ -71,7 +118,7 @@ const Input = (props: IProps) => {
             value={props.value}
             disabled={props.disabled ? props.disabled : false}
             min={props.min}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e) => {
               e.preventDefault();
               props.onChange(e);
             }}

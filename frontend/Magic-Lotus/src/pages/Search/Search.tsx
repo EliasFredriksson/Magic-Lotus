@@ -30,7 +30,6 @@ import {
 import { ImStatsBars2 } from "react-icons/im";
 import { BiCoinStack } from "react-icons/bi";
 import { FiLayers } from "react-icons/fi";
-import { GrPowerReset } from "react-icons/gr";
 // CONSTANTS
 import { CARD_TYPES, SUPER_TYPES } from "../../constants/CARD_TYPES";
 import { IS } from "../../constants/FILTER_CONDITIONS";
@@ -318,6 +317,7 @@ const Search = () => {
       e.preventDefault();
       const query: IFullTextParams = {};
 
+      console.log("SUBMITTED");
       storageSetItem("SESSION", SESSION_STORAGE_KEY, inputs);
 
       // CARD NAME

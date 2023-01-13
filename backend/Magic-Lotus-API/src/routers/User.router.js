@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const UploadModel = require("../models/Upload.model");
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const utils = require("../helpers/utils");
@@ -18,7 +20,7 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await UsersModel.findOne({ email: email });
+    const user = await UsersModel.findOne({ email: email }).populate("image");
     if (!user) {
       // USER NOT FOUND IN DATABASE
       // INVALIDATE AUTH TOKEN
@@ -46,6 +48,7 @@ router.post("/login", async (req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
+            image: user.image,
           },
           req
         )
@@ -134,7 +137,9 @@ router.get("/", auth.checkIfLoggedIn, async (req, res) => {
   try {
     const id = req.decodedToken?.id;
     if (id) {
-      const user = await UsersModel.findById(id);
+      const user = await UsersModel.findById(id)
+        .populate("image")
+        .select("-hashedPassword");
       if (user) {
         res.status(200).send(create200Response(user, req));
       } else {
@@ -182,8 +187,59 @@ router.get("/:id", auth.checkIfAdmin, async (req, res) => {
         );
     }
   } catch (error) {
-    res.status(400).send(create400Response(error, req.method, req.path));
+    res.status(400).send(create400Response(error, req));
   }
 });
+// UPLOAD PROFILE AVATAR
+router.post("/avatar", auth.checkIfLoggedIn, async (req, res) => {
+  try {
+    // CHECK THAT WE HAVE UPLOADED 1 FILE
+    console.log("REQ: ", req.body);
+    const file = req.body.file;
+    if (!file) {
+      res
+        .status(400)
+        .send(create400Response("You must provide atleast 1 file!", req));
+    } else {
+      const id = req.decodedToken?.id;
+      if (id) {
+        const user = await UsersModel.findById(id);
+        if (user) {
+          // WE FOUND THE USER TO ADD AVATAR TO
 
+          const uploadedFile = new UploadModel({
+            file: {
+              data: file.file,
+              type: file.type,
+            },
+            fileName: file.name,
+          });
+          await uploadedFile.save();
+
+          await user.update({
+            image: uploadedFile._id,
+          });
+          await user.save();
+
+          res.status(200).send(create200Response(uploadedFile, req));
+        } else {
+          res
+            .status(404)
+            .send(create400Response(`No user found with ID: ${id}.`, req));
+        }
+      } else {
+        res
+          .status(404)
+          .send(
+            create400Response(
+              "No ID provided for finding user to add Avatar image to.",
+              req
+            )
+          );
+      }
+    }
+  } catch (error) {
+    res.status(400).send(create400Response(error, req));
+  }
+});
 module.exports = router;

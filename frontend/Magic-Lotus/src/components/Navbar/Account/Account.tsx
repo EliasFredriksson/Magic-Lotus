@@ -5,6 +5,7 @@ import Button from "../../Button/Button";
 import Text from "../../Text/Text";
 import Image from "../../Image/Image";
 import useNavigate from "../../../hooks/useNavigate/useNavigate";
+import { useEffect, useState } from "react";
 
 type Props = {
   closeMenu?: () => void;
@@ -14,6 +15,15 @@ const Account = (props: Props) => {
   const { credentials, logout, isLoggedIn } = useAuth();
 
   const { navigate } = useNavigate();
+
+  const [imgUrl, setImgUrl] = useState("");
+
+  useEffect(() => {
+    console.log("CREDENTIALS IN NAVBAR: ", credentials);
+    if (credentials.image) {
+      setImgUrl(credentials.image.file.data);
+    }
+  }, [credentials]);
 
   return isLoggedIn ? (
     <div className="account-component">
@@ -39,7 +49,7 @@ const Account = (props: Props) => {
         </Button>
       </div>
       <Image
-        imageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT} // USER PROFILE IMAGE HERE
+        imageUrl={imgUrl} // USER PROFILE IMAGE HERE
         fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
         spinnerSize="medium"
         imageSize={{
