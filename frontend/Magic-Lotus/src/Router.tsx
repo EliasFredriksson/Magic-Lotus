@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import RequireRole from "./components/RequireRole/RequireRole";
 import Layout from "./Layout";
@@ -54,7 +53,7 @@ const Router = () => {
         </Route>
       </Routes>
 
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

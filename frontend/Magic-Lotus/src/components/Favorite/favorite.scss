@@ -1,0 +1,25 @@
+@use "../../styles/all" as *;
+
+.favorite-component {
+  display: grid;
+  place-items: center;
+  width: $size-5xl;
+  height: $size-5xl;
+  font-size: $size-5xl;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+
+  &.is-fav {
+    color: $success-100;
+  }
+  &.not-fav {
+    color: $primary-100;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+  }
+  &:active {
+    transform: scale(1);
+  }
+}

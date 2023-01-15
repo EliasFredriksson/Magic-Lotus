@@ -23,6 +23,7 @@
 
       .right {
         @include display-flex-column;
+        justify-content: center;
         flex-basis: 30%;
       }
     }

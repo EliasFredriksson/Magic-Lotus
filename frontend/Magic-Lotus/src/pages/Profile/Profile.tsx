@@ -9,15 +9,17 @@ import ImageSelect from "../../components/ImageSelect/ImageSelect";
 import { PUBLIC_FOLDER } from "../../Public";
 import { useFetchPostUserAvatar } from "../../services/backend/Upload.service";
 import Button from "../../components/Button/Button";
-import IFile from "../../models/backend/interfaces/IFile";
+import IFile, { BLANK_IFILE } from "../../models/backend/interfaces/IFile";
 import Card from "../../components/Card/Card";
 import PageHeader from "../../components/PageHeader/PageHeader";
 import Text from "../../components/Text/Text";
 import Image from "../../components/Image/Image";
+import Spinner from "../../components/Spinner/Spinner";
+import useAuth from "../../hooks/useAuth/useAuth";
 
-interface IIsEditing {
+type IIsEditing = {
   avatar: boolean;
-}
+};
 
 const BLANK_IS_EDITING: IIsEditing = {
   avatar: false,
@@ -25,6 +27,7 @@ const BLANK_IS_EDITING: IIsEditing = {
 
 const Profile = () => {
   const { openStatusModal, updateTitle } = useUtility();
+  const { refetch } = useAuth();
   const [profile, setProfile] = useObjectState<IUser>(BLANK_IUSER);
   const FetchProfile = useFetchGetLoggedInUser();
 
@@ -32,8 +35,7 @@ const Profile = () => {
   const [imgUrl, setImgUrl] = useState("");
   const uploadAvatar = useFetchPostUserAvatar();
 
-  const [isEditing, setIsEditing] =
-    useObjectState<IIsEditing>(BLANK_IS_EDITING);
+  const [isEditing, setIsEditing] = useObjectState(BLANK_IS_EDITING);
 
   const fetchProfile = useCallback(async () => {
     const res = await FetchProfile.triggerFetch();
@@ -48,16 +50,21 @@ const Profile = () => {
       return;
     }
 
-    console.log("RES: ", res);
-    if (res.data.image) setImgUrl(res.data.image.file.data);
+    if (res.data.image)
+      setFile({
+        name: res.data.image.fileName,
+        file: res.data.image.file.data,
+        type: res.data.image.file.type,
+      });
     setProfile(res.data);
   }, []);
 
+  const [isLoading, setIsLoading] = useObjectState(BLANK_IS_EDITING);
   const handleUpdateAvatar = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      console.log("SUBMITTED!", e);
       if (file) {
+        setIsLoading({ avatar: true });
         const res = await uploadAvatar.triggerFetch({
           body: {
             file: file,
@@ -73,6 +80,9 @@ const Profile = () => {
           openStatusModal(res.error);
           return;
         }
+        setIsLoading({ avatar: false });
+        setIsEditing({ avatar: false });
+        refetch();
       }
     },
     [file]
@@ -93,34 +103,72 @@ const Profile = () => {
             <p>USERNAME: {profile.username}</p>
             <p>ROLE: {profile.role}</p>
             <p>EMAIL: {profile.email}</p>
+            <div>
+              {profile.favoriteCards.map((cardId) => (
+                <p>{cardId}</p>
+              ))}
+            </div>
           </Card>
           <Card className="right">
             {isEditing.avatar ? (
               <form onSubmit={handleUpdateAvatar} encType="multipart/form-data">
                 <ImageSelect
-                  // saveOnChoice
+                  saveOnChoice
                   name="avatar"
                   imageUrl={imgUrl}
                   fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
                   imageSize={{
-                    width: "20rem",
-                    height: "20rem",
+                    width: "16rem",
+                    height: "16rem",
                   }}
                   onSave={(file) => {
                     setFile(file);
                   }}
                 />
+                <Button
+                  variant="success"
+                  type="submit"
+                  className="submit-avatar-button"
+                >
+                  {isLoading.avatar ? (
+                    <Spinner variant="pulse" size="medium" />
+                  ) : (
+                    "Save"
+                  )}
+                </Button>
+                <Button
+                  variant="primary"
+                  type="button"
+                  className="submit-avatar-button"
+                  onClick={() =>
+                    setIsEditing({
+                      avatar: false,
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
               </form>
             ) : (
               <>
                 <Image
-                  imageUrl={imgUrl}
+                  imageUrl={file?.file}
                   fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
                   imageSize={{ width: "16rem", height: "16rem" }}
                   spinnerSize="medium"
                   borderRadius="50%"
                 />
-                <Text size="xl">{profile.username}</Text>
+                <Button
+                  variant="link"
+                  onClick={() =>
+                    setIsEditing({
+                      avatar: true,
+                    })
+                  }
+                >
+                  Change avatar
+                </Button>
+                <Text size="xxl">{profile.username}</Text>
               </>
             )}
           </Card>

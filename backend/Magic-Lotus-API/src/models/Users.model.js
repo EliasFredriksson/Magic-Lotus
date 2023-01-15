@@ -10,6 +10,12 @@ const usersSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "upload",
     },
+    favoriteCards: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
   { versionKey: false }
 );

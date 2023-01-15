@@ -11,11 +11,14 @@ import useFetchCardById from "../../services/scryfall/cards/Cards.byId.service";
 import useModal from "../../hooks/useModal/useModal";
 import { useFetchSymbologyParseMana } from "../../services/scryfall/CardSymbols.service";
 import Main from "../../components/Main/Main";
+import useUtility from "../../hooks/useUtility/useUtility";
+import Favorite from "../../components/Favorite/Favorite";
 
 const SingleCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [card, setCard] = useState<ICard | null>(null);
   const { id } = useParams();
+  const { openStatusModal } = useUtility();
 
   const [errorMsg, setErrorMsg] = useState("");
   const [errorModal, openErrorModal] = useModal({
@@ -33,8 +36,11 @@ const SingleCard = () => {
       const res = await fetchCard.triggerFetch();
       if (res.object === "aborted") return;
       if (res.object === "error") {
-        setErrorMsg(res.details);
-        openErrorModal();
+        openStatusModal(res.details);
+        return;
+      }
+      if (res.object === "unknown_error" || res.object === "network_error") {
+        openStatusModal(res.error);
         return;
       }
 
@@ -81,6 +87,7 @@ const SingleCard = () => {
                 {card.name}
               </Text>
               <Text>{card.type_line}</Text>
+              <Favorite cardId={id ? id : ""} />
             </div>
             <div className="right">
               <Card>

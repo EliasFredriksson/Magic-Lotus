@@ -15,7 +15,7 @@ interface ISize {
   height: string;
 }
 interface IProps {
-  imageUrl: string | undefined;
+  imageUrl?: string | undefined;
   fallbackImageUrl: string;
   imageSize: ISize;
   onSave: (data: IFile) => void;

@@ -1,4 +1,5 @@
 import useFetch from "../../hooks/useFetch/useFetch";
+import IFile from "../../models/backend/interfaces/IFile";
 import IUser from "../../models/backend/interfaces/IUser";
 import MagicLotusError from "../../models/backend/types/MagicLotusError";
 import MagicLotusResponse from "../../models/backend/types/MagicLotusResponse";
@@ -42,6 +43,7 @@ type PostNewUser = {
   email: string;
   password: string;
   repeatPassword: string;
+  image: IFile | null;
 };
 export const useFetchPostUser = () => {
   return useFetch<
@@ -86,5 +88,26 @@ export const useFetchGetUserById = (id: string) => {
     base: "BACKEND",
     method: "GET",
     route: `/users/${id}`,
+  });
+};
+
+// ################################ ROUTE ################################
+// Add card (Scryfall Card ID) to currently logged in users favoriteCards
+// POST     /users
+export const useFetchPostFavoriteCard = (id: string) => {
+  return useFetch<MagicLotusResponse<string>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "POST",
+    route: `/users/favorite/card/${id}`,
+  });
+};
+// ################################ ROUTE ################################
+// Remove card (Scryfall Card ID) from currently logged in users favoriteCards
+// DELETE     /users
+export const useFetchDeleteFavoriteCard = (id: string) => {
+  return useFetch<MagicLotusResponse<string>, MagicLotusError, null, null>({
+    base: "BACKEND",
+    method: "DELETE",
+    route: `/users/favorite/card/${id}`,
   });
 };

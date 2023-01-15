@@ -15,13 +15,14 @@ import { IoClose, IoMenu } from "react-icons/io5";
 import Account from "./Account/Account";
 import useSearch from "../../hooks/useSearch/useSearch";
 import { isEmpty } from "../../helpers/StringValidations";
+import Spinner from "../Spinner/Spinner";
 
 const Navbar = () => {
   const { navigate } = useRouterContext();
   const { credentials, isLoggedIn } = useAuth();
   const { breakpoints } = useScreenSize();
   const { value: isMenuOpen, on, off } = useBoolean();
-  const { search, latestSearch } = useSearch();
+  const { search, latestSearch, isLoading } = useSearch();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -42,7 +43,13 @@ const Navbar = () => {
     <div className="middle">
       <form onSubmit={handleSubmit} className="search-form">
         <Input
-          beforeDec={<RxMagnifyingGlass />}
+          beforeDec={
+            isLoading ? (
+              <Spinner variant="pulse" size="small" />
+            ) : (
+              <RxMagnifyingGlass />
+            )
+          }
           type="text"
           placeholder="Search for cards"
           value={searchTerm}
@@ -50,6 +57,9 @@ const Navbar = () => {
             setSearchTerm(e.target.value);
           }}
         />
+        <button type="submit" className="nav-submit-button">
+          Submit
+        </button>
         {!breakpoints.IS_MOBILE && (
           <Button
             type="button"
@@ -87,7 +97,8 @@ const Navbar = () => {
       }}
       fontSize="xl"
     >
-      {!breakpoints.IS_MOBILE ? <FaHome /> : "Start"}
+      <FaHome />
+      <Text size={breakpoints.IS_MOBILE ? "xxl" : "l"}>Home</Text>
     </Button>
   );
 
@@ -99,7 +110,7 @@ const Navbar = () => {
         navigate("/admin");
       }}
     >
-      Admin
+      <Text size={breakpoints.IS_MOBILE ? "xxl" : "l"}>Admin</Text>
     </Button>
   );
 
@@ -133,15 +144,7 @@ const Navbar = () => {
             {loginLogoutButton}
             <Account closeMenu={off} />
             {adminButton}
-            <Button
-              variant="link"
-              onClick={() => {
-                off();
-                navigate("/admin");
-              }}
-            >
-              Admin
-            </Button>
+
             <Button
               variant="link"
               onClick={() => {

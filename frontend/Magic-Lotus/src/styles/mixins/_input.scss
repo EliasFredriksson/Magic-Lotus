@@ -28,10 +28,6 @@
     outline: 0;
   }
 
-  @include breakpoint-laptop {
-    font-size: $size-l;
-  }
-
   @include dark-mode {
     background-color: $gray-900;
     box-shadow: inset 0px 0px 5px 0px $gray-1100;

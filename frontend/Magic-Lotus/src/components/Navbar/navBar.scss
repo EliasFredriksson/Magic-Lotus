@@ -21,24 +21,25 @@
     box-shadow: -0.5rem -1rem 5rem 2rem $primary-500;
   }
 
-  .home-button {
-    @include breakpoint-laptop {
-      width: 4rem;
-      height: 4rem;
-    }
-  }
-
   .middle {
     flex-grow: 1;
     .search-form {
       @include display-flex-row;
       align-items: center;
 
+      & > * {
+        flex-grow: 1;
+      }
+
       @include breakpoint-tablet {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+      }
+
+      .nav-submit-button {
+        display: none;
       }
     }
   }

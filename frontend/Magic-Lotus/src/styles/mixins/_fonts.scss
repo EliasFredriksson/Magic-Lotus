@@ -56,3 +56,16 @@
     font-weight: $weight-bold;
   }
 }
+
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontAlign.ts"
+@mixin font-align {
+  &.start {
+    text-align: start;
+  }
+  &.center {
+    text-align: center;
+  }
+  &.end {
+    text-align: end;
+  }
+}

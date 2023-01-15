@@ -21,12 +21,12 @@
   }
 
   .landing-form {
-    @include display-flex-column;
-    width: 90%;
+    @include display-flex-row;
+    gap: $spacing-m;
 
-    @include breakpoint-laptop {
-      @include display-flex-row;
-      width: auto;
+    @include breakpoint-tablet {
+      flex-direction: row;
+      align-items: center;
     }
   }
 }

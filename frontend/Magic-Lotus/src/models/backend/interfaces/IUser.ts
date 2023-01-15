@@ -7,6 +7,7 @@ export default interface IUser {
   email: string;
   role: AuthRole;
   image?: IImage;
+  favoriteCards: string[];
 }
 
 export const BLANK_IUSER: IUser = {
@@ -15,4 +16,5 @@ export const BLANK_IUSER: IUser = {
   email: "",
   role: "public",
   image: BLANK_IIMAGE,
+  favoriteCards: [],
 };

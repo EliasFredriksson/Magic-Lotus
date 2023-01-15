@@ -44,11 +44,12 @@ router.post("/login", async (req, res) => {
       res.status(200).send(
         create200Response(
           {
-            id: user._id,
             username: user.username,
             email: user.email,
-            role: user.role,
             image: user.image,
+            id: user._id,
+            role: user.role,
+            favoriteCards: user.favoriteCards,
           },
           req
         )
@@ -80,7 +81,7 @@ router.post("/logout", auth.checkIfLoggedIn, (req, res) => {
 router.post("/", async (req, res) => {
   try {
     // This is deconstructuring.
-    const { username, email, password, repeatPassword } = req.body;
+    const { username, email, password, repeatPassword, image } = req.body;
     const user = await UsersModel.findOne({ email });
 
     // Regular cases
@@ -89,14 +90,40 @@ router.post("/", async (req, res) => {
     } else if (password !== repeatPassword) {
       res.status(400).send(create400Response("Incorrect passwords.", req));
     } else {
+      // VALIDATE MISSING! ADD VALIDATION FOR FOLLOWING:
+      // username
+      // password
+      // email
+
       const newUser = new UsersModel({
         username: username,
         hashedPassword: utils.hashPassword(password),
         email: email,
         role: ROLES.user,
+        favoriteCards: [],
       });
       await newUser.save();
-      res.status(400).send(create200Response(newUser._id, req));
+
+      if (image) {
+        // VALIDATE MISSING! ADD VALIDATION FOR FOLLOWING:
+        // avatar.name
+        // avatar.file
+        // avatar.type
+
+        const uploadedAvatar = new UploadModel({
+          fileName: image.name,
+          file: {
+            data: image.file,
+            type: image.type,
+          },
+        });
+        const userImage = await uploadedAvatar.save();
+        await newUser.update({
+          image: userImage._id,
+        });
+        await newUser.save();
+      }
+      res.status(200).send(create200Response(newUser._id, req));
     }
   } catch (error) {
     res.status(400).send(create400Response(error, req.method, req.path));
@@ -194,7 +221,6 @@ router.get("/:id", auth.checkIfAdmin, async (req, res) => {
 router.post("/avatar", auth.checkIfLoggedIn, async (req, res) => {
   try {
     // CHECK THAT WE HAVE UPLOADED 1 FILE
-    console.log("REQ: ", req.body);
     const file = req.body.file;
     if (!file) {
       res
@@ -242,4 +268,96 @@ router.post("/avatar", auth.checkIfLoggedIn, async (req, res) => {
     res.status(400).send(create400Response(error, req));
   }
 });
+// ADD CARD TO FAV
+router.post("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (id) {
+      const userId = req.decodedToken?.id;
+
+      if (userId) {
+        const user = await UsersModel.findById(userId);
+        if (user) {
+          user.favoriteCards.push(id);
+          await user.save();
+          res
+            .status(200)
+            .send(
+              create200Response("Successfully added card to favorites!", req)
+            );
+        } else
+          res
+            .status(404)
+            .send(create400Response("No user found with cookie ID.", req));
+      } else
+        res
+          .status(404)
+          .send(create400Response("No userId found in cookie.", req));
+    } else
+      res
+        .status(404)
+        .send(
+          create400Response("No ID provided to add card to favorites", req)
+        );
+  } catch (error) {
+    res.status(400).send(create400Response(error, req));
+  }
+});
+// REMOVE CARD FROM FAV
+router.delete("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (id) {
+      const userId = req.decodedToken?.id;
+
+      if (userId) {
+        const user = await UsersModel.findById(userId);
+        if (user) {
+          // const filtered = user.favoriteCards.filter((favId) => favId !== id);
+
+          const favIndex = user.favoriteCards.findIndex(
+            (cardId) => cardId === id
+          );
+          if (favIndex !== -1) {
+            user.favoriteCards.splice(favIndex, 1);
+            await user.save();
+            res
+              .status(200)
+              .send(
+                create200Response(
+                  `Successfully removed card with ID: ${id} from your favorites`,
+                  req
+                )
+              );
+          } else
+            res
+              .status(400)
+              .send(
+                create400Response(
+                  `Card with ID: ${id} is not in your favorites.`,
+                  req
+                )
+              );
+        } else {
+          res
+            .status(400)
+            .send(create400Response("No user found with cookie ID.", req));
+        }
+      } else {
+        res
+          .status(400)
+          .send(create400Response("No userId found in cookie.", req));
+      }
+    } else {
+      res
+        .status(404)
+        .send(
+          create400Response("No ID provided to remove card from favorites", req)
+        );
+    }
+  } catch (error) {
+    res.status(400).send(create400Response(error, req));
+  }
+});
+
 module.exports = router;

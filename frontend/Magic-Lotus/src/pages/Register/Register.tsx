@@ -4,53 +4,157 @@ import Card from "../../components/Card/Card";
 import ImageSelect from "../../components/ImageSelect/ImageSelect";
 import Input from "../../components/Input/Input";
 import Main from "../../components/Main/Main";
+import Spinner from "../../components/Spinner/Spinner";
 import Text from "../../components/Text/Text";
+import { isValid } from "../../helpers/InputValidityHelpers";
+import {
+  hasNumber,
+  hasUniqueCharacter,
+  isEmail,
+  isEmpty,
+} from "../../helpers/StringValidations";
+import useModal from "../../hooks/useModal/useModal";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import useUtility from "../../hooks/useUtility/useUtility";
+import IFile from "../../models/backend/interfaces/IFile";
 import { PUBLIC_FOLDER } from "../../Public";
+import { useFetchPostUser } from "../../services/backend/User.service";
 import "./register.scss";
 
-interface IInputStates {
+type IInputStates = {
   username: string;
   email: string;
   password: string;
   repeatPassword: string;
-  image: File | null;
-}
+  image: IFile | null;
+};
+const BLANK_INPUT_STATES: IInputStates = {
+  username: "",
+  email: "",
+  password: "",
+  repeatPassword: "",
+  image: null,
+};
+
+type IInputValidity = {
+  [Prop in keyof IInputStates]: boolean;
+};
+const BLANK_INPUT_VALIDITY: IInputValidity = {
+  username: true,
+  email: true,
+  password: true,
+  repeatPassword: true,
+  image: true,
+};
+
+type IInputMessages = {
+  [Props in keyof IInputStates]: string;
+};
+const BLANK_INPUT_MESSAGES: IInputMessages = {
+  username: "",
+  email: "",
+  password: "",
+  repeatPassword: "",
+  image: "",
+};
+
+const MINIMUM_PASSWORD_LENGTH = 4;
 
 const Register = () => {
   const { openStatusModal, updateTitle } = useUtility();
   const { navigate } = useNavigate();
+  const registerUser = useFetchPostUser();
+
+  const [liveValidate, setLiveValidate] = useState(false);
+  const [validity, setValidity] = useObjectState(BLANK_INPUT_VALIDITY);
+  const [inputs, setInputs] = useObjectState<IInputStates>(BLANK_INPUT_STATES);
+  const [messages, setMessages] =
+    useObjectState<IInputMessages>(BLANK_INPUT_MESSAGES);
+
+  const [successModal, openSuccessModal] = useModal({
+    innerTsx: <span>Register successful!</span>,
+    confirmTextOrButton: "Ok",
+    onClose: () => {
+      navigate("/login");
+    },
+  });
+
+  const isFormValid = useCallback(() => {
+    const val = { ...BLANK_INPUT_VALIDITY };
+    const msgs = { ...BLANK_INPUT_MESSAGES };
+
+    // USERNAME
+    if (isEmpty(inputs.username)) {
+      val.username = false;
+      msgs.username = "You must provide a username!";
+    }
+    // EMAIL
+    if (!isEmail(inputs.email)) {
+      val.email = false;
+      msgs.email = "You must provide a valid email!";
+    }
+    // PASSWORD
+    if (inputs.password.length < MINIMUM_PASSWORD_LENGTH) {
+      val.password = false;
+      msgs.password = "Your password is too short! (minimum 5)";
+    } else if (!hasNumber(inputs.password)) {
+      val.password = false;
+      msgs.password = "Your password must contain a number!";
+    } else if (!hasUniqueCharacter(inputs.password)) {
+      val.password = false;
+      msgs.password = "Your password must contain a unique character!";
+    }
+    // REPEAT PASSWORD
+    if (inputs.password !== inputs.repeatPassword) {
+      val.repeatPassword = false;
+      msgs.repeatPassword = "Passwords do not match!";
+    }
+
+    setMessages(msgs);
+    setValidity(val);
+
+    if (isValid(val)) return true;
+    setLiveValidate(true);
+    return false;
+  }, [inputs]);
+
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      console.log("SUBMITTED!", isFormValid());
+      e.preventDefault();
+      if (isFormValid()) {
+        const res = await registerUser.triggerFetch({
+          body: {
+            username: inputs.username,
+            email: inputs.email,
+            password: inputs.password,
+            repeatPassword: inputs.repeatPassword,
+            image: inputs.image,
+          },
+        });
+        if (res.object === "aborted") return;
+        if (
+          res.object === "network_error" ||
+          res.object === "unknown_error" ||
+          res.object === "magic_lotus_error"
+        ) {
+          openStatusModal(res.error);
+          return;
+        }
+        openSuccessModal();
+      }
+    },
+    [inputs]
+  );
+
+  useEffect(() => {
+    if (liveValidate) isFormValid();
+  }, [inputs]);
 
   useEffect(() => {
     updateTitle("Register");
   }, []);
-
-  const [inputs, setInputs] = useObjectState<IInputStates>({
-    username: "",
-    email: "",
-    password: "",
-    repeatPassword: "",
-    image: null,
-  });
-
-  const [imgUrl, setImgUrl] = useState("");
-
-  const handleSubmit = useCallback((e: FormEvent) => {
-    e.preventDefault();
-    // triggerFetch({
-    //   data: {
-    //     username: inputs.username,
-    //     email: inputs.email,
-    //     password: inputs.password,
-    //   },
-    // });
-  }, []);
-
-  useEffect(() => {
-    console.log("INPUTS\n\n", inputs);
-  }, [inputs]);
 
   return (
     <Main id="register-page">
@@ -76,6 +180,8 @@ const Register = () => {
                     username: e.target.value,
                   });
                 }}
+                isValid={validity.username}
+                validationMsg={messages.username}
               />
               <Input
                 label="Email"
@@ -88,6 +194,8 @@ const Register = () => {
                     email: e.target.value,
                   });
                 }}
+                isValid={validity.email}
+                validationMsg={messages.email}
               />
               <Input
                 label="Password"
@@ -100,6 +208,8 @@ const Register = () => {
                     password: e.target.value,
                   });
                 }}
+                isValid={validity.password}
+                validationMsg={messages.password}
               />
               <Input
                 label="Repeat password"
@@ -112,12 +222,13 @@ const Register = () => {
                     repeatPassword: e.target.value,
                   });
                 }}
+                isValid={validity.repeatPassword}
+                validationMsg={messages.repeatPassword}
               />
             </section>
             <section className="right">
               <ImageSelect
                 name="avatar"
-                imageUrl={imgUrl}
                 fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
                 imageSize={{
                   width: "20rem",
@@ -125,15 +236,24 @@ const Register = () => {
                 }}
                 saveOnChoice
                 onSave={(file) => {
-                  console.log("FILE: ", file);
+                  setInputs({
+                    image: file,
+                  });
                 }}
               />
             </section>
           </div>
 
-          <Button type="submit">Register</Button>
+          <Button type="submit">
+            {registerUser.isLoading ? (
+              <Spinner variant="pulse" size="medium" />
+            ) : (
+              <>Register</>
+            )}
+          </Button>
         </form>
       </Card>
+      {successModal}
     </Main>
   );
 };

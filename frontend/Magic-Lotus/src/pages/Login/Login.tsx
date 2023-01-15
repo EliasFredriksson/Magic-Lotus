@@ -4,7 +4,6 @@ import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
 import Spinner from "../../components/Spinner/Spinner";
-import { isValidityValid } from "../../helpers/InputValidityHelpers";
 import { isEmail, isEmpty } from "../../helpers/StringValidations";
 import useAuth from "../../hooks/useAuth/useAuth";
 import useModal from "../../hooks/useModal/useModal";
@@ -15,6 +14,7 @@ import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useUtility from "../../hooks/useUtility/useUtility";
 import Text from "../../components/Text/Text";
+import { isValid } from "../../helpers/InputValidityHelpers";
 
 interface IInputValidity {
   email: boolean;
@@ -71,7 +71,7 @@ const Login = () => {
 
     setInputValidity(validity);
 
-    if (isValidityValid(validity)) return true;
+    if (isValid(validity)) return true;
     setLiveValidate(true);
     return false;
   }, [inputState]);

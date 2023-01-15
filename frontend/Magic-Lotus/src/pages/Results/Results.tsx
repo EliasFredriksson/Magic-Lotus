@@ -13,6 +13,7 @@ import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 import useSearch from "../../hooks/useSearch/useSearch";
+import Div from "../../components/Div/Div";
 
 const Results = () => {
   const { breakpoints } = useScreenSize();
@@ -47,9 +48,7 @@ const Results = () => {
             <Spinner size="x-large" variant="pulse" />
           </div>
         ) : (
-          <div
-            className={`results ${result.data.length > 3 ? "grid" : "flex"}`}
-          >
+          <Div className={`results`}>
             {result.data.map((card) => (
               <div
                 key={card.id}
@@ -64,7 +63,7 @@ const Results = () => {
                 />
               </div>
             ))}
-          </div>
+          </Div>
         )}
       </div>
       {errorModal}
