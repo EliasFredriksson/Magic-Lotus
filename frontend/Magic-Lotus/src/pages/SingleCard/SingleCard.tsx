@@ -108,9 +108,12 @@ const SingleCard = () => {
                 {/* POWER AND TOUGHNESS */}
                 {card.power && card.toughness && (
                   <>
-                    <Text>
-                      {card.power} / {card.toughness}
-                    </Text>
+                    <div className="inner">
+                      <Text>Power / Toughness</Text>
+                      <Text>
+                        {card.power} / {card.toughness}
+                      </Text>
+                    </div>
                     <Seperator direction="ver" />
                   </>
                 )}
