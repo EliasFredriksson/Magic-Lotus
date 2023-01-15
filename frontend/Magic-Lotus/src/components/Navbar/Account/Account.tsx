@@ -19,7 +19,6 @@ const Account = (props: Props) => {
   const [imgUrl, setImgUrl] = useState("");
 
   useEffect(() => {
-    console.log("CREDENTIALS IN NAVBAR: ", credentials);
     if (credentials.image) {
       setImgUrl(credentials.image.file.data);
     }

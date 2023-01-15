@@ -6,6 +6,7 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { isEmpty } from "../../helpers/StringValidations";
 import Main from "../../components/Main/Main";
 import useSearch from "../../hooks/useSearch/useSearch";
+import Loader from "../../components/Loader/Loader";
 
 const Landing = () => {
   const [searchText, setSearchText] = useState("");

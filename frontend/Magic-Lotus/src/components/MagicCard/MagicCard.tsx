@@ -16,7 +16,7 @@ const MagicCard = (props: Props) => {
     switch (props.size) {
       case "small":
         return {
-          width: "11rem",
+          width: "14rem",
         };
       case "normal":
         return {
@@ -27,7 +27,7 @@ const MagicCard = (props: Props) => {
           width: "30rem",
         };
     }
-  }, []);
+  }, [props.size]);
 
   const calcImage = useCallback(() => {
     switch (props.quality) {
@@ -46,7 +46,7 @@ const MagicCard = (props: Props) => {
       default:
         return props.card?.image_uris?.normal;
     }
-  }, []);
+  }, [props.card, props.quality]);
 
   return (
     <div className={`magic-card-component ${props.disabled ? "disabled" : ""}`}>

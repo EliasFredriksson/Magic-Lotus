@@ -15,10 +15,10 @@
   transition: opacity 0.5s ease;
 
   @include dark-mode {
-    background: $main-gradient-dark;
+    background: $loader-gradient-dark;
   }
   @include light-mode {
-    background: $main-gradient-light;
+    background: $loader-gradient-light;
   }
 
   &.fade-in {

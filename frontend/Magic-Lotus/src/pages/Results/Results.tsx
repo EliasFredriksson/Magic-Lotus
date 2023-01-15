@@ -57,7 +57,11 @@ const Results = () => {
                   navigate(`/card/${card.id}`);
                 }}
               >
-                <MagicCard card={card} size="normal" quality="normal" />
+                <MagicCard
+                  card={card}
+                  size={breakpoints.IS_MOBILE ? "small" : "normal"}
+                  quality="normal"
+                />
               </div>
             ))}
           </div>
