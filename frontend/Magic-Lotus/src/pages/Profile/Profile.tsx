@@ -11,11 +11,13 @@ import { useFetchPostUserAvatar } from "../../services/backend/Upload.service";
 import Button from "../../components/Button/Button";
 import IFile, { BLANK_IFILE } from "../../models/backend/interfaces/IFile";
 import Card from "../../components/Card/Card";
-import PageHeader from "../../components/PageHeader/PageHeader";
 import Text from "../../components/Text/Text";
 import Image from "../../components/Image/Image";
 import Spinner from "../../components/Spinner/Spinner";
 import useAuth from "../../hooks/useAuth/useAuth";
+import useFetchRandomCard from "../../services/scryfall/cards/Cards.random.service";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
+import Header from "../../components/Header/Header";
 
 type IIsEditing = {
   avatar: boolean;
@@ -28,11 +30,17 @@ const BLANK_IS_EDITING: IIsEditing = {
 const Profile = () => {
   const { openStatusModal, updateTitle } = useUtility();
   const { refetch } = useAuth();
-  const [profile, setProfile] = useObjectState<IUser>(BLANK_IUSER);
-  const FetchProfile = useFetchGetLoggedInUser();
+  const { navigate } = useNavigate();
 
+  // STATES
+  const [profile, setProfile] = useObjectState<IUser>(BLANK_IUSER);
+  const [isLoading, setIsLoading] = useObjectState(BLANK_IS_EDITING);
   const [file, setFile] = useState<IFile | null>(null);
   const [imgUrl, setImgUrl] = useState("");
+
+  // FETCH CALLS
+  const FetchProfile = useFetchGetLoggedInUser();
+  const FetchRandomCard = useFetchRandomCard();
   const uploadAvatar = useFetchPostUserAvatar();
 
   const [isEditing, setIsEditing] = useObjectState(BLANK_IS_EDITING);
@@ -59,7 +67,6 @@ const Profile = () => {
     setProfile(res.data);
   }, []);
 
-  const [isLoading, setIsLoading] = useObjectState(BLANK_IS_EDITING);
   const handleUpdateAvatar = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
@@ -88,6 +95,20 @@ const Profile = () => {
     [file]
   );
 
+  const fetchRandomCard = useCallback(async () => {
+    const res = await FetchRandomCard.triggerFetch();
+    if (res.object === "aborted") return;
+    if (res.object === "network_error" || res.object === "unknown_error") {
+      openStatusModal(res.error);
+      return;
+    }
+    if (res.object === "error") {
+      openStatusModal(res.details);
+      return;
+    }
+    navigate(`card/${res.id}`);
+  }, []);
+
   useEffect(() => {
     fetchProfile();
     updateTitle("Your profile");
@@ -96,26 +117,72 @@ const Profile = () => {
   return (
     <Main id="profile-page">
       <div className="middle">
-        <PageHeader title={`${profile.username}'s Profile`} />
+        <Header title={`${profile.username}'s Profile`} />
 
         <div className="content">
-          <Card className="left">
-            <p>USERNAME: {profile.username}</p>
-            <p>ROLE: {profile.role}</p>
-            <p>EMAIL: {profile.email}</p>
-            <div>
-              {profile.favoriteCards.map((cardId) => (
-                <p>{cardId}</p>
-              ))}
-            </div>
-          </Card>
+          <div className="left">
+            <Card>
+              <Text family="heading" size="xxl">
+                About
+              </Text>
+              <p>USERNAME: {profile.username}</p>
+              <p>ROLE: {profile.role}</p>
+              <p>EMAIL: {profile.email}</p>
+            </Card>
+            <Card className="favorites">
+              <Text family="heading" size="xxl">
+                Favorite Cards
+              </Text>
+              {profile.favoriteCards.length > 0 ? (
+                <div className="fav-wrapper">
+                  {profile.favoriteCards.map((card) => {
+                    console.log("CARD: ", card);
+                    return (
+                      <Image
+                        onClick={() => {
+                          navigate(`card/${card.id}`);
+                        }}
+                        key={card.id}
+                        imageUrl={card.imageUrl}
+                        fallbackImageUrl={""}
+                        spinnerSize="small"
+                        imageSize={{
+                          width: "20rem",
+                          // height: "20rem",
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <>
+                  <Text className="hint">
+                    You have not added any favorites yet
+                  </Text>
+                  <Button
+                    variant="link"
+                    fontWeight="bold"
+                    fontSize="l"
+                    onClick={() => fetchRandomCard()}
+                  >
+                    {FetchRandomCard.isLoading ? (
+                      <Spinner variant="pulse" size="small" />
+                    ) : (
+                      "Take me to a random card!"
+                    )}
+                  </Button>
+                </>
+              )}
+            </Card>
+          </div>
+
           <Card className="right">
             {isEditing.avatar ? (
               <form onSubmit={handleUpdateAvatar} encType="multipart/form-data">
                 <ImageSelect
                   saveOnChoice
                   name="avatar"
-                  imageUrl={imgUrl}
+                  imageUrl={file?.file}
                   fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
                   imageSize={{
                     width: "16rem",

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Card from "../../components/Card/Card";
 import Main from "../../components/Main/Main";
-import PageHeader from "../../components/PageHeader/PageHeader";
+import PageHeader from "../../components/Header/Header";
 import Text from "../../components/Text/Text";
 import useUtility from "../../hooks/useUtility/useUtility";
 import ISet from "../../models/scryfall/interfaces/ISet";

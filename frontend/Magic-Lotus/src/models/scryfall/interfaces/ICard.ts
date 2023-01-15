@@ -32,7 +32,7 @@ export default interface ICard {
   readonly object: "card"; // The content type for this object. Always "card".
   readonly oracle_id: string; // UUID // This is the oracle identity.
   readonly prints_search_uri: string; // URI // A link to where you can begin paginating all re/prints for this cad on Scryfall's API
-  readonly rulins_uri: string; // URI // A link to this card's ruling list on Scryfall's API.
+  readonly rulings_uri: string; // URI // A link to this card's ruling list on Scryfall's API.
   readonly scryfall_uri: string; // URI // A link to this card's permapage on Scryfall's website.
   readonly url: string; // URI // A link to this card object on Scryfall's API.
 

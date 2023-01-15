@@ -12,8 +12,9 @@ const usersSchema = new mongoose.Schema(
     },
     favoriteCards: [
       {
-        type: String,
-        required: true,
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        imageUrl: { type: String, required: true },
       },
     ],
   },

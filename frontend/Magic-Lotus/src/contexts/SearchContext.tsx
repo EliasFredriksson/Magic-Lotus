@@ -8,40 +8,27 @@ import IPaginated, {
 } from "../models/scryfall/types/Paginated";
 import useFetchCardSearch, {
   ICardSearchParams,
+  useFetchCardSearchRaw,
 } from "../services/scryfall/cards/Cards.search.service";
 
-type NewHistory = {
-  query: ICardSearchParams;
-  data: IPaginated<ICard[]>;
-};
-
-type History = {
-  id: number;
-  query: ICardSearchParams;
-  data: IPaginated<ICard[]>;
-};
-
-const BLANK_HISTORY: History = {
-  id: -1,
-  query: {
-    q: "",
-  },
-  data: BLANK_PAGINATED_CARDS,
-};
-
+interface ISearchOptions {
+  raw?: boolean;
+}
 interface ISearchContext {
-  history: History[];
-  latestSearch: History;
-  clearHistory: () => void;
-  search: (params: ICardSearchParams) => Promise<void>;
+  latestSearch: IPaginated<ICard[]> | undefined;
+  search: (
+    params: ICardSearchParams | string,
+    raw?: ISearchOptions
+  ) => Promise<void>;
   isLoading: boolean;
 }
 
 export const SearchContext = createContext<ISearchContext>({
-  history: [],
-  latestSearch: BLANK_HISTORY,
-  clearHistory: () => {},
-  search: async (params: ICardSearchParams) => {},
+  latestSearch: undefined,
+  search: async (
+    params: ICardSearchParams | string,
+    options?: ISearchOptions
+  ) => {},
   isLoading: false,
 });
 
@@ -51,73 +38,54 @@ interface IProps {
 export const SearchContextProvider = (props: IProps) => {
   const { openStatusModal } = useUtility();
   const { navigate } = useNavigate();
-  const [currentHistory, setCurrentHistory] = useState<History[]>([]);
 
-  // CALCULATE NEW ID FOR NEW HISTORY ENTRY
-  const getNewId = useCallback(() => {
-    let max = 0;
-    currentHistory.forEach((entry) => {
-      if (entry.id > max) max = entry.id;
-    });
-    return max + 1;
-  }, [currentHistory]);
-
-  const addToHistory = useCallback(
-    (history: NewHistory) => {
-      setCurrentHistory([
-        ...currentHistory,
-        {
-          id: getNewId(),
-          ...history,
-        },
-      ]);
-    },
-    [currentHistory]
-  );
-  const clearHistory = useCallback(() => {
-    setCurrentHistory([]);
-  }, []);
+  const [data, setData] = useState<IPaginated<ICard[]>>();
 
   const fetchSearchCards = useFetchCardSearch();
-  const search = useCallback(async (params: ICardSearchParams) => {
-    const res = await fetchSearchCards.triggerFetch({
-      params: params,
-    });
-    if (res.object === "aborted") return;
-    if (res.object === "error") {
-      openStatusModal(res.details);
-      return;
-    }
-    if (res.object === "network_error") {
-      openStatusModal(res.error);
-      return;
-    }
-    if (res.object === "unknown_error") {
-      openStatusModal("Unknown error occured!");
-      return;
-    }
+  const fetchSearchCardsRaw = useFetchCardSearchRaw();
+  const search = useCallback(
+    async (params: ICardSearchParams | string, options?: ISearchOptions) => {
+      if (typeof params === "string") {
+        // ONLY SCENARIO MAYBE TO ALLOW "var". WILL PROBABLY CHANGE IN THE FUTIRE
+        var res = await fetchSearchCardsRaw.triggerFetch({
+          params: params,
+        });
+      } else {
+        var res = await fetchSearchCards.triggerFetch({
+          params: params,
+        });
+      }
 
-    console.log("RESULT: ", res);
-    addToHistory({
-      query: params,
-      data: res,
-    });
-    navigate({
-      pathname: "/results",
-      search: convertObjectToQuery(params),
-    });
-  }, []);
+      if (res.object === "aborted") return;
+      if (res.object === "error") {
+        openStatusModal(res.details);
+        return;
+      }
+      if (res.object === "network_error") {
+        openStatusModal(res.error);
+        return;
+      }
+      if (res.object === "unknown_error") {
+        openStatusModal("Unknown error occured!");
+        return;
+      }
+
+      setData(res);
+
+      navigate({
+        pathname: "/results",
+        search: convertObjectToQuery(params),
+      });
+    },
+    []
+  );
 
   // CALC LATEST SEARCH
-  const latest = currentHistory[currentHistory.length - 1]
-    ? currentHistory[currentHistory.length - 1]
-    : BLANK_HISTORY;
+
   return (
     <SearchContext.Provider
       value={{
-        history: currentHistory,
-        latestSearch: latest,
-        clearHistory,
+        latestSearch: data,
         search,
         isLoading: fetchSearchCards.isLoading,
       }}

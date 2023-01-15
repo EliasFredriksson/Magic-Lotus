@@ -12,13 +12,32 @@ import Card from "../../components/Card/Card";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useAuth from "../../hooks/useAuth/useAuth";
 import Account from "../../components/Navbar/Account/Account";
+import useFetchRandomCard from "../../services/scryfall/cards/Cards.random.service";
+import useUtility from "../../hooks/useUtility/useUtility";
 
 const Landing = () => {
   const [searchText, setSearchText] = useState("");
 
+  const { openStatusModal } = useUtility();
   const { search, isLoading } = useSearch();
   const { isLoggedIn } = useAuth();
   const { navigate } = useNavigate();
+
+  const fetchRandomCard = useFetchRandomCard();
+
+  const handleRandomCard = useCallback(async () => {
+    const res = await fetchRandomCard.triggerFetch();
+    if (res.object === "aborted") return;
+    if (res.object === "network_error" || res.object === "unknown_error") {
+      openStatusModal(res.error);
+      return;
+    }
+    if (res.object === "error") {
+      openStatusModal(res.details);
+      return;
+    }
+    navigate(`card/${res.id}`);
+  }, []);
 
   const handleSearch = useCallback(
     async (e: FormEvent) => {
@@ -81,6 +100,14 @@ const Landing = () => {
             Login
           </Button>
         )}
+
+        <Button variant="link" onClick={handleRandomCard}>
+          {fetchRandomCard.isLoading ? (
+            <Spinner variant="pulse" size="medium" />
+          ) : (
+            "Take me to a random card!"
+          )}
+        </Button>
       </Card>
     </Main>
   );

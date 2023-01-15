@@ -94,20 +94,38 @@ export const useFetchGetUserById = (id: string) => {
 // ################################ ROUTE ################################
 // Add card (Scryfall Card ID) to currently logged in users favoriteCards
 // POST     /users
-export const useFetchPostFavoriteCard = (id: string) => {
-  return useFetch<MagicLotusResponse<string>, MagicLotusError, null, null>({
+type FavoriteParams = {
+  id: string;
+  name: string;
+  image: string;
+};
+export const useFetchPostFavoriteCard = () => {
+  return useFetch<
+    MagicLotusResponse<string>,
+    MagicLotusError,
+    null,
+    FavoriteParams
+  >({
     base: "BACKEND",
     method: "POST",
-    route: `/users/favorite/card/${id}`,
+    route: `/users/favorite/card`,
   });
 };
 // ################################ ROUTE ################################
 // Remove card (Scryfall Card ID) from currently logged in users favoriteCards
 // DELETE     /users
-export const useFetchDeleteFavoriteCard = (id: string) => {
-  return useFetch<MagicLotusResponse<string>, MagicLotusError, null, null>({
+type RemoveFavoriteParams = {
+  id: string;
+};
+export const useFetchDeleteFavoriteCard = () => {
+  return useFetch<
+    MagicLotusResponse<string>,
+    MagicLotusError,
+    null,
+    RemoveFavoriteParams
+  >({
     base: "BACKEND",
     method: "DELETE",
-    route: `/users/favorite/card/${id}`,
+    route: `/users/favorite/card`,
   });
 };

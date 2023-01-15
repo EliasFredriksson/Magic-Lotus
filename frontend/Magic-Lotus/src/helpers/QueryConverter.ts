@@ -1,5 +1,6 @@
 export function convertObjectToQuery<T>(object: T): string {
   if (!object) return "";
+  if (typeof object === "string") return object;
   const obj = object as Object;
   let query = "?";
   Object.entries(obj).forEach(([key, value]) => {

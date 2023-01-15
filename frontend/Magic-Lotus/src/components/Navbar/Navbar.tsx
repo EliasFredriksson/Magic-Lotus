@@ -29,10 +29,9 @@ const Navbar = () => {
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      if (!isEmpty(searchTerm) && searchTerm !== latestSearch.query.q) {
+      if (!isEmpty(searchTerm)) {
         search({
           q: searchTerm,
-          order: "color",
         });
       }
     },
@@ -154,7 +153,15 @@ const Navbar = () => {
             >
               Advanced search
             </Button>
-            {homeButton}
+            <Button
+              variant="link"
+              onClick={() => {
+                off();
+                navigate("/");
+              }}
+            >
+              Home
+            </Button>
           </Collapse>
         </>
       ) : (

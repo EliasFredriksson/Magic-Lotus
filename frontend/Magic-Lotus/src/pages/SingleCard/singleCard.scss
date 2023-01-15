@@ -25,8 +25,30 @@
 
       .right {
         flex-grow: 1;
-        background-color: blue;
+        // background-color: blue;
         height: 100%;
+        @include display-flex-column;
+
+        .prices {
+          display: grid;
+          place-items: center;
+          grid-template-columns: repeat(1, 1fr);
+        }
+
+        .inner {
+          @include display-flex-row;
+          justify-content: space-between;
+
+          .uncommon {
+            color: #d1d1d1;
+          }
+          .rare {
+            color: #f0e264;
+          }
+          .mythic {
+            color: #ff7a0e;
+          }
+        }
       }
     }
   }

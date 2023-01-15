@@ -1,4 +1,4 @@
-import "./pageHeader.scss";
+import "./header.scss";
 import { IoArrowBackOutline } from "react-icons/io5";
 import Button from "../Button/Button";
 import Text from "../Text/Text";
@@ -8,13 +8,13 @@ type Props = {
   title?: string | React.ReactNode;
 };
 
-const PageHeader = (props: Props) => {
+const Header = (props: Props) => {
   const { navigate } = useRouterContext();
   return (
     <header className="page-header">
       <Button
         variant="icon"
-        fontSize="xxxxxl"
+        fontSize="xxxxl"
         fontWeight="bold"
         className="back-button"
         onClick={() => {
@@ -30,4 +30,4 @@ const PageHeader = (props: Props) => {
   );
 };
 
-export default PageHeader;
+export default Header;

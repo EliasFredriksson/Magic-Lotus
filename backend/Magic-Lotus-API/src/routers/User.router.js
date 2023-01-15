@@ -269,22 +269,39 @@ router.post("/avatar", auth.checkIfLoggedIn, async (req, res) => {
   }
 });
 // ADD CARD TO FAV
-router.post("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
+router.post("/favorite/card", auth.checkIfLoggedIn, async (req, res) => {
   try {
-    const { id } = req.params;
-    if (id) {
+    const id = req.query.id;
+    const name = req.query.name;
+    const imageUrl = req.query.image;
+    if (id && name && imageUrl) {
       const userId = req.decodedToken?.id;
 
       if (userId) {
         const user = await UsersModel.findById(userId);
         if (user) {
-          user.favoriteCards.push(id);
-          await user.save();
-          res
-            .status(200)
-            .send(
-              create200Response("Successfully added card to favorites!", req)
-            );
+          const favIndex = user.favoriteCards.findIndex(
+            (cardId) => cardId.id === id
+          );
+          if (favIndex !== -1) {
+            res
+              .status(200)
+              .send(
+                create200Response("Card is already in your favorites", req)
+              );
+          } else {
+            user.favoriteCards.push({
+              id: id,
+              name: name,
+              imageUrl: imageUrl,
+            });
+            await user.save();
+            res
+              .status(200)
+              .send(
+                create200Response("Successfully added card to favorites!", req)
+              );
+          }
         } else
           res
             .status(404)
@@ -297,16 +314,19 @@ router.post("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
       res
         .status(404)
         .send(
-          create400Response("No ID provided to add card to favorites", req)
+          create400Response(
+            "No ID, name OR imageUrl provided to add card to favorites",
+            req
+          )
         );
   } catch (error) {
     res.status(400).send(create400Response(error, req));
   }
 });
 // REMOVE CARD FROM FAV
-router.delete("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
+router.delete("/favorite/card", auth.checkIfLoggedIn, async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.query.id;
     if (id) {
       const userId = req.decodedToken?.id;
 
@@ -316,7 +336,7 @@ router.delete("/favorite/card/:id", auth.checkIfLoggedIn, async (req, res) => {
           // const filtered = user.favoriteCards.filter((favId) => favId !== id);
 
           const favIndex = user.favoriteCards.findIndex(
-            (cardId) => cardId === id
+            (cardId) => cardId.id === id
           );
           if (favIndex !== -1) {
             user.favoriteCards.splice(favIndex, 1);

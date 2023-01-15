@@ -15,6 +15,29 @@
       }
       .left {
         flex-grow: 1;
+        @include display-flex-column;
+
+        .favorites {
+          .fav-wrapper {
+            @include display-flex-column;
+
+            @include breakpoint-tablet {
+              flex-direction: row;
+              flex-wrap: wrap;
+            }
+
+            .image-component {
+              transition: all 0.1s ease;
+              &:hover {
+                transform: translateY(-0.5rem);
+              }
+            }
+          }
+          .hint {
+            align-self: center;
+            filter: brightness(70%);
+          }
+        }
       }
       .right {
         align-items: center;

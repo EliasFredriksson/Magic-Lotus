@@ -43,4 +43,11 @@ const useFetchCardSearch = () => {
     route: "/cards/search",
   });
 };
+export const useFetchCardSearchRaw = () => {
+  return useFetch<Paginated<ICard[]>, ScryfallError, null, string>({
+    base: "SCRYFALL",
+    method: "GET",
+    route: "/cards/search",
+  });
+};
 export default useFetchCardSearch;

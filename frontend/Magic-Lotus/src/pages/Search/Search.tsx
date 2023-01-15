@@ -1,7 +1,7 @@
 import "./search.scss";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 // COMPONENTS
-import PageHeader from "../../components/PageHeader/PageHeader";
+import PageHeader from "../../components/Header/Header";
 import Card from "../../components/Card/Card";
 import Input from "../../components/Input/Input";
 import Main from "../../components/Main/Main";

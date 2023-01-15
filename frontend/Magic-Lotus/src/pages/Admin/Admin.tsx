@@ -12,7 +12,6 @@ import Spinner from "../../components/Spinner/Spinner";
 import Text from "../../components/Text/Text";
 import useModal from "../../hooks/useModal/useModal";
 import useUpdateAllCatalogs from "../../hooks/useUpdateAllCatalogs/useUpdateAllCatalogs";
-import PageHeader from "../../components/PageHeader/PageHeader";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import { useFetchGetCatalogNames } from "../../services/backend/Catalog.service";
@@ -23,6 +22,7 @@ import useUpdateAllSymbols from "../../hooks/useUpdateAllSymbols/useUpdateAllSym
 import Image from "../../components/Image/Image";
 import { useFetchGetAllSetNames } from "../../services/backend/Sets.service";
 import useUpdateAllSets from "../../hooks/useUpdateAllSets/useUpdateAllSets";
+import Header from "../../components/Header/Header";
 
 const MINIMIZED_SETS_COUNT = 20;
 
@@ -92,7 +92,11 @@ const Admin = () => {
     const fetchCatalogNames = async () => {
       const res = await FetchCatalogNames.triggerFetch();
       if (res.object === "aborted") return;
-      if (res.object === "magic_lotus_error") {
+      if (
+        res.object === "magic_lotus_error" ||
+        res.object === "network_error" ||
+        res.object === "unknown_error"
+      ) {
         setCatalogNames([]);
         openStatusModal(res.error);
         return;
@@ -103,19 +107,28 @@ const Admin = () => {
     const fetchSymbols = async () => {
       const res = await FetchSymbols.triggerFetch();
       if (res.object === "aborted") return;
-      if (res.object === "magic_lotus_error") {
+      if (
+        res.object === "magic_lotus_error" ||
+        res.object === "network_error" ||
+        res.object === "unknown_error"
+      ) {
         setSymbols([]);
         openStatusModal(res.error);
         return;
       }
+
       setSymbols(res.data);
     };
 
     const fetchSets = async () => {
       const res = await FetchSets.triggerFetch();
       if (res.object === "aborted") return;
-      if (res.object === "magic_lotus_error") {
-        setSymbols([]);
+      if (
+        res.object === "magic_lotus_error" ||
+        res.object === "network_error" ||
+        res.object === "unknown_error"
+      ) {
+        setSets([]);
         openStatusModal(res.error);
         return;
       }
@@ -148,7 +161,7 @@ const Admin = () => {
   return (
     <Main id="admin-page">
       <div className="middle">
-        <PageHeader title="Admin" />
+        <Header title="Admin" />
         <div className="cards">
           <div className="left">
             <Card className="catalogs">
