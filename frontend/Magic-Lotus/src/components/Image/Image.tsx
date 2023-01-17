@@ -6,14 +6,14 @@ interface ISize {
   width?: string;
   height?: string;
 }
-interface IProps {
+interface IProps extends React.HTMLAttributes<HTMLImageElement> {
   imageUrl: string | undefined;
   fallbackImageUrl: string;
   imageSize?: ISize;
   spinnerSize: ISpinnerSize;
   borderRadius?: string;
   alt?: string;
-  onClick?: () => void;
+  "data-testid"?: string;
 }
 
 const Image = (props: IProps) => {
@@ -28,6 +28,15 @@ const Image = (props: IProps) => {
     }
   }, [props.imageUrl]);
 
+  const {
+    imageUrl,
+    imageSize,
+    fallbackImageUrl,
+    spinnerSize,
+    borderRadius,
+    "data-testid": testId,
+    ...rest
+  } = props;
   return (
     <div
       className={`image-component${props.onClick ? " clickable" : ""}`}
@@ -39,8 +48,10 @@ const Image = (props: IProps) => {
             }
           : undefined
       }
+      data-testid={testId ? testId : undefined}
     >
       <img
+        {...rest}
         onClick={props.onClick}
         alt={props.alt}
         src={previewUrl}

@@ -35,6 +35,9 @@ type Props = {
   label?: string;
   isValidState?: boolean;
   validationMsg?: string;
+
+  // FOR TESTING AS data-* ATTRIBUTES ARE NOT AUTOMATICALLY ADDED UNLESS THE PROPS EXTEND A BUILT IN HTML ELEMENT.
+  "data-testid"?: string;
 };
 
 let initLoad = true;
@@ -70,6 +73,7 @@ const Choice = (props: Props) => {
 
   return (
     <div
+      data-testid={props["data-testid"] ? props["data-testid"] : undefined}
       className={`choice-component${props.variant ? ` ${props.variant}` : ""}`}
     >
       {props.label && (
@@ -85,6 +89,7 @@ const Choice = (props: Props) => {
         const id = `${choice.id}-${index}`;
         return (
           <ChoiceEntry
+            data-testid={choice.name}
             key={id}
             choice={choice}
             checked={isObjectInListNonInclude(choice, activeChoices)}
@@ -113,10 +118,12 @@ type PropsEntry = {
   checked: boolean;
   variant: "checkbox" | "radio";
   onClick: () => void;
+  "data-testid"?: string;
 };
 const ChoiceEntry = (props: PropsEntry) => {
   return (
     <div
+      data-testid={props["data-testid"] ? props["data-testid"] : undefined}
       key={props.id}
       className={`choice${props.checked ? " checked" : ""} ${props.variant}`}
       onClick={() => {
@@ -126,7 +133,7 @@ const ChoiceEntry = (props: PropsEntry) => {
       <label htmlFor={props.id}>
         {props.choice.image && (
           <div className="image">
-            <img src={props.choice.image} />
+            <img src={props.choice.image} alt={props.choice.name} />
           </div>
         )}
         {props.choice.name}
@@ -136,7 +143,6 @@ const ChoiceEntry = (props: PropsEntry) => {
         id={props.id}
         type={props.variant}
         value={props.choice.name}
-        data-testid="choice-input"
         checked={props.checked}
         onChange={(e) => {
           e.preventDefault();

@@ -60,10 +60,12 @@ interface IProps {
   stayOpenOnSelect?: boolean;
   minimumWaitTime?: number;
   onError?: (error: string) => void;
-  testId?: string;
 
   // OPEN HEIGHT
   menuHeight?: string;
+
+  // TESTING
+  "data-testid"?: string;
 }
 
 const MINIMUM_INPUT_WAIT_TIME = 100; // In milliseconds
@@ -232,7 +234,7 @@ const Dropdown = (props: IProps): ReactElement => {
 
   return (
     <div
-      data-testid={props.testId ? props.testId : "dropdown"}
+      data-testid={props["data-testid"] ? props["data-testid"] : "dropdown"}
       ref={dropdownRef}
       className={`dropdown-componenet${
         props.disabled === true ? " Disabled" : ""
@@ -295,6 +297,9 @@ const Dropdown = (props: IProps): ReactElement => {
         ) : null}
       </div>
       <div
+        data-testid={
+          props["data-testid"] ? `${props["data-testid"]}_MENU` : undefined
+        }
         ref={menuRef}
         className={`menu ${isOpen ? "opened" : "closed"}${
           props.menuPosition ? " " + props.menuPosition : ""

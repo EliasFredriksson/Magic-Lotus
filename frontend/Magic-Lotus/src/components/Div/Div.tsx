@@ -6,6 +6,9 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   sizeIncrement?: number;
 }
 
+// !!! THIS COMPONENT IS WORK IN PROGRESS !!!
+// Is not implemented anywhere yet.
+
 const DEFAULT_SIZE_INCREMENT = 20;
 const DEFAULT_SCROLL_THRESHOLD = 50;
 const Div = (props: Props) => {

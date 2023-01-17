@@ -11,6 +11,7 @@ import "./favorite.scss";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   card: ICard | null;
+  "data-testid"?: string;
 }
 
 const Favorite = (props: Props) => {
@@ -68,6 +69,7 @@ const Favorite = (props: Props) => {
   return isLoggedIn ? (
     <div
       {...props}
+      title={props.title ? props.title : "favorite-component"}
       className={`favorite-component${
         props.className ? ` ${props.className}` : ""
       }${isFav ? " is-fav" : " not-fav"}`}
@@ -76,6 +78,7 @@ const Favorite = (props: Props) => {
         else addFav();
         if (props.onClick) props.onClick(e);
       }}
+      data-testid={props["data-testid"] ? props["data-testid"] : undefined}
     >
       {isFav ? <IoHeartSharp /> : <IoHeartOutline />}
     </div>

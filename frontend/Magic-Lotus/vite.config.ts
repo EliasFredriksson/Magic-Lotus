@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
@@ -16,5 +18,15 @@ export default defineConfig({
     // headers: {
     //   "content-type": "application/json",
     // },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/tests.setup.ts",
+    environmentOptions: {
+      jsdom: {
+        resources: "usable",
+      },
+    },
   },
 });

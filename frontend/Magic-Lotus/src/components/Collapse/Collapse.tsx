@@ -1,43 +1,46 @@
 import "./collapse.scss";
 import { useRef } from "react";
 
-type IProps = {
+interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   children?: React.ReactNode;
   isOpen: boolean;
   direction: "vertical" | "horizontal";
   openSize: string;
-};
+}
 
 const Collapse = (props: IProps) => {
+  const { isOpen, openSize, direction, ...rest } = props;
+
   const collapseRef = useRef<HTMLDivElement>(null);
 
   const horizontalCss = {
-    maxWidth: props.isOpen ? collapseRef.current?.scrollWidth + "px" : 0,
+    maxWidth: isOpen ? collapseRef.current?.scrollWidth + "px" : "0px",
     transition: "max-width 0.5s ease",
   };
   const verticalCss = {
-    maxHeight: props.isOpen ? collapseRef.current?.scrollHeight + "px" : 0,
+    maxHeight: isOpen ? collapseRef.current?.scrollHeight + "px" : "0px",
     transition: "max-height 0.5s ease",
   };
 
   return (
     <div
-      className={`collapse-component${props.isOpen ? " open" : " closed"}${
+      {...rest}
+      className={`collapse-component${isOpen ? " open" : " closed"}${
         props.className ? ` ${props.className}` : ""
       }`}
       ref={collapseRef}
-      style={props.direction === "vertical" ? verticalCss : horizontalCss}
+      style={direction === "vertical" ? verticalCss : horizontalCss}
     >
       <div
         className={`inner`}
         style={
-          props.direction === "vertical"
+          direction === "vertical"
             ? {
-                height: props.openSize,
+                height: openSize,
               }
             : {
-                width: props.openSize,
+                width: openSize,
               }
         }
       >
