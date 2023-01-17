@@ -18,6 +18,7 @@ import { Price } from "../../models/scryfall/types/Prices";
 import Button from "../../components/Button/Button";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useSearch from "../../hooks/useSearch/useSearch";
+import Spinner from "../../components/Spinner/Spinner";
 
 const SingleCard = () => {
   const { id } = useParams();
@@ -84,7 +85,11 @@ const SingleCard = () => {
     <Main id="card-page">
       <div className="middle">
         <PageHeader title={card ? card.name : ""} />
-        {card ? (
+        {fetchCard.isLoading ? (
+          <div>
+            <Spinner variant="pulse" size="large" />
+          </div>
+        ) : card ? (
           <div className="wrapper">
             <div className="left">
               <MagicCard
@@ -93,7 +98,7 @@ const SingleCard = () => {
                 size={"art_crop"}
                 quality="normal"
               />
-              <Text size="xxl" family="heading">
+              <Text size="xxl" family="heading" as="h3">
                 {card.name}
               </Text>
               <Text>{card.type_line}</Text>
@@ -102,7 +107,7 @@ const SingleCard = () => {
             <div className="right">
               <Card>
                 {/* ORACLE TEXT */}
-                <Text>{card.oracle_text}</Text>
+                <Text as="pre">{card.oracle_text}</Text>
               </Card>
               <Card>
                 {/* POWER AND TOUGHNESS */}

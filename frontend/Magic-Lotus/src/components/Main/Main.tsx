@@ -2,13 +2,14 @@ import "./main.scss";
 import { useCallback, useEffect, useState } from "react";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 
-type Props = {
+interface Props extends React.HTMLAttributes<HTMLElement> {
   id: string;
   children?: React.ReactNode;
   onUnmounted?: () => void;
-};
+}
 
 const Main = (props: Props) => {
+  const { onUnmounted, children, id, ...rest } = props;
   const { show, goToPage } = useNavigate();
   const [shouldRender, setRender] = useState(show);
 
@@ -26,11 +27,12 @@ const Main = (props: Props) => {
 
   return shouldRender ? (
     <main
-      id={props.id}
+      {...rest}
+      id={id}
       className={`main-component${show ? " show" : " hide"}`}
       onAnimationEnd={onAnimationEnd}
     >
-      {props.children}
+      {children}
     </main>
   ) : (
     <></>

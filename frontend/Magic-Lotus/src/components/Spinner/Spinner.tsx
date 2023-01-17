@@ -1,15 +1,19 @@
 import "./spinner.scss";
 export type ISpinnerSize = "x-small" | "small" | "medium" | "large" | "x-large";
 
-type Props = {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   size: ISpinnerSize;
   variant?: "spinner" | "pulse";
-};
+}
 
-const Spinner = ({ size, variant }: Props) => {
+const Spinner = (props: Props) => {
+  const { variant, size, className, ...rest } = props;
   return (
     <div
-      className={`spinner-component ${size} ${variant ? variant : "spinner"}`}
+      {...rest}
+      className={`spinner-component ${size} ${variant ? variant : "spinner"}${
+        className ? ` ${className}` : ""
+      }`}
     >
       {variant === "pulse" ? (
         <>

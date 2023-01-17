@@ -39,7 +39,6 @@ describe("Collapse Component Tests", () => {
     const collapse = screen.getByTestId("TEST_COLLAPSE");
     const button = screen.getByText("TOGGLE_BUTTON");
 
-    screen.debug(collapse);
     expect(collapse).toHaveStyle("max-height: 0px");
 
     fireEvent.click(button);

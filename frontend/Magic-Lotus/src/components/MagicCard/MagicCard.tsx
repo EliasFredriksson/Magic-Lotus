@@ -72,12 +72,16 @@ const MagicCard = (props: Props) => {
     }
   }, [props.card, props.quality]);
 
+  const { onClick, disabled, ...rest } = props;
   return (
     <div
-      {...props}
-      className={`magic-card-component${props.disabled ? " disabled" : ""}${
+      {...rest}
+      className={`magic-card-component${disabled ? " disabled" : ""}${
         props.className ? ` ${props.className}` : ""
       }`}
+      onClick={(e) => {
+        if (!disabled && onClick) onClick(e);
+      }}
     >
       <Image
         imageUrl={calcImage()}

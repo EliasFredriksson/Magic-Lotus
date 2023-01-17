@@ -1,4 +1,5 @@
 import FontAlign from "../../models/frontend/types/FontAlign";
+import FontAs from "../../models/frontend/types/FontAs";
 import FontSize from "../../models/frontend/types/FontSize";
 import FontWeight from "../../models/frontend/types/FontWeight";
 import "./text.scss";
@@ -10,11 +11,13 @@ interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   align?: FontAlign;
   size?: FontSize;
   weight?: FontWeight;
+  as?: FontAs;
 }
 
 const Text = (props: Props) => {
+  const Tag = props.as ? props.as : "span";
   return (
-    <span
+    <Tag
       {...props}
       className={`text-component${
         props.className ? ` ${props.className}` : ""
@@ -25,7 +28,7 @@ const Text = (props: Props) => {
       }${props.align ? ` ${props.align}` : " start"}`}
     >
       {props.children}
-    </span>
+    </Tag>
   );
 };
 

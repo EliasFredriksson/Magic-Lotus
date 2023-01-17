@@ -1,24 +1,26 @@
 import "./navBar.scss";
-
+import { FormEvent, useCallback, useState } from "react";
+// COMPONENTS
 import Button from "../Button/Button";
-import useAuth from "../../hooks/useAuth/useAuth";
+import Collapse from "../Collapse/Collapse";
+import Text from "../Text/Text";
 import Input from "../Input/Input";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import Account from "./Account/Account";
+import Spinner from "../Spinner/Spinner";
+// HOOKS
+import useAuth from "../../hooks/useAuth/useAuth";
+import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
+import useBoolean from "../../hooks/useBoolean/useBoolean";
+import useSearch from "../../hooks/useSearch/useSearch";
+// ICONS
 import { FaHome } from "react-icons/fa";
 import { RxMagnifyingGlass } from "react-icons/rx";
-import useRouterContext from "../../hooks/useNavigate/useNavigate";
-import Collapse from "../Collapse/Collapse";
-import useBoolean from "../../hooks/useBoolean/useBoolean";
-import Text from "../Text/Text";
 import { IoClose, IoMenu } from "react-icons/io5";
-import Account from "./Account/Account";
-import useSearch from "../../hooks/useSearch/useSearch";
 import { isEmpty } from "../../helpers/StringValidations";
-import Spinner from "../Spinner/Spinner";
 
 const Navbar = () => {
-  const { navigate } = useRouterContext();
+  const { navigate } = useNavigate();
   const { credentials, isLoggedIn } = useAuth();
   const { breakpoints } = useScreenSize();
   const { value: isMenuOpen, on, off } = useBoolean();
@@ -84,20 +86,6 @@ const Navbar = () => {
       }}
     >
       Login
-    </Button>
-  );
-
-  const homeButton = (
-    <Button
-      className="home-button"
-      onClick={() => {
-        off();
-        navigate("/");
-      }}
-      fontSize="xl"
-    >
-      <FaHome />
-      <Text size={breakpoints.IS_MOBILE ? "xxl" : "l"}>Home</Text>
     </Button>
   );
 
@@ -167,9 +155,18 @@ const Navbar = () => {
       ) : (
         // DESKTOP MENU
         <>
-          {homeButton}
+          <Button
+            className="home-button"
+            onClick={() => {
+              off();
+              navigate("/");
+            }}
+            fontSize="xl"
+          >
+            <FaHome />
+            <Text size={breakpoints.IS_MOBILE ? "xxl" : "l"}>Home</Text>
+          </Button>
           {searchForm}
-
           {loginLogoutButton}
           {adminButton}
           <Account />
