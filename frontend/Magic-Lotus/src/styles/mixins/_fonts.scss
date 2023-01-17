@@ -1,4 +1,5 @@
 @use "../variables/fonts" as *;
+@use "./theme" as *;
 // COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontSize.ts"
 @mixin font-sizes {
   // FONT SIZES
@@ -67,5 +68,91 @@
   }
   &.end {
     text-align: end;
+  }
+}
+
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontAs.ts"
+@mixin font-as {
+  // HEADINGS
+  &:is(h1) {
+    font-size: $size-6xl;
+  }
+  &:is(h2) {
+    font-size: $size-5xl;
+  }
+  &:is(h3) {
+    font-size: $size-4xl;
+  }
+  &:is(h4) {
+    font-size: $size-3xl;
+  }
+  &:is(h5) {
+    font-size: $size-2xl;
+  }
+  &:is(h6) {
+    font-size: $size-xl;
+  }
+  &:is(h1),
+  &:is(h2),
+  &:is(h3),
+  &:is(h4),
+  &:is(h5),
+  &:is(h6) {
+    font-family: $heading-font;
+  }
+
+  // ALL TAGS WITH DEFAULT SIZE "$size-s"
+  &:is(sub),
+  &:is(sup),
+  &:is(small) {
+    font-size: $size-s;
+  }
+
+  // ALL TAGS WITH DEFAULT SIZE "$size-m"
+  &:is(p),
+  &:is(b),
+  &:is(i),
+  &:is(pre),
+  &:is(span),
+  &:is(ins) {
+    font-size: $size-m;
+  }
+
+  // ALL TAGS WITH DEFAULT SIZE "$size-m"
+  &:is(strong) {
+    font-size: $size-l;
+  }
+
+  // UNIQUE
+  &:is(em) {
+    font-size: $size-m;
+    font-weight: $weight-bold;
+  }
+  &:is(mark) {
+    @include dark-mode {
+      background-color: rgba(153, 148, 0, 0.45);
+    }
+    @include light-mode {
+      background-color: rgba(255, 247, 0, 0.5);
+    }
+  }
+  &:is(del) {
+    font-size: $size-m;
+    opacity: 0.8;
+  }
+  &:is(code) {
+    font-size: $size-m;
+    font-family: "Courier New", Courier, monospace !important;
+  }
+}
+
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontFamily.ts"
+@mixin font-family {
+  // HEADINGS
+  &.heading {
+    font-family: $heading-font !important;
+  }
+  &.main {
+    font-family: $main-font !important;
   }
 }

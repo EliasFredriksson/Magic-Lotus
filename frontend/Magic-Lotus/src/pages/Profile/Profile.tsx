@@ -116,130 +116,128 @@ const Profile = () => {
 
   return (
     <Main id="profile-page">
-      <div className="middle">
-        <Header title={`${profile.username}'s Profile`} />
+      <Header title={`${profile.username}'s Profile`} />
 
-        <div className="content">
-          <div className="left">
-            <Card>
-              <Text family="heading" size="xxl">
-                About
-              </Text>
-              <p>USERNAME: {profile.username}</p>
-              <p>ROLE: {profile.role}</p>
-              <p>EMAIL: {profile.email}</p>
-            </Card>
-            <Card className="favorites">
-              <Text family="heading" size="xxl">
-                Favorite Cards
-              </Text>
-              {profile.favoriteCards.length > 0 ? (
-                <div className="fav-wrapper">
-                  {profile.favoriteCards.map((card) => {
-                    console.log("CARD: ", card);
-                    return (
-                      <Image
-                        onClick={() => {
-                          navigate(`card/${card.id}`);
-                        }}
-                        key={card.id}
-                        imageUrl={card.imageUrl}
-                        fallbackImageUrl={""}
-                        spinnerSize="small"
-                        imageSize={{
-                          width: "20rem",
-                          // height: "20rem",
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <>
-                  <Text className="hint">
-                    You have not added any favorites yet
-                  </Text>
-                  <Button
-                    variant="link"
-                    fontWeight="bold"
-                    fontSize="l"
-                    onClick={() => fetchRandomCard()}
-                  >
-                    {FetchRandomCard.isLoading ? (
-                      <Spinner variant="pulse" size="small" />
-                    ) : (
-                      "Take me to a random card!"
-                    )}
-                  </Button>
-                </>
-              )}
-            </Card>
-          </div>
-
-          <Card className="right">
-            {isEditing.avatar ? (
-              <form onSubmit={handleUpdateAvatar} encType="multipart/form-data">
-                <ImageSelect
-                  saveOnChoice
-                  name="avatar"
-                  imageUrl={file?.file}
-                  fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
-                  imageSize={{
-                    width: "16rem",
-                    height: "16rem",
-                  }}
-                  onSave={(file) => {
-                    setFile(file);
-                  }}
-                />
-                <Button
-                  variant="success"
-                  type="submit"
-                  className="submit-avatar-button"
-                >
-                  {isLoading.avatar ? (
-                    <Spinner variant="pulse" size="medium" />
-                  ) : (
-                    "Save"
-                  )}
-                </Button>
-                <Button
-                  variant="primary"
-                  type="button"
-                  className="submit-avatar-button"
-                  onClick={() =>
-                    setIsEditing({
-                      avatar: false,
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              </form>
+      <div className="content">
+        <div className="left">
+          <Card>
+            <Text family="heading" size="xxl">
+              About
+            </Text>
+            <p>USERNAME: {profile.username}</p>
+            <p>ROLE: {profile.role}</p>
+            <p>EMAIL: {profile.email}</p>
+          </Card>
+          <Card className="favorites">
+            <Text family="heading" size="xxl">
+              Favorite Cards
+            </Text>
+            {profile.favoriteCards.length > 0 ? (
+              <div className="fav-wrapper">
+                {profile.favoriteCards.map((card) => {
+                  console.log("CARD: ", card);
+                  return (
+                    <Image
+                      onClick={() => {
+                        navigate(`card/${card.id}`);
+                      }}
+                      key={card.id}
+                      imageUrl={card.imageUrl}
+                      fallbackImageUrl={""}
+                      spinnerSize="small"
+                      imageSize={{
+                        width: "20rem",
+                        // height: "20rem",
+                      }}
+                    />
+                  );
+                })}
+              </div>
             ) : (
               <>
-                <Image
-                  imageUrl={file?.file}
-                  fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
-                  imageSize={{ width: "16rem", height: "16rem" }}
-                  spinnerSize="medium"
-                  borderRadius="50%"
-                />
+                <Text className="hint">
+                  You have not added any favorites yet
+                </Text>
                 <Button
                   variant="link"
-                  onClick={() =>
-                    setIsEditing({
-                      avatar: true,
-                    })
-                  }
+                  fontWeight="bold"
+                  fontSize="l"
+                  onClick={() => fetchRandomCard()}
                 >
-                  Change avatar
+                  {FetchRandomCard.isLoading ? (
+                    <Spinner variant="pulse" size="small" />
+                  ) : (
+                    "Take me to a random card!"
+                  )}
                 </Button>
-                <Text size="xxl">{profile.username}</Text>
               </>
             )}
           </Card>
         </div>
+
+        <Card className="right">
+          {isEditing.avatar ? (
+            <form onSubmit={handleUpdateAvatar} encType="multipart/form-data">
+              <ImageSelect
+                saveOnChoice
+                name="avatar"
+                imageUrl={file?.file}
+                fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
+                imageSize={{
+                  width: "16rem",
+                  height: "16rem",
+                }}
+                onSave={(file) => {
+                  setFile(file);
+                }}
+              />
+              <Button
+                variant="success"
+                type="submit"
+                className="submit-avatar-button"
+              >
+                {isLoading.avatar ? (
+                  <Spinner variant="pulse" size="medium" />
+                ) : (
+                  "Save"
+                )}
+              </Button>
+              <Button
+                variant="primary"
+                type="button"
+                className="submit-avatar-button"
+                onClick={() =>
+                  setIsEditing({
+                    avatar: false,
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            </form>
+          ) : (
+            <>
+              <Image
+                imageUrl={file?.file}
+                fallbackImageUrl={PUBLIC_FOLDER.IMAGES.USERS.DEFAULT}
+                imageSize={{ width: "16rem", height: "16rem" }}
+                spinnerSize="medium"
+                borderRadius="50%"
+              />
+              <Button
+                variant="link"
+                onClick={() =>
+                  setIsEditing({
+                    avatar: true,
+                  })
+                }
+              >
+                Change avatar
+              </Button>
+              <Text size="xxl">{profile.username}</Text>
+            </>
+          )}
+        </Card>
       </div>
     </Main>
   );

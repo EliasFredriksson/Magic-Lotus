@@ -2,7 +2,7 @@
 @use "../variables/fonts" as *;
 @use "../variables/spacings" as *;
 @use "../variables/borders" as *;
-@use "./scheme" as *;
+@use "./theme" as *;
 @use "./breakpoint" as *;
 
 @mixin basic-input {

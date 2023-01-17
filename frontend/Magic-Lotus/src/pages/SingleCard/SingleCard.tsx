@@ -83,117 +83,115 @@ const SingleCard = () => {
 
   return (
     <Main id="card-page">
-      <div className="middle">
-        <PageHeader title={card ? card.name : ""} />
-        {fetchCard.isLoading ? (
-          <div>
-            <Spinner variant="pulse" size="large" />
+      <PageHeader title={card ? card.name : ""} />
+      {fetchCard.isLoading ? (
+        <div>
+          <Spinner variant="pulse" size="large" />
+        </div>
+      ) : card ? (
+        <div className="wrapper">
+          <div className="left">
+            <MagicCard
+              disabled
+              card={card}
+              size={"art_crop"}
+              quality="normal"
+            />
+            <Text size="xxl" family="heading" as="h3">
+              {card.name}
+            </Text>
+            <Text>{card.type_line}</Text>
+            <Favorite card={card} />
           </div>
-        ) : card ? (
-          <div className="wrapper">
-            <div className="left">
-              <MagicCard
-                disabled
-                card={card}
-                size={"art_crop"}
-                quality="normal"
-              />
-              <Text size="xxl" family="heading" as="h3">
-                {card.name}
-              </Text>
-              <Text>{card.type_line}</Text>
-              <Favorite card={card} />
-            </div>
-            <div className="right">
-              <Card>
-                {/* ORACLE TEXT */}
-                <Text as="pre">{card.oracle_text}</Text>
-              </Card>
-              <Card>
-                {/* POWER AND TOUGHNESS */}
-                {card.power && card.toughness && (
-                  <>
-                    <div className="inner">
-                      <Text>Power / Toughness</Text>
-                      <Text>
-                        {card.power} / {card.toughness}
-                      </Text>
-                    </div>
-                    <Seperator direction="ver" />
-                  </>
-                )}
-                {/* TYPE*/}
-                <div className="inner">
-                  <Text>Card type:</Text>
-                  <Text weight="bold">{capitalizeWord(card.type_line)}</Text>
-                </div>
+          <div className="right">
+            <Card>
+              {/* ORACLE TEXT */}
+              <Text as="pre">{card.oracle_text}</Text>
+            </Card>
+            <Card>
+              {/* POWER AND TOUGHNESS */}
+              {card.power && card.toughness && (
+                <>
+                  <div className="inner">
+                    <Text>Power / Toughness</Text>
+                    <Text>
+                      {card.power} / {card.toughness}
+                    </Text>
+                  </div>
+                  <Seperator direction="ver" />
+                </>
+              )}
+              {/* TYPE*/}
+              <div className="inner">
+                <Text>Card type:</Text>
+                <Text weight="bold">{capitalizeWord(card.type_line)}</Text>
+              </div>
 
-                {/* MANA COST */}
-                <Seperator direction="ver" />
-                <div className="inner">
-                  <Text>Manacost:</Text>
-                  <Text weight="bold">{card.mana_cost}</Text>
-                </div>
+              {/* MANA COST */}
+              <Seperator direction="ver" />
+              <div className="inner">
+                <Text>Manacost:</Text>
+                <Text weight="bold">{card.mana_cost}</Text>
+              </div>
 
-                {/* COLOR IDENTITY */}
-                <Seperator direction="ver" />
-                <div className="inner">
-                  <Text>Color Identity:</Text>
-                  <Text weight="bold">{card.color_identity}</Text>
-                </div>
+              {/* COLOR IDENTITY */}
+              <Seperator direction="ver" />
+              <div className="inner">
+                <Text>Color Identity:</Text>
+                <Text weight="bold">{card.color_identity}</Text>
+              </div>
 
-                {/* RARITY */}
-                <Seperator direction="ver" />
-                <div className="inner">
-                  <Text>Rarity:</Text>
-                  <Text className={card.rarity} weight="bold">
-                    {capitalizeWord(card.rarity)}
-                  </Text>
-                </div>
-              </Card>
-              <Card>
-                <Text family="heading" size="xl">
-                  Price trends
+              {/* RARITY */}
+              <Seperator direction="ver" />
+              <div className="inner">
+                <Text>Rarity:</Text>
+                <Text className={card.rarity} weight="bold">
+                  {capitalizeWord(card.rarity)}
                 </Text>
+              </div>
+            </Card>
+            <Card>
+              <Text family="heading" size="xl">
+                Price trends
+              </Text>
 
-                <div className="prices">
-                  {Object.entries(card.prices).map(([key, value], index) => {
-                    const currency = (() => {
-                      const curr = key as Price;
-                      if (curr === "usd_etched") return "usd";
-                      if (curr === "usd_foil") return "usd";
-                      if (curr === "eur_foil") return "eur";
-                      return curr;
-                    })();
-                    if (key && value)
-                      return (
-                        <div className="inner" key={index}>
-                          <span>{key}</span>
-                          <span>{formatCurrency(currency, Number(value))}</span>
-                        </div>
-                      );
-                    else return;
-                  })}
-                </div>
-              </Card>
-              <Card>
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    const query = card.prints_search_uri.split("?")[1];
-                    console.log("QUERY: ", query);
-                    search(`?${query}`);
-                  }}
-                >
-                  Unique prints
-                </Button>
-              </Card>
-            </div>
+              <div className="prices">
+                {Object.entries(card.prices).map(([key, value], index) => {
+                  const currency = (() => {
+                    const curr = key as Price;
+                    if (curr === "usd_etched") return "usd";
+                    if (curr === "usd_foil") return "usd";
+                    if (curr === "eur_foil") return "eur";
+                    return curr;
+                  })();
+                  if (key && value)
+                    return (
+                      <div className="inner" key={index}>
+                        <span>{key}</span>
+                        <span>{formatCurrency(currency, Number(value))}</span>
+                      </div>
+                    );
+                  else return;
+                })}
+              </div>
+            </Card>
+            <Card>
+              <Button
+                variant="link"
+                onClick={() => {
+                  const query = card.prints_search_uri.split("?")[1];
+                  console.log("QUERY: ", query);
+                  search(`?${query}`);
+                }}
+              >
+                Unique prints
+              </Button>
+            </Card>
           </div>
-        ) : (
-          <></>
-        )}
-      </div>
+        </div>
+      ) : (
+        <></>
+      )}
       {errorModal}
     </Main>
   );

@@ -5,37 +5,11 @@
   flex-direction: row;
   gap: $spacing-m;
 
-  &.primary {
-    @include primary-button;
-  }
-  &.secondary {
-    @include secondary-button;
-  }
-  &.success {
-    @include success-button;
-  }
-  &.alert {
-    @include alert-button;
-  }
-  &.link {
-    @include link-button;
-  }
-  &.icon {
-    @include icon-button;
-  }
+  // BUTTON VARIANTS
+  @include button-variants;
 
-  &.small {
-    border-radius: $border-radius-small;
-  }
-  &.medium {
-    border-radius: $border-radius-medium;
-  }
-  &.large {
-    border-radius: $border-radius-large;
-  }
-  &.none {
-    border-radius: 0;
-  }
+  // BORDER RADIUS
+  @include border-radius;
 
   // FONT SIZES
   @include font-sizes;

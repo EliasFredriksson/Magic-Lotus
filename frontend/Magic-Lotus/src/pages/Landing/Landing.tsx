@@ -14,6 +14,7 @@ import useAuth from "../../hooks/useAuth/useAuth";
 import Account from "../../components/Navbar/Account/Account";
 import useFetchRandomCard from "../../services/scryfall/cards/Cards.random.service";
 import useUtility from "../../hooks/useUtility/useUtility";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 
 const Landing = () => {
   const [searchText, setSearchText] = useState("");
@@ -22,6 +23,7 @@ const Landing = () => {
   const { search, isLoading } = useSearch();
   const { isLoggedIn } = useAuth();
   const { navigate } = useNavigate();
+  const { breakpoints } = useScreenSize();
 
   const fetchRandomCard = useFetchRandomCard();
 
@@ -54,14 +56,17 @@ const Landing = () => {
 
   return (
     <Main id="landing-page">
-      <h1>Welcome to Magic Lotus!</h1>
-      <Text size="m" align="center">
-        <em>A Magic the Gathering search site powered by Scryfall</em>
+      <Text as={breakpoints.IS_MOBILE ? "h3" : "h2"} align="center">
+        Welcome to Magic Lotus!
+      </Text>
+      <Text as="em" align="center">
+        A Magic the Gathering search site powered by Scryfall
       </Text>
 
       <Card>
         <form onSubmit={handleSearch} className="landing-form">
           <Input
+            className="search-input"
             beforeDec={
               isLoading ? (
                 <Spinner variant="pulse" size="medium" />
@@ -107,6 +112,9 @@ const Landing = () => {
           ) : (
             "Take me to a random card!"
           )}
+        </Button>
+        <Button variant="link" onClick={handleRandomCard}>
+          Advanced search
         </Button>
       </Card>
     </Main>

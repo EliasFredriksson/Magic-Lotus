@@ -2,17 +2,30 @@
 @use "../variables/fonts" as *;
 @use "../variables/spacings" as *;
 @use "../variables/borders" as *;
-@use "./scheme" as *;
+@use "./theme" as *;
 @use "./breakpoint" as *;
+@use "./borders" as *;
 
-@mixin shadow-border(
-  $border-width,
-  $color,
-  $padding-v: inherit,
-  $padding-h: inherit
-) {
-  box-shadow: inset 0 0 0 $border-width $color;
-  padding: calc($padding-v - $border-width) calc($padding-h - $border-width);
+// COMBINE THE USECASE FOR THIS WITH "models/frontend/types/ButtonVariant.ts"
+@mixin button-variants {
+  &.primary {
+    @include primary-button;
+  }
+  &.secondary {
+    @include secondary-button;
+  }
+  &.success {
+    @include success-button;
+  }
+  &.alert {
+    @include alert-button;
+  }
+  &.link {
+    @include link-button;
+  }
+  &.icon {
+    @include icon-button;
+  }
 }
 
 @mixin button-base {

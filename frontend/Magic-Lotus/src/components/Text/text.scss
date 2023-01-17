@@ -9,19 +9,19 @@
     color: $white;
   }
 
-  // FONT FAMILY
-  &.main {
-    font-family: $main-font;
-  }
-  &.heading {
-    font-family: $heading-font;
-  }
+  // ################ ORDER OF PRIORITY (WHAT OVERRIDES WHAT) ################
+  // FONT AS
+  @include font-as;
 
   // FONT WEIGHT
   @include font-weights;
 
   // FONT SIZES
   @include font-sizes;
+
+  // FONT FAMILY
+  @include font-family;
+  // #########################################################################
 
   &.clickable {
     cursor: pointer;

@@ -16,17 +16,21 @@
     }
   }
 
-  @include breakpoint-laptop {
+  @include breakpoint-tablet {
     justify-content: center;
   }
 
   .landing-form {
-    @include display-flex-row;
+    @include display-flex-column;
     gap: $spacing-m;
 
     @include breakpoint-tablet {
       flex-direction: row;
       align-items: center;
+    }
+
+    .search-input {
+      flex-grow: 1;
     }
   }
 }

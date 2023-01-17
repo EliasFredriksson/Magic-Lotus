@@ -1,3 +1,4 @@
+@use "../../styles/all" as *;
 .main-component {
   display: flex;
   flex-direction: column;
@@ -31,5 +32,12 @@
     to {
       opacity: 0;
     }
+  }
+
+  & > .middle {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: $spacing-l;
   }
 }

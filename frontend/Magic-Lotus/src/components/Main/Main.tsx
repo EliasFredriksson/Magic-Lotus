@@ -32,7 +32,7 @@ const Main = (props: Props) => {
       className={`main-component${show ? " show" : " hide"}`}
       onAnimationEnd={onAnimationEnd}
     >
-      {children}
+      <div className="middle">{children}</div>
     </main>
   ) : (
     <></>

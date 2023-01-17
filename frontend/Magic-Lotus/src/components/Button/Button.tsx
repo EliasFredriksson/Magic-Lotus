@@ -1,14 +1,16 @@
+import BorderRadius from "../../models/frontend/types/BorderRadius";
+import ButtonVariant from "../../models/frontend/types/ButtonVariant";
 import FontSize from "../../models/frontend/types/FontSize";
 import FontWeight from "../../models/frontend/types/FontWeight";
 import "./button.scss";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  variant?: "primary" | "secondary" | "success" | "alert" | "link" | "icon";
   children?: React.ReactNode;
-  borderRadius?: "small" | "medium" | "large" | "none";
+  variant?: ButtonVariant;
   fontSize?: FontSize;
   fontWeight?: FontWeight;
+  borderRadius?: BorderRadius;
 }
 
 const Button = (props: Props) => {

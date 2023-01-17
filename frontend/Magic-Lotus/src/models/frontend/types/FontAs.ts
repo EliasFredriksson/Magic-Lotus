@@ -22,5 +22,6 @@ type FontAs =
   | "del" // Deleted
   | "ins" // Inserted
   | "sub" // Subscript
-  | "sup"; // Superescript
+  | "sup" // Superescript
+  | "code"; // Code
 export default FontAs;

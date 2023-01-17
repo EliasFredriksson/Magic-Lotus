@@ -1,5 +1,5 @@
 @use "../variables/colors" as *;
-@use "./scheme" as *;
+@use "./theme" as *;
 
 @mixin primary-scrollbar {
   ::-webkit-scrollbar {

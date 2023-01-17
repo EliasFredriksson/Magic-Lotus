@@ -1,5 +1,6 @@
 import FontAlign from "../../models/frontend/types/FontAlign";
 import FontAs from "../../models/frontend/types/FontAs";
+import FontFamily from "../../models/frontend/types/FontFamily";
 import FontSize from "../../models/frontend/types/FontSize";
 import FontWeight from "../../models/frontend/types/FontWeight";
 import "./text.scss";
@@ -7,11 +8,11 @@ import "./text.scss";
 interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   className?: string;
   children?: React.ReactNode;
-  family?: "main" | "heading";
-  align?: FontAlign;
-  size?: FontSize;
-  weight?: FontWeight;
-  as?: FontAs;
+  family?: FontFamily; // No default
+  align?: FontAlign; // No default
+  size?: FontSize; // No default
+  weight?: FontWeight; // No default
+  as?: FontAs; // Defaults to 'span'
 }
 
 const Text = (props: Props) => {
@@ -21,11 +22,11 @@ const Text = (props: Props) => {
       {...props}
       className={`text-component${
         props.className ? ` ${props.className}` : ""
-      }${props.family ? ` ${props.family}` : " main"}${
-        props.size ? ` ${props.size}` : " m"
-      }${props.weight ? ` ${props.weight}` : " medium"}${
+      }${props.family ? ` ${props.family}` : ""}${
+        props.size ? ` ${props.size}` : ""
+      }${props.weight ? ` ${props.weight}` : ""}${
         props.onClick ? " clickable" : ""
-      }${props.align ? ` ${props.align}` : " start"}`}
+      }${props.align ? ` ${props.align}` : ""}`}
     >
       {props.children}
     </Tag>

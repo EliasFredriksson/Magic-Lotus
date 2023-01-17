@@ -4,6 +4,7 @@ import React from "react";
 type IProps = PropsInput | PropsTextArea;
 type PropsInput = React.InputHTMLAttributes<HTMLInputElement> & {
   // INPUT TAG
+  className?: string;
   placeholder: string;
   type: // BIT OF AN UGLY SOLUTION BUT IT REMOVES THE * WITH (string & {})
   | "button"
@@ -52,6 +53,7 @@ type PropsInput = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 type PropsTextArea = React.HTMLAttributes<HTMLTextAreaElement> & {
   // INPUT TAG
+  className?: string;
   placeholder: string;
   type: "textarea";
   name?: string;
@@ -80,9 +82,11 @@ type PropsTextArea = React.HTMLAttributes<HTMLTextAreaElement> & {
 const Input = (props: IProps) => {
   return (
     <div
-      className={`input-component ${
-        props.isValid === undefined || props.isValid ? "" : "invalid"
-      } ${props.disabled ? "disabled" : ""}`}
+      className={`input-component${
+        props.isValid === undefined || props.isValid ? "" : " invalid"
+      } ${props.disabled ? " disabled" : ""}${
+        props.className ? ` ${props.className}` : ""
+      }`}
     >
       {props.label && (
         <label className="input-label" htmlFor={props.id}>
