@@ -21,12 +21,18 @@
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 2rem;
-    box-shadow: inset -1rem 0 0 1rem $primary-500;
     border: solid 1rem transparent;
     // border-right: solid 1rem transparent;
     // border-left: solid 1rem transparent;
     min-height: 3rem;
     cursor: grab;
+
+    @include light-mode {
+      box-shadow: inset -1rem 0 0 1rem $primary-100;
+    }
+    @include dark-mode {
+      box-shadow: inset -1rem 0 0 1rem $primary-500;
+    }
   }
 }
 @mixin secondary-scrollbar {

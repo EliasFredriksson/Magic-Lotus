@@ -1,8 +1,6 @@
 @use "../../styles/all" as *;
 .main-component {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  @include page-base;
 
   &.show {
     animation: show 500ms forwards;

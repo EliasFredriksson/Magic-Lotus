@@ -1,14 +1,6 @@
 @use "../../styles/all" as *;
 
 .text-component {
-  // LIGHT / DARK MODE
-  @include light-mode {
-    color: $black;
-  }
-  @include dark-mode {
-    color: $white;
-  }
-
   // ################ ORDER OF PRIORITY (WHAT OVERRIDES WHAT) ################
   // FONT AS
   @include font-as;

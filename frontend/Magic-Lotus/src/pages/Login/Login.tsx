@@ -124,7 +124,7 @@ const Login = () => {
 
   return (
     <Main id="login-page">
-      <Text family="heading" size="xxxxl" weight="bold">
+      <Text as="h3" weight="bold" align="center">
         Login
       </Text>
       <Card>
@@ -142,6 +142,7 @@ const Login = () => {
             }}
             isValid={inputValidity.email}
             validationMsg={validationMsg.email}
+            fontSize="l"
           />
 
           <Input
@@ -157,6 +158,7 @@ const Login = () => {
             }}
             isValid={inputValidity.password}
             validationMsg={validationMsg.password}
+            fontSize="l"
           />
 
           <Button type="submit">

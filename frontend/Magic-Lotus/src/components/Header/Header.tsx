@@ -27,7 +27,7 @@ const Header = (props: Props) => {
       >
         <IoArrowBackOutline />
       </Button>
-      <Text size="xxxl" family="heading" as="h1">
+      <Text family="heading" as="h4">
         {props.title}
       </Text>
     </header>

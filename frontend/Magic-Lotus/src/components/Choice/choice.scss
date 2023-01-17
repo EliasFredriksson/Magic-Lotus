@@ -7,7 +7,7 @@
   align-items: flex-start;
   gap: $spacing-m;
 
-  .choice-label {
+  & > .choice-label {
     @include basic-label;
     transition: color 0.2s ease;
     &.invalid {
@@ -15,9 +15,8 @@
     }
   }
 
-  .choice {
+  & > .choice {
     font-family: $main-font;
-    font-size: $size-m;
     background: none;
     border: none;
     outline: none;
@@ -82,8 +81,11 @@
     }
     &.checkbox {
       &.checked {
-        color: $white;
         font-weight: $weight-bold;
+
+        @include dark-mode {
+          color: $white;
+        }
 
         &::before {
           content: "\2713";
@@ -100,8 +102,8 @@
         border: none;
         outline: none;
         border-radius: $border-radius-small;
-        height: $size-xl;
-        width: $size-xl;
+        height: calc($spacing-s + 1em);
+        width: calc($spacing-s + 1em);
         background-color: transparent;
         transition: background-color 0.1s ease, box-shadow 0.1s ease;
 
@@ -128,11 +130,11 @@
     }
   }
 
-  .validation-msg {
+  & > .validation-msg {
     font-family: $main-font;
     position: absolute;
     transition: top 0.2s ease, opacity 0.2s ease, color 0.2s ease;
-    font-size: $size-m;
+    font-size: 0.7em;
     color: $alert-500;
 
     &.show {
@@ -145,4 +147,6 @@
       opacity: 0;
     }
   }
+
+  @include font-sizes;
 }

@@ -3,29 +3,27 @@
 #results-page {
   @include page-base;
 
-  .middle {
-    .spinner-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 40rem;
-      width: 100%;
+  .spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40rem;
+    width: 100%;
+  }
+
+  .results {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-m;
+
+    @include breakpoint-tablet {
+      grid-template-columns: repeat(3, 1fr);
     }
-
-    .results {
-      display: grid;
-      justify-items: center;
-      align-items: center;
-      grid-template-columns: repeat(2, 1fr);
-      gap: $spacing-m;
-
-      @include breakpoint-tablet {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      @include breakpoint-desktop {
-        grid-template-columns: repeat(4, 1fr);
-        gap: $spacing-l;
-      }
+    @include breakpoint-desktop {
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-l;
     }
   }
 }

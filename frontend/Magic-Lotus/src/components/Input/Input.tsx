@@ -1,11 +1,9 @@
 import "./input.scss";
 import React from "react";
+import FontSize from "../../models/frontend/types/FontSize";
 
 type IProps = PropsInput | PropsTextArea;
 type PropsInput = React.InputHTMLAttributes<HTMLInputElement> & {
-  // INPUT TAG
-  className?: string;
-  placeholder: string;
   type: // BIT OF AN UGLY SOLUTION BUT IT REMOVES THE * WITH (string & {})
   | "button"
     | "checkbox"
@@ -29,54 +27,42 @@ type PropsInput = React.InputHTMLAttributes<HTMLInputElement> & {
     | "time"
     | "url"
     | "week";
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
+} & PropShared;
+type PropsTextArea = React.HTMLAttributes<HTMLTextAreaElement> & {
+  // UNIQUE TYPE
+  type: "textarea";
+  onChange: (value: React.ChangeEvent<HTMLTextAreaElement>) => void;
+} & PropShared;
+
+type PropShared = {
+  // CLASSNAME
+  className?: string;
+  // PLACEHOLDER
+  placeholder: string;
+  // NAME
   name?: string;
+  // AFTER / BEFORE DEC
+  beforeDec?: React.ReactElement | string;
+  afterDec?: React.ReactElement | string;
+  // TAB INDEX
+  tabIndex?: number;
+  // IF type="date", DEFINE MIN / MAX
+  min?: string;
+  max?: string;
+  // DISABLED
+  disabled?: boolean;
+  // VALID STATE
+  isValid?: boolean;
+  validationMsg?: string;
   // LABELS
   label?: string;
   id?: string;
   // INPUT STATE
   value?: string;
-  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
-  // VALID STATE
-  isValid?: boolean;
-  validationMsg?: string;
-  // TAB INDEX
-  tabIndex?: number;
-  // IF type="date", DEFINE MIN / MAX
-  min?: string;
-  max?: string;
-  // DISABLED
-  disabled?: boolean;
 
-  // AFTER / BEFORE DEC
-  beforeDec?: React.ReactElement | string;
-  afterDec?: React.ReactElement | string;
-};
-type PropsTextArea = React.HTMLAttributes<HTMLTextAreaElement> & {
-  // INPUT TAG
-  className?: string;
-  placeholder: string;
-  type: "textarea";
-  name?: string;
-  // LABELS
-  label?: string;
-  id?: string;
-  // INPUT STATE
-  value: string;
-  onChange: (value: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  // VALID STATE
-  isValid?: boolean;
-  validationMsg?: string;
-  // TAB INDEX
-  tabIndex?: number;
-  // IF type="date", DEFINE MIN / MAX
-  min?: string;
-  max?: string;
-  // DISABLED
-  disabled?: boolean;
-
-  // AFTER / BEFORE DEC
-  beforeDec?: React.ReactElement | string;
-  afterDec?: React.ReactElement | string;
+  // FONT SIZE
+  fontSize?: FontSize; // Defaults to 'm'
 };
 
 const Input = (props: IProps) => {
@@ -86,16 +72,20 @@ const Input = (props: IProps) => {
         props.isValid === undefined || props.isValid ? "" : " invalid"
       } ${props.disabled ? " disabled" : ""}${
         props.className ? ` ${props.className}` : ""
-      }`}
+      }${props.fontSize ? ` ${props.fontSize}` : " l"}`}
     >
       {props.label && (
-        <label className="input-label" htmlFor={props.id}>
+        <label className={`input-label`} htmlFor={props.id}>
           {props.id
             ? props.label
             : "You need to provide an 'id' prop for label!"}
         </label>
       )}
-      <div className="inner-wrapper">
+      <div
+        className={`inner-wrapper${
+          props.fontSize ? ` ${props.fontSize}` : " m"
+        }`}
+      >
         {props.beforeDec && <div className="before">{props.beforeDec}</div>}
         {props.type === "textarea" ? (
           <textarea

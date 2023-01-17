@@ -1,12 +1,11 @@
 @use "../../styles/all" as *;
 
 #search-page {
-  @include page-base;
-
-  .middle {
-    width: 100%;
-
-    .card-component {
+  .advanced-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+    .top-card {
       gap: $spacing-l;
       @include breakpoint-laptop {
         gap: $spacing-2xl;
@@ -61,11 +60,21 @@
         &.rarity {
           // RARITY COLORS
 
+          .choice label {
+            font-weight: $weight-bold;
+          }
+
           .choice:nth-child(2) label {
             color: #d1d1d1;
+            @include light-mode {
+              text-shadow: 0px 0px 1px black;
+            }
           }
           .choice:nth-child(3) label {
             color: #f0e264;
+            @include light-mode {
+              text-shadow: 0px 0px 1px black;
+            }
           }
           .choice:nth-child(4) label {
             color: #ff7a0e;
@@ -129,7 +138,7 @@
       }
     }
 
-    .submit-wrapper {
+    .bottom-card {
       align-items: center;
 
       @include breakpoint-tablet {

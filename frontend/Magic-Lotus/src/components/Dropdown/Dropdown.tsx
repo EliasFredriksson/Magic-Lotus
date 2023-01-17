@@ -13,6 +13,7 @@ import useOutsideClick from "../../hooks/useOutsideClick/useOutsideClick";
 import { areObjectsEqual } from "../../helpers/ObjectValidations";
 import useKeyboard from "../../hooks/useKeyboard/useKeyboard";
 import Spinner from "../Spinner/Spinner";
+import FontSize from "../../models/frontend/types/FontSize";
 
 type DropdownCategory = {
   id: string;
@@ -60,6 +61,7 @@ interface IProps {
   stayOpenOnSelect?: boolean;
   minimumWaitTime?: number;
   onError?: (error: string) => void;
+  fontSize?: FontSize;
 
   // OPEN HEIGHT
   menuHeight?: string;
@@ -238,7 +240,7 @@ const Dropdown = (props: IProps): ReactElement => {
       ref={dropdownRef}
       className={`dropdown-componenet${
         props.disabled === true ? " Disabled" : ""
-      }`}
+      }${props.fontSize ? ` ${props.fontSize}` : " l"}`}
     >
       {props.label && (
         <label className="input-label" htmlFor={props.id}>

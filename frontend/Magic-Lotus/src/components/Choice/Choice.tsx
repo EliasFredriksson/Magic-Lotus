@@ -1,6 +1,7 @@
 import "./choice.scss";
 import { useCallback, useEffect, useState } from "react";
 import { isObjectInListNonInclude } from "../../helpers/ListValidations";
+import FontSize from "../../models/frontend/types/FontSize";
 
 type ChoiceWithImg = {
   id: string;
@@ -35,6 +36,7 @@ type Props = {
   label?: string;
   isValidState?: boolean;
   validationMsg?: string;
+  fontSize?: FontSize; // Defaults to 'l'
 
   // FOR TESTING AS data-* ATTRIBUTES ARE NOT AUTOMATICALLY ADDED UNLESS THE PROPS EXTEND A BUILT IN HTML ELEMENT.
   "data-testid"?: string;
@@ -74,7 +76,9 @@ const Choice = (props: Props) => {
   return (
     <div
       data-testid={props["data-testid"] ? props["data-testid"] : undefined}
-      className={`choice-component${props.variant ? ` ${props.variant}` : ""}`}
+      className={`choice-component${props.variant ? ` ${props.variant}` : ""}${
+        props.fontSize ? ` ${props.fontSize}` : " l"
+      }`}
     >
       {props.label && (
         <label

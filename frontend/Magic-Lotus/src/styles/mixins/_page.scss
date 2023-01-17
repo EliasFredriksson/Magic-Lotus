@@ -22,7 +22,7 @@
 
   & > .middle {
     @include display-flex-column;
-    max-width: $breakpoint-laptop;
-    width: fit-content;
+    max-width: $breakpoint-desktop;
+    width: 100%;
   }
 }

@@ -466,9 +466,9 @@ const Search = () => {
 
   return (
     <Main id="search-page">
-      <form onSubmit={triggerSearch} className="middle">
-        <PageHeader title="Advanced Search" />
-        <Card>
+      <PageHeader title="Advanced Search" />
+      <form onSubmit={triggerSearch} className="advanced-search-form">
+        <Card className="top-card">
           {/* CARD NAME */}
           <div className="search-field">
             <div className="label">
@@ -484,6 +484,7 @@ const Search = () => {
                   cardName: e.target.value,
                 });
               }}
+              fontSize="xxl"
             />
           </div>
           <Seperator direction="ver" />
@@ -540,6 +541,7 @@ const Search = () => {
               menuHeight="50rem"
               menuPosition="relative"
               startValue={inputs.cardTypes}
+              fontSize="l"
             />
 
             <div className="inner padded">
@@ -552,6 +554,7 @@ const Search = () => {
                   });
                 }}
                 startValue={inputs.allowPartial}
+                fontSize="l"
               />
 
               <Text size="xs">
@@ -836,7 +839,7 @@ const Search = () => {
 
           {/* SUBMIT */}
         </Card>
-        <Card className="submit-wrapper">
+        <Card className="bottom-card">
           <Button
             variant="secondary"
             className="reset-button"

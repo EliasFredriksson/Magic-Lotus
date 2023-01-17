@@ -4,8 +4,9 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-s;
-  font-size: $size-m;
   position: relative;
+
+  @include font-sizes;
 
   &.invalid {
     color: $alert-100 !important;
@@ -22,14 +23,45 @@
     }
   }
 
-  .inner-wrapper {
-    @include basic-input;
+  & > .inner-wrapper {
+    // @include basic-input;
     display: flex;
     align-items: center;
     gap: $spacing-s;
 
-    .input-textarea,
-    .input-regular {
+    font-family: $main-font;
+    padding: $spacing-s $spacing-m;
+    border-radius: $border-radius-medium;
+    border: 0;
+    transition: color 0.2s ease;
+    min-width: 0px;
+
+    @include dark-mode {
+      background-color: $gray-900;
+      box-shadow: inset 0px 0px 5px 0px $gray-1100;
+    }
+    @include light-mode {
+      background-color: $white;
+      box-shadow: inset 0px 0px 5px 0px $gray-100;
+    }
+
+    &::placeholder {
+      @include light-mode {
+        color: $gray-300;
+      }
+      @include dark-mode {
+        color: $gray-500;
+      }
+    }
+
+    // NO '&' SELECTOR TO AFFECT CHILDREN ASWELL
+    :focus {
+      border: 0;
+      outline: 0;
+    }
+
+    & > .input-textarea,
+    & > .input-regular {
       width: 100%;
       border: none;
       background: transparent;
@@ -41,11 +73,6 @@
       &::-webkit-outer-spin-button,
       &::-webkit-inner-spin-button {
         display: none;
-      }
-
-      &:focus {
-        border: 0;
-        outline: 0;
       }
 
       &[type="file"] {
@@ -72,22 +99,22 @@
       }
     }
 
-    .input-textarea {
+    & > .input-textarea {
       min-height: 10rem;
     }
 
-    .input-label {
-      @include basic-label;
+    & > .input-label {
+      font-family: $heading-font;
       margin-left: $spacing-s;
     }
   }
 
-  .validation-msg {
+  & > .validation-msg {
     font-family: $main-font;
     position: absolute;
     left: $spacing-m;
     transition: top 0.2s ease, opacity 0.2s ease, color 0.2s ease;
-    font-size: 0.8em;
+    font-size: 0.7em;
 
     &.show {
       top: calc(99% + $spacing-s);

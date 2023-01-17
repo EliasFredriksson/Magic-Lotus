@@ -168,9 +168,15 @@
   }
   @include dark-mode {
     color: $link-blue-dark;
+    a {
+      color: $link-blue-dark;
+    }
   }
   @include light-mode {
     color: $link-blue-light;
+    a {
+      color: $link-blue-light;
+    }
   }
 }
 

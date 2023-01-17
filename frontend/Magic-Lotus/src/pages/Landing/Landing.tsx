@@ -15,6 +15,7 @@ import Account from "../../components/Navbar/Account/Account";
 import useFetchRandomCard from "../../services/scryfall/cards/Cards.random.service";
 import useUtility from "../../hooks/useUtility/useUtility";
 import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
+import { Seperator } from "../../components/Seperator/Seperator";
 
 const Landing = () => {
   const [searchText, setSearchText] = useState("");
@@ -67,13 +68,7 @@ const Landing = () => {
         <form onSubmit={handleSearch} className="landing-form">
           <Input
             className="search-input"
-            beforeDec={
-              isLoading ? (
-                <Spinner variant="pulse" size="medium" />
-              ) : (
-                <RxMagnifyingGlass />
-              )
-            }
+            beforeDec={<RxMagnifyingGlass />}
             type="text"
             placeholder="Search for cards"
             value={searchText}
@@ -82,9 +77,17 @@ const Landing = () => {
             }}
           />
           <Button type="submit" variant="secondary">
-            <Text size="xl">Search!</Text>
+            {isLoading ? (
+              <Spinner variant="pulse" size="medium" />
+            ) : (
+              <Text size="xl">Search!</Text>
+            )}
           </Button>
         </form>
+        <Button type="button" variant="link">
+          <Text size={breakpoints.IS_MOBILE ? "xl" : "l"}>Advanced Search</Text>
+        </Button>
+        <Seperator direction="ver" />
         {isLoggedIn ? (
           <>
             <Button
