@@ -127,7 +127,12 @@ const Input = (props: IProps) => {
         {props.afterDec && <div className="after">{props.afterDec}</div>}
       </div>
 
-      <span className={`validation-msg ${!props.isValid ? "show" : "hide"}`}>
+      <span
+        className={`validation-msg ${props.isValid ? "hide" : "show"}`}
+        style={{
+          opacity: props.isValid ? 0 : 1,
+        }}
+      >
         {props.validationMsg}
       </span>
     </div>

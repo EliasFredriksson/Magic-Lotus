@@ -91,12 +91,10 @@
 
     &.show {
       top: calc(99% + $spacing-s);
-      opacity: 1;
     }
 
     &.hide {
       top: calc(100% - 1.5rem);
-      opacity: 0;
     }
   }
 }

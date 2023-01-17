@@ -21,6 +21,10 @@
         gap: $spacing-m;
         align-items: center;
         text-align: center;
+
+        @include breakpoint-laptop {
+          max-width: 30%;
+        }
       }
 
       .right {
