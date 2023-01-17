@@ -48,7 +48,7 @@ const MagicCard = (props: Props) => {
     >
       <Image
         imageUrl={calcImage()}
-        fallbackImageUrl={PUBLIC_FOLDER.IMAGES.CARD.BACKSIDE} // TO BE ADDED
+        fallbackImageUrl={PUBLIC_FOLDER.IMAGES.CARD.BACKSIDE_WITH_ERROR} // TO BE ADDED
         spinnerSize="medium"
         imageSize={
           breakpoints.IS_MOBILE || breakpoints.IS_TABLET

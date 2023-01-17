@@ -1,6 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import Button from "../../components/Button/Button";
 import Card from "../../components/Card/Card";
+import Header from "../../components/Header/Header";
 import ImageSelect from "../../components/ImageSelect/ImageSelect";
 import Input from "../../components/Input/Input";
 import Main from "../../components/Main/Main";
@@ -158,9 +159,7 @@ const Register = () => {
 
   return (
     <Main id="register-page">
-      <Text family="heading" size="xxxxl" weight="bold">
-        Register
-      </Text>
+      <Header title="Register" />
       <Card>
         <form
           onSubmit={handleSubmit}

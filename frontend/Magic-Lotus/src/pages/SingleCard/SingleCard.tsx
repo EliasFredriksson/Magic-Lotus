@@ -119,7 +119,9 @@ const SingleCard = () => {
               {/* TYPE*/}
               <div className="inner">
                 <Text>Card type:</Text>
-                <Text weight="bold">{capitalizeWord(card.type_line)}</Text>
+                <Text weight="bold" align="end">
+                  {capitalizeWord(card.type_line)}
+                </Text>
               </div>
 
               {/* MANA COST */}
@@ -162,8 +164,8 @@ const SingleCard = () => {
                   if (key && value)
                     return (
                       <div className="inner" key={index}>
-                        <span>{key}</span>
-                        <span>{formatCurrency(currency, Number(value))}</span>
+                        <Text>{key}</Text>
+                        <Text>{formatCurrency(currency, Number(value))}</Text>
                       </div>
                     );
                   else return;

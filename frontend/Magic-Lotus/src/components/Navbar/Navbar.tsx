@@ -57,6 +57,7 @@ const Navbar = () => {
           onChange={(e) => {
             setSearchTerm(e.target.value);
           }}
+          fontSize={breakpoints.IS_MOBILE ? "xxl" : "l"}
         />
         <button type="submit" className="nav-submit-button">
           Submit

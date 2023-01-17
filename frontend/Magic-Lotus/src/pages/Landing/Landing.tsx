@@ -11,7 +11,6 @@ import Text from "../../components/Text/Text";
 import Card from "../../components/Card/Card";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useAuth from "../../hooks/useAuth/useAuth";
-import Account from "../../components/Navbar/Account/Account";
 import useFetchRandomCard from "../../services/scryfall/cards/Cards.random.service";
 import useUtility from "../../hooks/useUtility/useUtility";
 import useScreenSize from "../../hooks/useScreenSize/useScreenSize";

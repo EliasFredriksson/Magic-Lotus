@@ -15,6 +15,8 @@ import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useUtility from "../../hooks/useUtility/useUtility";
 import Text from "../../components/Text/Text";
 import { isValid } from "../../helpers/InputValidityHelpers";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
+import Header from "../../components/Header/Header";
 
 interface IInputValidity {
   email: boolean;
@@ -38,6 +40,7 @@ const Login = () => {
   const { openStatusModal, updateTitle } = useUtility(); // UTILITY FUNCTIONS
   const { login } = useAuth(); // AUTHENTICATION
   const { navigate } = useNavigate(); // NAVIGATE
+  const { breakpoints } = useScreenSize();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/"; // CHECK IF WE WERE HEADING TO ANOTHER PAGE.
 
@@ -124,10 +127,9 @@ const Login = () => {
 
   return (
     <Main id="login-page">
-      <Text as="h3" weight="bold" align="center">
-        Login
-      </Text>
-      <Card>
+      <Header title="Login" />
+
+      <Card className="login-card">
         <form onSubmit={handleSubmit} className="login-form">
           <Input
             label="Email"
@@ -142,7 +144,7 @@ const Login = () => {
             }}
             isValid={inputValidity.email}
             validationMsg={validationMsg.email}
-            fontSize="l"
+            fontSize={breakpoints.IS_MOBILE ? "l" : "xl"}
           />
 
           <Input
@@ -158,10 +160,10 @@ const Login = () => {
             }}
             isValid={inputValidity.password}
             validationMsg={validationMsg.password}
-            fontSize="l"
+            fontSize={breakpoints.IS_MOBILE ? "l" : "xl"}
           />
 
-          <Button type="submit">
+          <Button type="submit" fontSize={breakpoints.IS_MOBILE ? "l" : "xl"}>
             {FetchLogin.isLoading ? (
               <Spinner size="medium" variant="pulse" />
             ) : (
@@ -169,8 +171,14 @@ const Login = () => {
             )}
           </Button>
         </form>
-        <Button variant="link">
-          <Link to="/register">Register</Link>
+        <Button
+          variant="link"
+          fontSize={breakpoints.IS_MOBILE ? "l" : "xl"}
+          onClick={() => {
+            navigate("/register");
+          }}
+        >
+          Register
         </Button>
       </Card>
     </Main>

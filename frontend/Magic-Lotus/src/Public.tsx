@@ -10,6 +10,7 @@ export const PUBLIC_FOLDER = {
     },
     CARD: {
       BACKSIDE: "/images/Magic_card_back.webp",
+      BACKSIDE_WITH_ERROR: "/images/Magic_card_back_ERROR_MSG.webp",
     },
   },
 } as const;
