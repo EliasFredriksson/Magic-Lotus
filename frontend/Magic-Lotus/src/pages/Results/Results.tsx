@@ -48,11 +48,7 @@ const Results = () => {
                   navigate(`/card/${card.id}`);
                 }}
               >
-                <MagicCard
-                  card={card}
-                  size={breakpoints.IS_MOBILE ? "small" : "art_crop"}
-                  quality={breakpoints.IS_MOBILE ? "small" : "normal"}
-                />
+                <MagicCard card={card} size="result" quality="normal" />
               </div>
             );
           })}

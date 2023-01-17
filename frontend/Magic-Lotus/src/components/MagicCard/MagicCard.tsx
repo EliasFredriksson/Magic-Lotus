@@ -3,55 +3,18 @@ import ICard from "../../models/scryfall/interfaces/ICard";
 import Image from "../Image/Image";
 import { useCallback } from "react";
 import { Formats } from "../../models/scryfall/types/ImageFormat";
-type ImagerySize =
-  | "small"
-  | "normal"
-  | "large"
-  | "art_crop"
-  | "border_crop"
-  | "png";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
+import { PUBLIC_FOLDER } from "../../Public";
+type CardOption = Formats | "result";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   card: ICard | null;
   disabled?: boolean;
-  size: ImagerySize;
+  size: CardOption;
   quality: Formats;
 }
 
 const MagicCard = (props: Props) => {
-  const calcSize = useCallback(() => {
-    switch (props.size) {
-      case "small":
-        return {
-          width: "146px",
-          height: "204px",
-        };
-      case "normal":
-        return {
-          width: "488px",
-          height: "680px",
-        };
-      case "large":
-        return {
-          width: "672px",
-          height: "936px",
-        };
-      case "art_crop":
-        return {
-          width: "auto",
-          height: "auto",
-        };
-      case "border_crop":
-        return {
-          width: "480px",
-          height: "680px",
-        };
-      case "png":
-        return {
-          width: "745px",
-          height: "1040px",
-        };
-    }
-  }, [props.size]);
+  const { breakpoints } = useScreenSize();
 
   const calcImage = useCallback(() => {
     switch (props.quality) {
@@ -85,9 +48,17 @@ const MagicCard = (props: Props) => {
     >
       <Image
         imageUrl={calcImage()}
-        fallbackImageUrl={""} // TO BE ADDED
+        fallbackImageUrl={PUBLIC_FOLDER.IMAGES.CARD.BACKSIDE} // TO BE ADDED
         spinnerSize="medium"
-        imageSize={calcSize()}
+        imageSize={
+          breakpoints.IS_MOBILE || breakpoints.IS_TABLET
+            ? {
+                width: "auto",
+              }
+            : {
+                width: "29rem",
+              }
+        }
       />
     </div>
   );

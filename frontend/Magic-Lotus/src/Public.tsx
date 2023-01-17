@@ -8,5 +8,8 @@ export const PUBLIC_FOLDER = {
     USERS: {
       DEFAULT: "/images/Default_profile_image.svg",
     },
+    CARD: {
+      BACKSIDE: "/images/Magic_card_back.webp",
+    },
   },
 } as const;

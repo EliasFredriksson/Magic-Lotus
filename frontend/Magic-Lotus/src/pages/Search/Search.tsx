@@ -49,6 +49,7 @@ import GAME_FORMATS from "../../constants/GAME_FORMATS";
 // HELPERS
 import { capitalizeWord, isEmpty } from "../../helpers/StringValidations";
 import { IFullTextParams } from "../../helpers/fullTextConverter/FullTextConverter";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 
 const COLOR_CONDITION_START_VALUE = [
   { id: "1", name: "Exactly these colors", meta: IS },
@@ -126,6 +127,7 @@ const SESSION_STORAGE_KEY = "MagicLotusRecentFilter";
 const Search = () => {
   const { openStatusModal } = useUtility();
   const { search, isLoading } = useSearch();
+  const { breakpoints } = useScreenSize();
 
   // DATA
   const [catalogs, setCatalogs] = useState<Data[]>([]);
@@ -718,6 +720,7 @@ const Search = () => {
                   });
                 }}
                 startValue={inputs.formatOneLegality}
+                fontSize={breakpoints.IS_MOBILE ? "m" : "l"}
               />
               <Dropdown
                 searchable
@@ -731,6 +734,7 @@ const Search = () => {
                   });
                 }}
                 startValue={inputs.formatOneTargets}
+                fontSize={breakpoints.IS_MOBILE ? "m" : "l"}
               />
               {/* SECOND ROW */}
               <Dropdown
@@ -744,6 +748,7 @@ const Search = () => {
                   });
                 }}
                 startValue={inputs.formatTwoLegality}
+                fontSize={breakpoints.IS_MOBILE ? "m" : "l"}
               />
               <Dropdown
                 searchable
@@ -757,6 +762,7 @@ const Search = () => {
                   });
                 }}
                 startValue={inputs.formatTwoTargets}
+                fontSize={breakpoints.IS_MOBILE ? "m" : "l"}
               />
             </div>
           </div>

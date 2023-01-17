@@ -75,16 +75,23 @@ const Landing = () => {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            fontSize={breakpoints.IS_MOBILE ? "l" : "xxl"}
           />
-          <Button type="submit" variant="secondary">
-            {isLoading ? (
-              <Spinner variant="pulse" size="medium" />
-            ) : (
-              <Text size="xl">Search!</Text>
-            )}
+          <Button
+            type="submit"
+            variant="secondary"
+            fontSize={breakpoints.IS_MOBILE ? "l" : "xxl"}
+          >
+            {isLoading ? <Spinner variant="pulse" size="medium" /> : "Search!"}
           </Button>
         </form>
-        <Button type="button" variant="link">
+        <Button
+          type="button"
+          variant="link"
+          onClick={() => {
+            navigate("/search");
+          }}
+        >
           <Text size={breakpoints.IS_MOBILE ? "xl" : "l"}>Advanced Search</Text>
         </Button>
         <Seperator direction="ver" />

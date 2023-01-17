@@ -118,6 +118,8 @@
           padding: $spacing-s $spacing-m;
           pointer-events: none;
 
+          word-break: break-word;
+
           .remove-tag-button {
             cursor: pointer;
             pointer-events: all;
@@ -125,6 +127,7 @@
             color: $gray-900;
             border-radius: 50%;
             transition: color 0.1s ease;
+            min-width: max-content;
 
             @include light-mode {
               color: $primary-800;
@@ -149,7 +152,7 @@
         align-self: flex-end;
         cursor: pointer;
         padding: $spacing-s;
-        font-size: 1.5em;
+        font-size: 20px;
 
         @include dark-mode {
           color: $secondary-100;
