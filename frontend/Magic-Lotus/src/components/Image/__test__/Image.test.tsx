@@ -55,7 +55,7 @@ describe("Image Component Tests", async () => {
 
     const overlay = imageComponent.children[1];
 
-    expect(overlay).toHaveClass("show");
+    expect(overlay).toBeVisible();
     fireEvent.load(image);
     await waitFor(() => {
       expect(overlay).not.toBeVisible();

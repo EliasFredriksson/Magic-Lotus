@@ -73,6 +73,8 @@ const Image = (props: IProps) => {
         className={`loading-overlay ${isLoading ? "show" : "hide"}`}
         style={{
           borderRadius: props.borderRadius ? props.borderRadius : "1rem",
+          opacity: isLoading ? 1 : 0,
+          transitionDelay: isLoading ? "0" : "0.2s",
         }}
       >
         <Spinner size={props.spinnerSize} variant="pulse" />

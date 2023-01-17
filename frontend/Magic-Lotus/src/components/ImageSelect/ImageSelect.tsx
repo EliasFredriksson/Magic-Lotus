@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { RiAddLine } from "react-icons/ri";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
 import IFile from "../../models/backend/interfaces/IFile";
@@ -11,13 +11,13 @@ const BLANK_IFILE: IFile = {
   type: "",
 };
 interface ISize {
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 interface IProps {
   imageUrl?: string | undefined;
   fallbackImageUrl: string;
-  imageSize: ISize;
+  imageSize?: ISize;
   onSave: (data: IFile) => void;
   name: string;
 
@@ -28,6 +28,9 @@ interface IProps {
   editImageSize?: ISize;
   saveButtonInnerTsx?: string | React.ReactNode;
   deleteButtonInnerTsx?: string | React.ReactNode;
+
+  // TESTING
+  "data-testid"?: string;
 }
 
 const TEN_MEGABYTE = 10e6;
@@ -42,8 +45,10 @@ const ImageSelect = (props: IProps) => {
 
   const [fileData, setFileData] = useObjectState<IFile>(BLANK_IFILE);
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
       if (e.target.files !== null && e.target.files.length > 0) {
         setIsLoading(true);
         const file = e.target.files[0];
@@ -52,11 +57,8 @@ const ImageSelect = (props: IProps) => {
             "The filesize is too large, please choose an image which is smaller than 10 MG."
           );
         }
-        if (
-          file.type !== "image/png" &&
-          file.type !== "image/jpeg" &&
-          file.type !== "image/jpg"
-        ) {
+        if (!["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
+          if (props.saveOnChoice) props.onSave(BLANK_IFILE);
           return setErrorMsg(
             "Unallowed file format. Please choose a .png, .jpeg or jpg file."
           );
@@ -106,12 +108,15 @@ const ImageSelect = (props: IProps) => {
   }, [props.imageUrl, props.fallbackImageUrl]);
 
   return (
-    <div className={`image-select-component`}>
+    <div
+      className={`image-select-component`}
+      data-testid={props["data-testid"] ? props["data-testid"] : undefined}
+    >
       <div
         className="preview"
         style={{
-          width: props.imageSize.width,
-          height: props.imageSize.height,
+          width: props.imageSize?.width,
+          height: props.imageSize?.height,
         }}
       >
         <img
@@ -135,6 +140,7 @@ const ImageSelect = (props: IProps) => {
       <div className="choose-image-button">
         <label htmlFor="file-upload-profile">
           <input
+            ref={inputRef}
             type="file"
             id="file-upload-profile"
             accept="image/jpeg, image/png, image/jpg"
