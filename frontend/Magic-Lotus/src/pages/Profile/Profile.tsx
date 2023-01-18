@@ -9,7 +9,7 @@ import ImageSelect from "../../components/ImageSelect/ImageSelect";
 import { PUBLIC_FOLDER } from "../../Public";
 import { useFetchPostUserAvatar } from "../../services/backend/Upload.service";
 import Button from "../../components/Button/Button";
-import IFile, { BLANK_IFILE } from "../../models/backend/interfaces/IFile";
+import IFile from "../../models/backend/interfaces/IFile";
 import Card from "../../components/Card/Card";
 import Text from "../../components/Text/Text";
 import Image from "../../components/Image/Image";

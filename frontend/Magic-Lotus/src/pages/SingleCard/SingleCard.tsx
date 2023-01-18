@@ -7,8 +7,7 @@ import ICard from "../../models/scryfall/interfaces/ICard";
 import "./singleCard.scss";
 import PageHeader from "../../components/Header/Header";
 import useFetchCardById from "../../services/scryfall/cards/Cards.byId.service";
-import useModal from "../../hooks/useModal/useModal";
-import { useFetchSymbologyParseMana } from "../../services/scryfall/CardSymbols.service";
+// import { useFetchSymbologyParseMana } from "../../services/scryfall/CardSymbols.service";
 import Main from "../../components/Main/Main";
 import useUtility from "../../hooks/useUtility/useUtility";
 import Favorite from "../../components/Favorite/Favorite";
@@ -19,9 +18,6 @@ import Button from "../../components/Button/Button";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useSearch from "../../hooks/useSearch/useSearch";
 import Spinner from "../../components/Spinner/Spinner";
-import Flex from "../../components/Flex/Flex";
-import Image from "../../components/Image/Image";
-import { PUBLIC_FOLDER } from "../../Public";
 
 const SingleCard = () => {
   const { id } = useParams();
@@ -33,7 +29,8 @@ const SingleCard = () => {
 
   const fetchCard = useFetchCardById(id ? id : "");
 
-  const parseMana = useFetchSymbologyParseMana();
+  // TO BE IMPLEMENTED
+  // const parseMana = useFetchSymbologyParseMana();
 
   useEffect(() => {
     const initFetch = async () => {

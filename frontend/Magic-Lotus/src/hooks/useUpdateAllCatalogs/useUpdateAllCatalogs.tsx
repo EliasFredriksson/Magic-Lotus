@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import useFetch from "../useFetch/useFetch";
 import useObjectState from "../useObjectState/useObjectState";
-import IServiceResponse from "../../models/backend/types/MagicLotusResponse";
 import ICatalog from "../../models/scryfall/interfaces/ICatalog";
 import {
   GET_CATALOG_ABILITY_WORDS,

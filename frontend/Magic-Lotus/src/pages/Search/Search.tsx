@@ -13,6 +13,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import useSearch from "../../hooks/useSearch/useSearch";
 import useUtility from "../../hooks/useUtility/useUtility";
 import useObjectState from "../../hooks/useObjectState/useObjectState";
+import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 // SERVICES
 import { useFetchManaSymbols } from "../../services/backend/Symbol.service";
 import { useFetchGetTypesCatalogs } from "../../services/backend/Catalog.service";
@@ -49,7 +50,6 @@ import GAME_FORMATS from "../../constants/GAME_FORMATS";
 // HELPERS
 import { capitalizeWord, isEmpty } from "../../helpers/StringValidations";
 import { IFullTextParams } from "../../helpers/fullTextConverter/FullTextConverter";
-import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 
 const COLOR_CONDITION_START_VALUE = [
   { id: "1", name: "Exactly these colors", meta: IS },

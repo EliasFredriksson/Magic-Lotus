@@ -10,11 +10,9 @@ import useObjectState from "../../hooks/useObjectState/useObjectState";
 import Spinner from "../../components/Spinner/Spinner";
 import Main from "../../components/Main/Main";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
-import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 import useSearch from "../../hooks/useSearch/useSearch";
 
 const Results = () => {
-  const { breakpoints } = useScreenSize();
   const { navigate } = useNavigate();
   const [result, setResult] = useObjectState<IPaginated<ICard[]>>(
     BLANK_PAGINATED_CARDS

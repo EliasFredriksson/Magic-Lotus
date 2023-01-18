@@ -6,7 +6,6 @@ import ImageSelect from "../../components/ImageSelect/ImageSelect";
 import Input from "../../components/Input/Input";
 import Main from "../../components/Main/Main";
 import Spinner from "../../components/Spinner/Spinner";
-import Text from "../../components/Text/Text";
 import { isValid } from "../../helpers/InputValidityHelpers";
 import {
   hasNumber,

@@ -52,8 +52,6 @@ const Router = () => {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-
-      {/* <Footer /> */}
     </>
   );
 };

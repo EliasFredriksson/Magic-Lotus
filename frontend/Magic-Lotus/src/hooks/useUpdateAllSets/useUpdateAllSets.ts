@@ -1,6 +1,4 @@
 import { useCallback, useState } from "react";
-import { useFetchPostSymbol } from "../../services/backend/Symbol.service";
-import ICardSymbol from "../../models/scryfall/interfaces/ICardSymbol";
 import { useFetchSetsFromScryfall } from "../../services/scryfall/Sets.service";
 import ISet from "../../models/scryfall/interfaces/ISet";
 import { useFetchPostSet } from "../../services/backend/Sets.service";
