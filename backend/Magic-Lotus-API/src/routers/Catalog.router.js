@@ -39,7 +39,6 @@ router.post("/", auth.checkIfAdmin, async (req, res) => {
       res.status(200).send(responses.create200Response(newCatalog._id, req));
     }
   } catch (error) {
-    console.warn("ERROR: ", error);
     res.status(400).send(responses.create400Response(error, req));
   }
 });

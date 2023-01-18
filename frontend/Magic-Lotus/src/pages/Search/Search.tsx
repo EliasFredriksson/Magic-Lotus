@@ -319,7 +319,6 @@ const Search = () => {
       e.preventDefault();
       const query: IFullTextParams = {};
 
-      console.log("SUBMITTED");
       storageSetItem("SESSION", SESSION_STORAGE_KEY, inputs);
 
       // CARD NAME
@@ -452,19 +451,12 @@ const Search = () => {
           .join(" ");
       }
 
-      // console.log("FINAL Q:\n\n", Object.values(query).join(" "));
-
       search({
         q: Object.values(query).join(" "),
       });
     },
     [inputs]
   );
-
-  // useEffect(() => {
-  //   console.clear();
-  //   console.log("INPUTS: ", inputs);
-  // }, [inputs]);
 
   return (
     <Main id="search-page">

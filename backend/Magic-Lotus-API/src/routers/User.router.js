@@ -182,7 +182,6 @@ router.get("/", auth.checkIfLoggedIn, async (req, res) => {
         );
     }
   } catch (error) {
-    console.log("ERROR: ", error);
     res.status(400).send(create400Response(error, req.method, req.path));
   }
 });

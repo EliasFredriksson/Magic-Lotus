@@ -7,7 +7,6 @@ export const isValid = (validity: Object): boolean => {
       (validState) => validState === true
     );
   } catch (e) {
-    console.warn("ERROR: ", (e as Error).message);
     return false;
   }
 };

@@ -41,7 +41,6 @@ router.post("/", auth.checkIfAdmin, async (req, res) => {
         .send(create400Response('Missing "symbol" property in req body!', req));
     }
   } catch (error) {
-    console.warn("ERROR: ", error);
     res.status(400).send(create400Response(error, req));
   }
 });

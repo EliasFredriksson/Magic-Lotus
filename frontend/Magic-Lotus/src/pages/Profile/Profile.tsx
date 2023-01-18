@@ -77,7 +77,6 @@ const Profile = () => {
             file: file,
           },
         });
-        console.log("RES: ", res);
         if (res.object === "aborted") return;
         if (
           res.object === "magic_lotus_error" ||
@@ -135,7 +134,6 @@ const Profile = () => {
             {profile.favoriteCards.length > 0 ? (
               <div className="fav-wrapper">
                 {profile.favoriteCards.map((card) => {
-                  console.log("CARD: ", card);
                   return (
                     <Image
                       onClick={() => {

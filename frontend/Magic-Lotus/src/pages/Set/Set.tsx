@@ -48,10 +48,6 @@ const Set = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (set) console.table(set);
-  }, [set]);
-
   return (
     <Main id="set-page">
       <Header title={name ? name : "Missing set name"} />

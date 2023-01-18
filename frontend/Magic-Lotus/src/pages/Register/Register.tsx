@@ -121,7 +121,6 @@ const Register = () => {
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
-      console.log("SUBMITTED!", isFormValid());
       e.preventDefault();
       if (isFormValid()) {
         const res = await registerUser.triggerFetch({

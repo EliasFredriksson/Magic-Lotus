@@ -57,8 +57,6 @@ const useUpdateAllSets = (
       return;
     }
 
-    console.log("SCRYFALL RES: ", scryfallRes);
-
     let counter = 0;
     scryfallRes.data.forEach(async (set, index) => {
       try {

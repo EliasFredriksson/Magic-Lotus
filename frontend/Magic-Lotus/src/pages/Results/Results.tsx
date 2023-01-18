@@ -23,8 +23,6 @@ const Results = () => {
   useEffect(() => {
     if (!isLoading) {
       setResult(latestSearch ? latestSearch : BLANK_PAGINATED_CARDS);
-    } else {
-      console.log("SEARCH IS LOADING...");
     }
   }, [isLoading]);
 

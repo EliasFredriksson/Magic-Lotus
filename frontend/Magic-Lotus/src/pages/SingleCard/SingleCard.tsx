@@ -59,7 +59,6 @@ const SingleCard = () => {
       //   openErrorModal();
       //   return;
       // }
-      // console.log("PARSED MANA: ", parsed);
     };
     initFetch();
 
@@ -75,10 +74,6 @@ const SingleCard = () => {
     });
     return formatCurr.format(total);
   }, []);
-
-  useEffect(() => {
-    if (card) console.log(card);
-  }, [card]);
 
   return (
     <Main id="card-page">
