@@ -1,0 +1,6 @@
+@use "../../styles/all" as *;
+
+.flex-component {
+  display: flex;
+  gap: $spacing-xl;
+}

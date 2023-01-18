@@ -1,4 +1,5 @@
 import React from "react";
+import "./flex.scss";
 
 type Direction =
   | "row"
@@ -44,18 +45,30 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   gap?: string;
 }
 
+// THIS COMPONENT IS A BIT WORK IN PROGRESS.
+
 const Flex = (props: Props) => {
-  const { children, direction, justify, align, gap, style, ...rest } = props;
+  const {
+    children,
+    direction,
+    justify,
+    align,
+    gap,
+    style,
+    className,
+    ...rest
+  } = props;
   return (
     <div
       {...rest}
+      className={`flex-component${className ? ` ${className}` : ""}`}
       style={{
         ...style,
         display: "flex",
         flexDirection: direction ? direction : "row",
         justifyContent: justify ? justify : "flex-start",
         alignItems: align ? align : "stretch",
-        gap: gap,
+        gap: gap ? gap : undefined,
       }}
     >
       {props.children}

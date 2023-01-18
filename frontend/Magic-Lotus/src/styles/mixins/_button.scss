@@ -35,7 +35,7 @@
   padding: $spacing-s $spacing-m;
   border-radius: $border-radius-medium;
   border: 0;
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -139,27 +139,34 @@
 @mixin link-button {
   background-color: transparent;
   border: 0;
-  transition: all 0.2s ease;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
 
   & > a {
     font-family: $main-font;
     font-size: $size-l;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.1s ease;
     border: 0;
     outline: 0;
   }
 
   &:hover {
-    color: $white;
-    a {
+    @include dark-mode {
       color: $white;
+      a {
+        color: $white;
+      }
+    }
+    @include light-mode {
+      color: $link-blue-dark;
+      a {
+        color: $link-blue-dark;
+      }
     }
   }
 
@@ -185,7 +192,7 @@
   font-size: $size-2xl;
   background-color: transparent;
   border: 0;
-  transition: all 0.2s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   display: flex;
   justify-content: center;

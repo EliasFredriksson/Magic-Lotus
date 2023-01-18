@@ -56,7 +56,7 @@ const Landing = () => {
 
   return (
     <Main id="landing-page">
-      <Text as={breakpoints.IS_MOBILE ? "h3" : "h2"} align="center">
+      <Text as={breakpoints.IS_MOBILE ? "h4" : "h2"} align="center">
         Welcome to Magic Lotus!
       </Text>
       <Text as="em" align="center">

@@ -74,7 +74,7 @@ const Image = (props: IProps) => {
         style={{
           borderRadius: props.borderRadius ? props.borderRadius : "1rem",
           opacity: isLoading ? 1 : 0,
-          transitionDelay: isLoading ? "0" : "0.2s",
+          transition: "opacity 0.1s ease",
         }}
       >
         <Spinner size={props.spinnerSize} variant="pulse" />

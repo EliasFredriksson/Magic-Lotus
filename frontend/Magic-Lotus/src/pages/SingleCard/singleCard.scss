@@ -3,60 +3,77 @@
 #card-page {
   @include page-base;
 
-  .middle {
-    width: 100%;
+  .wrapper {
+    @include display-flex-column;
+    flex-grow: 1;
+    align-items: center;
 
-    .wrapper {
+    @include breakpoint-laptop {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .left {
       @include display-flex-column;
-      flex-grow: 1;
+      gap: $spacing-m;
       align-items: center;
+      text-align: center;
 
       @include breakpoint-laptop {
-        flex-direction: row;
-        align-items: flex-start;
+        max-width: 30%;
+      }
+    }
+
+    .right {
+      flex-grow: 1;
+      // background-color: blue;
+      @include display-flex-column;
+
+      & > .oracle {
+        gap: $spacing-l;
       }
 
-      .left {
-        @include display-flex-column;
-        gap: $spacing-m;
-        align-items: center;
-        text-align: center;
-
-        @include breakpoint-laptop {
-          max-width: 30%;
-        }
-      }
-
-      .right {
-        flex-grow: 1;
-        // background-color: blue;
-        height: 100%;
+      & > .buy-card {
         @include display-flex-column;
 
-        .prices {
-          display: grid;
-          column-gap: $spacing-xl;
-          row-gap: $spacing-s;
-          grid-template-columns: repeat(2, 1fr);
-
-          .inner {
-            justify-content: space-between;
+        @include breakpoint-tablet {
+          flex-direction: row;
+          & > * {
+            flex-grow: 1;
           }
         }
 
-        .inner {
-          @include display-flex-row;
-          justify-content: space-between;
+        & > .price-trends {
+          gap: $spacing-m;
+          .prices {
+            display: grid;
+            column-gap: $spacing-xl;
+            row-gap: $spacing-s;
+            grid-template-columns: repeat(2, 1fr);
 
-          .uncommon {
-            color: #d1d1d1;
+            .inner {
+              justify-content: space-between;
+            }
           }
-          .rare {
-            color: #f0e264;
-          }
-          .mythic {
-            color: #ff7a0e;
-          }
+        }
+
+        & > .purchase {
+          gap: $spacing-m;
+        }
+      }
+
+      .inner {
+        @include display-flex-row;
+        justify-content: space-between;
+
+        .uncommon {
+          color: #d1d1d1;
+        }
+        .rare {
+          color: #f0e264;
+        }
+        .mythic {
+          color: #ff7a0e;
         }
       }
     }

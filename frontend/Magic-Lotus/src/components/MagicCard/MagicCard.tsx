@@ -3,7 +3,6 @@ import ICard from "../../models/scryfall/interfaces/ICard";
 import Image from "../Image/Image";
 import { useCallback } from "react";
 import { Formats } from "../../models/scryfall/types/ImageFormat";
-import useScreenSize from "../../hooks/useScreenSize/useScreenSize";
 import { PUBLIC_FOLDER } from "../../Public";
 type CardOption = Formats | "result";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,7 +13,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const MagicCard = (props: Props) => {
-  const { breakpoints } = useScreenSize();
+  const { card, size, quality, disabled, onClick, ...rest } = props;
 
   const calcImage = useCallback(() => {
     switch (props.quality) {
@@ -35,7 +34,6 @@ const MagicCard = (props: Props) => {
     }
   }, [props.card, props.quality]);
 
-  const { onClick, disabled, ...rest } = props;
   return (
     <div
       {...rest}
@@ -48,18 +46,11 @@ const MagicCard = (props: Props) => {
     >
       <Image
         imageUrl={calcImage()}
-        fallbackImageUrl={PUBLIC_FOLDER.IMAGES.CARD.BACKSIDE_WITH_ERROR} // TO BE ADDED
+        fallbackImageUrl={PUBLIC_FOLDER.IMAGES.CARD.BACKSIDE_WITH_ERROR}
         spinnerSize="medium"
-        imageSize={
-          breakpoints.IS_MOBILE || breakpoints.IS_TABLET
-            ? {
-                width: "auto",
-                height: "100%",
-              }
-            : {
-                width: "29rem",
-              }
-        }
+        imageSize={{
+          width: "auto",
+        }}
       />
     </div>
   );

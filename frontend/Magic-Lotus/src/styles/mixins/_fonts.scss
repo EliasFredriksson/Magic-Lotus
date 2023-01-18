@@ -1,4 +1,5 @@
 @use "../variables/fonts" as *;
+@use "../variables/spacings" as *;
 @use "./theme" as *;
 // COMBINE THE USECASE FOR THIS WITH "models/frontend/types/FontSize.ts"
 @mixin font-sizes {

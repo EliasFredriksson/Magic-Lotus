@@ -19,19 +19,17 @@ import Button from "../../components/Button/Button";
 import useNavigate from "../../hooks/useNavigate/useNavigate";
 import useSearch from "../../hooks/useSearch/useSearch";
 import Spinner from "../../components/Spinner/Spinner";
+import Flex from "../../components/Flex/Flex";
+import Image from "../../components/Image/Image";
+import { PUBLIC_FOLDER } from "../../Public";
 
 const SingleCard = () => {
   const { id } = useParams();
   const { openStatusModal } = useUtility();
-  const { navigate } = useNavigate();
   const { search } = useSearch();
+  const { navigate } = useNavigate();
 
   const [card, setCard] = useState<ICard | null>(null);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [errorModal, openErrorModal] = useModal({
-    innerTsx: <span>{errorMsg}</span>,
-    confirmTextOrButton: "Ok",
-  });
 
   const fetchCard = useFetchCardById(id ? id : "");
 
@@ -81,6 +79,10 @@ const SingleCard = () => {
     return formatCurr.format(total);
   }, []);
 
+  useEffect(() => {
+    if (card) console.log(card);
+  }, [card]);
+
   return (
     <Main id="card-page">
       <PageHeader title={card ? card.name : ""} />
@@ -99,11 +101,20 @@ const SingleCard = () => {
             <Favorite card={card} />
           </div>
           <div className="right">
-            <Card>
-              {/* ORACLE TEXT */}
-              <Text as="pre">{card.oracle_text}</Text>
-            </Card>
-            <Card>
+            {card.oracle_text && (
+              <Card className="oracle">
+                {(() => {
+                  const split = card.oracle_text.split("\n");
+                  return split.map((row, index) => (
+                    <Text key={index} as="p">
+                      {row}
+                    </Text>
+                  ));
+                })()}
+                {/* ORACLE TEXT */}
+              </Card>
+            )}
+            <Card className="main-stats">
               {/* POWER AND TOUGHNESS */}
               {card.power && card.toughness && (
                 <>
@@ -146,38 +157,104 @@ const SingleCard = () => {
                   {capitalizeWord(card.rarity)}
                 </Text>
               </div>
-            </Card>
-            <Card>
-              <Text family="heading" size="xl">
-                Price trends
-              </Text>
 
-              <div className="prices">
-                {Object.entries(card.prices).map(([key, value], index) => {
-                  const currency = (() => {
-                    const curr = key as Price;
-                    if (curr === "usd_etched") return "usd";
-                    if (curr === "usd_foil") return "usd";
-                    if (curr === "eur_foil") return "eur";
-                    return curr;
-                  })();
-                  if (key && value)
-                    return (
-                      <div className="inner" key={index}>
-                        <Text>{key}</Text>
-                        <Text>{formatCurrency(currency, Number(value))}</Text>
-                      </div>
-                    );
-                  else return;
-                })}
+              {/* SET */}
+              <Seperator direction="ver" />
+              <div className="inner">
+                <Text>Set:</Text>
+
+                <Button
+                  variant="link"
+                  fontSize="l"
+                  onClick={() => {
+                    navigate(`/sets/${card.set_name}`);
+                  }}
+                >
+                  {capitalizeWord(card.set_name)}
+                </Button>
               </div>
             </Card>
-            <Card>
+            {/* LEGALITY */}
+            {/* CURRENTLY COMMENTED OUT, NOT READY YET */}
+            {/* <Card> 
+              {Object.entries(card.legalities).map(([key, value], index) => {
+                return (
+                  <Text key={index}>
+                    {key}: {`${value}`}
+                  </Text>
+                );
+              })}
+            </Card> */}
+            {/* PRICE TRENDS AND PURCHASE LINKS */}
+            <div className="buy-card">
+              <Card className="price-trends">
+                <Text as="h6">Price trends</Text>
+                <Seperator direction="ver" />
+                <div className="prices">
+                  {Object.entries(card.prices).map(([key, value], index) => {
+                    const currency = (() => {
+                      const curr = key as Price;
+                      if (curr === "usd_etched") return "usd";
+                      if (curr === "usd_foil") return "usd";
+                      if (curr === "eur_foil") return "eur";
+                      return curr;
+                    })();
+                    if (key && value)
+                      return (
+                        <div className="inner" key={index}>
+                          <Text>{key}</Text>
+                          <Text>{formatCurrency(currency, Number(value))}</Text>
+                        </div>
+                      );
+                    else return;
+                  })}
+                </div>
+              </Card>
+              <Card className="purchase">
+                <Text as="h6">Purchase</Text>
+                <Seperator direction="ver" />
+                {card.purchase_uris.cardmarket && (
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      if (card.purchase_uris.cardmarket)
+                        window.open(card.purchase_uris.cardmarket, "_blank");
+                    }}
+                  >
+                    Card Market
+                  </Button>
+                )}
+                {card.purchase_uris.tcgplayer && (
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      if (card.purchase_uris.tcgplayer)
+                        window.open(card.purchase_uris.tcgplayer, "_blank");
+                    }}
+                  >
+                    TCG Player
+                  </Button>
+                )}
+                {card.purchase_uris.cardhoarder && (
+                  <Button
+                    variant="link"
+                    onClick={() => {
+                      if (card.purchase_uris.cardhoarder)
+                        window.open(card.purchase_uris.cardhoarder, "_blank");
+                    }}
+                  >
+                    Card Hoarder
+                  </Button>
+                )}
+              </Card>
+            </div>
+            {/* OTHER LINKS */}
+            <Card className="links">
+              <Text as="h6">Links</Text>
               <Button
                 variant="link"
                 onClick={() => {
                   const query = card.prints_search_uri.split("?")[1];
-                  console.log("QUERY: ", query);
                   search(`?${query}`);
                 }}
               >
@@ -187,9 +264,10 @@ const SingleCard = () => {
           </div>
         </div>
       ) : (
-        <></>
+        <>
+          <Text as="h5">Something went wrong...</Text>
+        </>
       )}
-      {errorModal}
     </Main>
   );
 };

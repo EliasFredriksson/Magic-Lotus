@@ -69,10 +69,8 @@ html {
     #root {
       // DEFAULT BEHAVIOR FOR THE ROOT ENTRY POINT.
       flex-grow: 1;
-      height: 100%;
       display: flex;
       flex-direction: column;
-      // overflow-x: hidden;
       overflow: hidden;
 
       @include light-mode {

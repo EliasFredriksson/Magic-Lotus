@@ -7,43 +7,41 @@
     align-items: center;
   }
 
-  .middle {
-    .cards {
+  .cards {
+    @include display-flex-column;
+    @include breakpoint-laptop {
+      flex-direction: row;
+    }
+
+    .left,
+    .right {
       @include display-flex-column;
-      @include breakpoint-laptop {
-        flex-direction: row;
+      align-items: center;
+      flex-basis: 50%;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .catalogs,
+    .symbols {
+      @include display-flex-column;
+
+      @include breakpoint-tablet {
+        max-width: 42rem;
       }
 
-      .left,
-      .right {
-        @include display-flex-column;
-        align-items: center;
-        flex-basis: 50%;
-        flex-grow: 0;
-        flex-shrink: 0;
+      .inner {
+        flex-grow: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: $spacing-m;
       }
+    }
 
-      .catalogs,
-      .symbols {
-        @include display-flex-column;
-
-        @include breakpoint-tablet {
-          max-width: 42rem;
-        }
-
-        .inner {
-          flex-grow: 1;
-          display: flex;
-          flex-wrap: wrap;
-          gap: $spacing-m;
-        }
-      }
-
-      .sets {
-        .inner {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-        }
+    .sets {
+      .inner {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
