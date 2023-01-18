@@ -44,8 +44,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   gap?: string;
 }
 
-// !!! THIS COMPONENT IS NOT FINISHED. IS NOT USED ANYWHERE IN THE PROJECT CURRENTLY !!!
-
 const Flex = (props: Props) => {
   const { children, direction, justify, align, gap, style, ...rest } = props;
   return (

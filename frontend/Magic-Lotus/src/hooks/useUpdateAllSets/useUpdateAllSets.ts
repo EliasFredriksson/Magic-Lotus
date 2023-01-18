@@ -51,6 +51,13 @@ const useUpdateAllSets = (
       props.onError(new Error(scryfallRes.details));
       return;
     }
+    if (
+      scryfallRes.object === "network_error" ||
+      scryfallRes.object === "unknown_error"
+    ) {
+      props.onError(new Error(scryfallRes.error));
+      return;
+    }
 
     console.log("SCRYFALL RES: ", scryfallRes);
 

@@ -122,9 +122,6 @@ const Landing = () => {
             "Take me to a random card!"
           )}
         </Button>
-        <Button variant="link" onClick={handleRandomCard}>
-          Advanced search
-        </Button>
       </Card>
     </Main>
   );

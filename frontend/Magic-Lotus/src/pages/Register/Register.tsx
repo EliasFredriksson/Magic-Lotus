@@ -98,7 +98,7 @@ const Register = () => {
     // PASSWORD
     if (inputs.password.length < MINIMUM_PASSWORD_LENGTH) {
       val.password = false;
-      msgs.password = "Your password is too short! (minimum 5)";
+      msgs.password = "Your password is too short!";
     } else if (!hasNumber(inputs.password)) {
       val.password = false;
       msgs.password = "Your password must contain a number!";

@@ -54,6 +54,7 @@ const MagicCard = (props: Props) => {
           breakpoints.IS_MOBILE || breakpoints.IS_TABLET
             ? {
                 width: "auto",
+                height: "100%",
               }
             : {
                 width: "29rem",

@@ -114,7 +114,7 @@
     position: absolute;
     left: $spacing-m;
     transition: top 0.2s ease, opacity 0.2s ease, color 0.2s ease;
-    font-size: 0.7em;
+    font-size: 0.5em;
 
     &.show {
       top: calc(99% + $spacing-s);

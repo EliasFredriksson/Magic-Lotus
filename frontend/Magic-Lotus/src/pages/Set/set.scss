@@ -1,5 +1,7 @@
 @use "../../styles/all" as *;
 
 #set-page {
-  @include page-base;
+  .set-svg {
+    filter: drop-shadow(0px 0px 5px $secondary-100);
+  }
 }

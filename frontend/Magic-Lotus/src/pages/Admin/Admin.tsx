@@ -160,127 +160,146 @@ const Admin = () => {
 
   return (
     <Main id="admin-page">
-      <div className="middle">
-        <Header title="Admin" />
-        <div className="cards">
-          <div className="left">
-            <Card className="catalogs">
-              <Text size="xl" weight="medium" family="heading">
-                Catalogs:
-              </Text>
-              <div className="inner">
-                {FetchCatalogNames.isLoading ? (
-                  <Spinner variant="pulse" size="x-large" />
-                ) : (
-                  catalogNames.map((cat, index) => (
-                    <Button
-                      key={index}
-                      variant="secondary"
-                      fontWeight="light"
-                      onClick={() => {
-                        navigate(`/catalog/${cat}`);
-                      }}
-                    >
-                      {cat}
-                    </Button>
-                  ))
-                )}
-              </div>
+      <Header title="Admin" />
+      <div className="cards">
+        <div className="left">
+          <Card className="catalogs">
+            {FetchCatalogNames.isLoading ? (
+              <Spinner variant="pulse" size="medium" />
+            ) : (
+              <>
+                <Text size="xl" weight="medium" family="heading">
+                  Catalogs:
+                </Text>
+                <div className="inner">
+                  {FetchCatalogNames.isLoading ? (
+                    <Spinner variant="pulse" size="x-large" />
+                  ) : (
+                    catalogNames.map((cat, index) => (
+                      <Button
+                        key={index}
+                        variant="secondary"
+                        fontWeight="light"
+                        onClick={() => {
+                          navigate(`/catalog/${cat}`);
+                        }}
+                      >
+                        {cat}
+                      </Button>
+                    ))
+                  )}
+                </div>
 
-              <Button onClick={handleUpdateCatalog}>
-                {updateCatalogs.isLoading ? (
-                  <Spinner size="medium" variant="pulse" />
-                ) : (
-                  "Update catalogs"
+                <Button onClick={handleUpdateCatalog}>
+                  {updateCatalogs.isLoading ? (
+                    <Spinner size="medium" variant="pulse" />
+                  ) : (
+                    "Update catalogs"
+                  )}
+                </Button>
+                {updateCatalogs.done && (
+                  <Text size="l">Done updating catalogs!</Text>
                 )}
-              </Button>
-              {updateCatalogs.done && (
-                <Text size="l">Done updating catalogs!</Text>
-              )}
-            </Card>
-            <Card className="symbols">
-              <Text size="xl" weight="medium" family="heading">
-                Symbols:
-              </Text>
-              <div className="inner">
-                {FetchSymbols.isLoading ? (
-                  <Spinner variant="pulse" size="x-large" />
-                ) : (
-                  symbols.map((symbol, index) => (
-                    <Image
-                      key={index}
-                      imageUrl={symbol.svg_uri}
-                      fallbackImageUrl={""}
-                      spinnerSize="small"
-                      imageSize={{
-                        width: "3rem",
-                        height: "3rem",
-                      }}
-                      alt={symbol.english}
-                    />
-                    // <Button key={index}>{symbol.symbol}</Button>
-                  ))
+              </>
+            )}
+          </Card>
+          <Card className="symbols">
+            {FetchSymbols.isLoading ? (
+              <Spinner variant="pulse" size="medium" />
+            ) : (
+              <>
+                <Text size="xl" weight="medium" family="heading">
+                  Symbols:
+                </Text>
+                <div className="inner">
+                  {FetchSymbols.isLoading ? (
+                    <Spinner variant="pulse" size="x-large" />
+                  ) : (
+                    symbols.map((symbol, index) => (
+                      <Image
+                        key={index}
+                        imageUrl={symbol.svg_uri}
+                        fallbackImageUrl={""}
+                        spinnerSize="small"
+                        imageSize={{
+                          width: "3rem",
+                          height: "3rem",
+                        }}
+                        alt={symbol.english}
+                      />
+                      // <Button key={index}>{symbol.symbol}</Button>
+                    ))
+                  )}
+                </div>
+                <Button onClick={handleUpdateSymbols}>
+                  {updateSymbols.isLoading ? (
+                    <Spinner size="medium" variant="pulse" />
+                  ) : (
+                    "Update symbols"
+                  )}
+                </Button>
+                {updateSymbols.done && (
+                  <Text size="l">Done updating symbols!</Text>
                 )}
-              </div>
-              <Button onClick={handleUpdateSymbols}>
-                {updateSymbols.isLoading ? (
-                  <Spinner size="medium" variant="pulse" />
-                ) : (
-                  "Update symbols"
-                )}
-              </Button>
-            </Card>
-          </div>
-          <div className="right">
-            <Card className="sets">
-              <Text size="xl" weight="medium" family="heading">
-                Sets:
-              </Text>
-              <div className="inner">
-                {FetchCatalogNames.isLoading ? (
-                  <Spinner variant="pulse" size="x-large" />
-                ) : sets.length > 0 ? (
-                  renderedSets.map((set, index) => (
-                    <Button
-                      key={index}
-                      variant="link"
-                      fontWeight="light"
-                      fontSize="xs"
-                      onClick={() => {
-                        navigate(`/sets/${set}`);
-                      }}
-                    >
-                      ● {set}
-                    </Button>
-                  ))
-                ) : (
-                  <Text>No sets found.</Text>
-                )}
-              </div>
-              <Button
-                variant="secondary"
-                fontSize="xs"
-                onClick={toggleCollapse}
-              >
-                {isPending ? (
-                  <Spinner variant="pulse" size="small" />
-                ) : showRest ? (
-                  "Hide"
-                ) : (
-                  `${sets.length - renderedSets.length} more...`
-                )}
-              </Button>
+              </>
+            )}
+          </Card>
+        </div>
+        <div className="right">
+          <Card className="sets">
+            {FetchSets.isLoading ? (
+              <Spinner variant="pulse" size="medium" />
+            ) : (
+              <>
+                <Text size="xl" weight="medium" family="heading">
+                  Sets:
+                </Text>
+                <div className="inner">
+                  {FetchCatalogNames.isLoading ? (
+                    <Spinner variant="pulse" size="x-large" />
+                  ) : sets.length > 0 ? (
+                    renderedSets.map((set, index) => (
+                      <Button
+                        key={index}
+                        variant="link"
+                        fontWeight="light"
+                        fontSize="xs"
+                        onClick={() => {
+                          navigate(`/sets/${set}`);
+                        }}
+                      >
+                        ● {set}
+                      </Button>
+                    ))
+                  ) : (
+                    <Text>No sets found.</Text>
+                  )}
+                </div>
+                <Button
+                  variant="secondary"
+                  fontSize="xs"
+                  onClick={toggleCollapse}
+                >
+                  {isPending ? (
+                    <Spinner variant="pulse" size="small" />
+                  ) : showRest ? (
+                    "Hide"
+                  ) : (
+                    `${sets.length - renderedSets.length} more...`
+                  )}
+                </Button>
 
-              <Button onClick={handleUpdateSets}>
-                {updateSets.isLoading ? (
-                  <Spinner size="medium" variant="pulse" />
-                ) : (
-                  "Update sets"
-                )}
-              </Button>
-              {updateSets.done && <Text size="l">Done updating sets!</Text>}
-            </Card>
-          </div>
+                <Button onClick={handleUpdateSets}>
+                  {updateSets.isLoading ? (
+                    <Spinner size="medium" variant="pulse" />
+                  ) : (
+                    "Update sets"
+                  )}
+                </Button>
+                {updateSets.done && <Text size="l">Done updating sets!</Text>}
+              </>
+            )}
+          </Card>
         </div>
       </div>
       {warningModal}

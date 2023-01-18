@@ -7,7 +7,7 @@ interface IProps {
   onError: (error: Error) => void;
 }
 
-const FETCH_CALLS_DELAY = 500;
+const FETCH_CALLS_DELAY = 250;
 const useUpdateAllSymbols = (
   props: IProps
 ): {
@@ -52,8 +52,13 @@ const useUpdateAllSymbols = (
       props.onError(new Error(scryfallRes.details));
       return;
     }
-
-    console.log("SCRYFALL RES: ", scryfallRes);
+    if (
+      scryfallRes.object === "network_error" ||
+      scryfallRes.object === "unknown_error"
+    ) {
+      props.onError(new Error(scryfallRes.error));
+      return;
+    }
 
     let counter = 0;
     scryfallRes.data.forEach(async (symbol, index) => {

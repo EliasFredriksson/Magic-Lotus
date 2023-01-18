@@ -72,10 +72,12 @@ export const SearchContextProvider = (props: IProps) => {
 
       setData(res);
 
-      navigate({
-        pathname: "/results",
-        search: convertObjectToQuery(params),
-      });
+      if (res.data.length === 1) navigate(`/card/${res.data[0].id}`);
+      else
+        navigate({
+          pathname: "/results",
+          search: convertObjectToQuery(params),
+        });
     },
     []
   );

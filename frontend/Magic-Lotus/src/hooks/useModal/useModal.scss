@@ -1,11 +1,5 @@
 @use "../../styles/all" as *;
 
-@mixin flex_center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .modal-component {
   width: 100vw;
   height: 100vh;
@@ -13,11 +7,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   z-index: 10000;
 
-  .background {
+  & > .background {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -42,7 +36,7 @@
     }
   }
 
-  .modal {
+  & > .modal {
     position: absolute;
     top: 40%;
     left: 50%;
@@ -68,12 +62,14 @@
       background: $main-gradient-dark;
     }
 
-    .top {
+    & > .top {
       display: flex;
       gap: $spacing-l;
 
       & > :first-child {
-        @include flex_center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
         word-break: break-word;
         flex-grow: 1;
@@ -106,27 +102,30 @@
       }
     }
 
-    .buttons {
+    & > .buttons {
       display: flex;
       gap: $spacing-l;
 
-      .confirm,
-      .cancel {
+      & > .confirm,
+      & > .cancel {
         @include button_base;
         font-size: $size-xl;
+        min-width: 0px;
       }
-      .confirm {
+      & > .confirm {
         @include primary-button;
-        flex-basis: 50%;
+        // flex-basis: 50%;
+        flex-grow: 1;
 
         &.alone {
           flex-basis: 100%;
         }
       }
-      .cancel {
+      & > .cancel {
         background-color: $alert-100;
         color: white;
-        flex-basis: 50%;
+        // flex-basis: 50%;
+        flex-grow: 1;
       }
     }
 

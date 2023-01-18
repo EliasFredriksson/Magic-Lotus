@@ -43,22 +43,20 @@ const Catalog = () => {
 
   return (
     <Main id="catalog-page">
-      <div className="middle">
-        <Header title={<em>{catalog.category}</em>} />
-        {FetchCatalog.isLoading ? (
-          <Spinner size="x-large" />
-        ) : (
-          <div className="catalog">
-            <ul>
-              {catalog.data.map((type) => (
-                <li key={type}>
-                  <Text>{type}</Text>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+      <Header title={catalog.category} />
+      {FetchCatalog.isLoading ? (
+        <Spinner size="x-large" />
+      ) : (
+        <div className="catalog">
+          <ul>
+            {catalog.data.map((type) => (
+              <li key={type}>
+                <Text>{type}</Text>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Main>
   );
 };
