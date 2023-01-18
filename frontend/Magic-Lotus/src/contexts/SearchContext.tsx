@@ -61,12 +61,8 @@ export const SearchContextProvider = (props: IProps) => {
         openStatusModal(res.details);
         return;
       }
-      if (res.object === "network_error") {
+      if (res.object === "network_error" || res.object === "unknown_error") {
         openStatusModal(res.error);
-        return;
-      }
-      if (res.object === "unknown_error") {
-        openStatusModal("Unknown error occured!");
         return;
       }
 

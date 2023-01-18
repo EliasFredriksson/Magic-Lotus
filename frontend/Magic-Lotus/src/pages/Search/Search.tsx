@@ -868,7 +868,7 @@ const Search = () => {
             type="submit"
             className="search-button"
           >
-            {isLoading ? <Spinner variant="pulse" size="medium" /> : "Search"}
+            {isLoading ? <Spinner variant="pulse" size="large" /> : "Search"}
           </Button>
         </Card>
       </form>

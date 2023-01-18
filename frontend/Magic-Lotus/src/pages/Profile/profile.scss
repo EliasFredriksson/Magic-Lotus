@@ -3,49 +3,45 @@
 #profile-page {
   @include page-base;
 
-  .middle {
-    width: 100%;
+  .content {
+    @include display-flex-column;
+    flex-direction: column-reverse;
 
-    .content {
+    @include breakpoint-tablet {
+      flex-direction: row;
+    }
+    .left {
+      flex-grow: 1;
       @include display-flex-column;
-      flex-direction: column-reverse;
 
-      @include breakpoint-tablet {
-        flex-direction: row;
-      }
-      .left {
-        flex-grow: 1;
-        @include display-flex-column;
+      .favorites {
+        .fav-wrapper {
+          @include display-flex-column;
 
-        .favorites {
-          .fav-wrapper {
-            @include display-flex-column;
+          @include breakpoint-tablet {
+            flex-direction: row;
+            flex-wrap: wrap;
+          }
 
-            @include breakpoint-tablet {
-              flex-direction: row;
-              flex-wrap: wrap;
-            }
-
-            .image-component {
-              transition: all 0.1s ease;
-              &:hover {
-                transform: translateY(-0.5rem);
-              }
+          .image-component {
+            transition: all 0.1s ease;
+            &:hover {
+              transform: translateY(-0.5rem);
             }
           }
-          .hint {
-            align-self: center;
-            filter: brightness(70%);
-          }
+        }
+        .hint {
+          align-self: center;
+          filter: brightness(70%);
         }
       }
-      .right {
-        align-items: center;
+    }
+    .right {
+      align-items: center;
 
-        .submit-avatar-button {
-          margin-top: $spacing-l;
-          width: 100%;
-        }
+      .submit-avatar-button {
+        margin-top: $spacing-l;
+        width: 100%;
       }
     }
   }

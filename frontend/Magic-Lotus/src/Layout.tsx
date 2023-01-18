@@ -4,17 +4,9 @@ import Loader from "./components/Loader/Loader";
 
 const Layout = () => {
   return (
-    <div
-      style={{
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <Suspense fallback={<Loader />}>
-        <Outlet />
-      </Suspense>
-    </div>
+    <Suspense fallback={<Loader />}>
+      <Outlet />
+    </Suspense>
   );
 };
 
