@@ -58,7 +58,7 @@ const Set = () => {
             <Image
               className="set-svg"
               imageUrl={set.icon_svg_uri}
-              fallbackImageUrl=""
+              fallbackImageUrl="" // TO BE ADDED
               imageSize={{ width: breakpoints.IS_MOBILE ? "8rem" : "12rem" }}
               spinnerSize="small"
             />
